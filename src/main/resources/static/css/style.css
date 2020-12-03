@@ -53,12 +53,6 @@ section {
     display: flex;
     justify-content: end;
 }
-/*.carousel-control-prev-icon {*/
-/*    background-image: url("photo/Left.png");*/
-/*}*/
-/*.carousel-control-next-icon {*/
-/*    background-image: url("photo/Right.png");*/
-/*}*/
 
 .carousel-item {
     width: 80%;
@@ -67,3 +61,28 @@ section {
     width: 30%;
 }
 
+label {
+    display: inline-block;
+    width: 200px;
+    margin: 5px;
+    text-align: left;
+    font-size: 25px;
+    color: #4d3b0b;
+    font-weight: bold;
+}
+input[type=text], input[type=password], select {
+    display: inline-block;
+    justify-content: center;
+    width: 442px;
+    height: 45px;
+}
+button {
+    padding: 5px;
+    margin: 10px;
+}
+h1 {
+    font-weight: bold;
+    color: #4d3b0b;
+    font-style: italic;
+    margin-left: 100px;
+}
