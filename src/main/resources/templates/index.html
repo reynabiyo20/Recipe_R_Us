@@ -1,10 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
 <body>
-<h1>Hello world</h1>
+<!--<div th:replace="fragments :: header"></div>-->
+<section>
+
+    <div class="container-xxl">
+        <h1 class="centered" th:text="${title}"></h1><br>
+
+        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div th:each="recipe, iterstat : ${recipes}"
+                     th:class="${iterstat.index} == 0  ? 'carousel-item active':'carousel-item'">
+                    <div class="row">
+                        <div class="offset-md-1 col-10">
+                            <div class="card">
+                                <img th:src="${recipe.img}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title" th:text="${recipe.name}"></h5>
+                                    <p class="card-text" th:text="${recipe.category}"></p>
+                                    <a th:text="${recipe.name}" th:href="'/recipes/display?recipeId=' + ${recipe.id}" class="btn btn-primary">Recipe Info</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<div th:replace="fragments :: footer"></div>
+
 </body>
 </html>
