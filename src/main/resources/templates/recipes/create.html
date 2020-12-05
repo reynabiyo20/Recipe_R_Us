@@ -7,57 +7,64 @@
 </head>
 <body>
 <div class="container - xxl">
+    <br><br><br><br>
+
     <div align="center">
         <h1>Create Recipe</h1>
-        <form action="#" th:action="@{/recipes/create}" method="post" th:object="${recipe}">
+        <form name="recipe-form" action="#" th:action="@{/recipes/create}" method="post" th:object="${recipe}">
             <div class="form-group">
                 <label>Recipe Name:</label>
                 <input type="text" th:field="*{name}"/><br/>
-            </div>
-            <br>
+            </div><br>
             <div class="form-group">
                 <label>Photo:</label>
                 <input type="text" th:field="*{img}"/><br/>
-            </div>
-            <br>
+            </div><br>
+
+            <!--        <label>Gender:</label>-->
+            <!--        <input type="radio" th:field="*{gender}" value="Male" />Male-->
+            <!--        <input type="radio" th:field="*{gender}" value="Female" />Female<br/>-->
             <div class="form-group">
                 <label>Category:</label>
                 <select th:field="*{category}">
                     <option th:each="category : ${categories}" th:value="${category}"
                             th:text="${category.name()}"></option>
                 </select>
-            </div>
-            <br/>
+            </div><br/>
             <div class="form-group">
                 <label>Tag:</label>
                 <select th:field="*{tag}">
                     <option th:each="tag : ${tags}" th:value="${tag}" th:text="${tag.name()}"></option>
                 </select>
-            </div>
-            <br/>
+            </div><br/>
             <div class="form-group">
                 <label>Ingredients:</label>
                 <textarea rows="2" cols="45" th:field="*{ingredients}"></textarea><br/>
-            </div>
-            <br>
+            </div><br>
             <div class="form-group">
                 <label>Directions:</label>
                 <textarea rows="2" cols="45" th:field="*{directions}"></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button  type="submit" class="btn btn-primary" onclick="submitForm()">Create</button>
+
         </form>
     </div>
 </div>
+
 <div th:replace="fragments :: footer"></div>
 <script>
+
 
     function addCategory() {
         $.get("/recipes/create/addCategory").done(function (fragment) { // get from controller
             $("#new-input").replaceWith(fragment); // update snippet of page
         });
     }
+    function submitForm() {
+        document.recipe - form.reset();
+    }
+
 </script>
 </body>
 </html>
-//

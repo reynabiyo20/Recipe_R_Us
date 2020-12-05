@@ -3,7 +3,7 @@
 <head th:replace="fragments :: head"></head>
 <body>
 
-<div class = "container - xxl">
+<div class="container - xxl">
 
     <h1>Recipes:</h1>
 
@@ -15,6 +15,14 @@
         </thead>
         <tr th:each="recipe:${recipes}">
             <td><a th:text="${recipe.name}" th:href="'/recipes/display?recipeId=' + ${recipe.id}"></a></td>
+            <td>
+                <a th:href="@{/recipes/edit/{id}(id=${recipe.id})}">Edit</a>
+            </td>
+            <td>
+
+
+                <a th:href="@{/recipes/delete/{id}(id=${recipe.id})}">Delete</a>
+            </td>
         </tr>
 
     </table>
@@ -22,3 +30,4 @@
 <div th:replace="fragments :: footer"></div>
 </body>
 </html>
+
