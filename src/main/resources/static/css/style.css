@@ -1,88 +1,88 @@
 
-body {
+/*body {*/
 
-    background-color: #c2abab;
-    background-image: url("photo/BG1.jpg");
-    background-size: cover;
-}
-section {
-    margin-top: 72px;
+/*    background-color: #c2abab;*/
+/*    background-image: url("photo/BG1.jpg");*/
+/*    background-size: cover;*/
+/*}*/
+/*section {*/
+/*    margin-top: 72px;*/
 
-}
-.card-img-top {
-    width: 100%;
-    height: 420px;
-}
-.card {
-    margin-left: 190px;
-    width: 70%;
-    border: solid 2px;
-    border-radius: 5px;
-    border-color: #91701f;
-    /*height: 420px;*/
-}
-.card-body {
-    background-color: #d1cab8;
-}
-.container-xxl {
-    width: 1200px;
-}
-.offset-md-1{
-    width: 970px;
-}
-.centered {
-    display: flex;
-    justify-content: center;
-    color: #543f09;
-    font-weight: bold;
-}
-.img-big {
-    margin-left: 200px;
-    width: 900px;
-    height: 450px;
-    border: solid 1px;
-    border-radius: 7px;
-    border-color: #91701f;
-}
-.table-striped {
-    margin-left: 200px;
-    width: 900px;
-    background-color: #e6e2d8;
-}
-.save_button {
-    display: flex;
-    justify-content: end;
-}
+/*}*/
+/*.card-img-top {*/
+/*    width: 100%;*/
+/*    height: 420px;*/
+/*}*/
+/*.card {*/
+/*    margin-left: 190px;*/
+/*    width: 70%;*/
+/*    border: solid 2px;*/
+/*    border-radius: 5px;*/
+/*    border-color: #91701f;*/
+/*    !*height: 420px;*!*/
+/*}*/
+/*.card-body {*/
+/*    background-color: #d1cab8;*/
+/*}*/
+/*.container-xxl {*/
+/*    width: 1200px;*/
+/*}*/
+/*.offset-md-1{*/
+/*    width: 970px;*/
+/*}*/
+/*.centered {*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    color: #543f09;*/
+/*    font-weight: bold;*/
+/*}*/
+/*.img-big {*/
+/*    margin-left: 200px;*/
+/*    width: 900px;*/
+/*    height: 450px;*/
+/*    border: solid 1px;*/
+/*    border-radius: 7px;*/
+/*    border-color: #91701f;*/
+/*}*/
+/*.table-striped {*/
+/*    margin-left: 200px;*/
+/*    width: 900px;*/
+/*    background-color: #e6e2d8;*/
+/*}*/
+/*.save_button {*/
+/*    display: flex;*/
+/*    justify-content: end;*/
+/*}*/
 
-.carousel-item {
-    width: 80%;
-}
-.carousel-control-prev, .carousel-control-next {
-    width: 30%;
-}
+/*.carousel-item {*/
+/*    width: 80%;*/
+/*}*/
+/*.carousel-control-prev, .carousel-control-next {*/
+/*    width: 30%;*/
+/*}*/
 
-label {
-    display: inline-block;
-    width: 200px;
-    margin: 5px;
-    text-align: left;
-    font-size: 25px;
-    color: #4d3b0b;
-    font-weight: bold;
-}
-input[type=text], input[type=password], select {
-    display: inline-block;
-    justify-content: center;
-    width: 442px;
-    height: 45px;
-}
-button {
-    padding: 5px;
-    margin: 10px;
-}
-h1 {
-    font-weight: bold;
-    color: #4d3b0b;
-    font-style: italic;
-    margin-left: 100px;
-}
+/*label {*/
+/*    display: inline-block;*/
+/*    width: 200px;*/
+/*    margin: 5px;*/
+/*    text-align: left;*/
+/*    font-size: 25px;*/
+/*    color: #4d3b0b;*/
+/*    font-weight: bold;*/
+/*}*/
+/*input[type=text], input[type=password], select {*/
+/*    display: inline-block;*/
+/*    justify-content: center;*/
+/*    width: 442px;*/
+/*    height: 45px;*/
+/*}*/
+/*button {*/
+/*    padding: 5px;*/
+/*    margin: 10px;*/
+/*}*/
+/*h1 {*/
+/*    font-weight: bold;*/
+/*    color: #4d3b0b;*/
+/*    font-style: italic;*/
+/*    margin-left: 100px;*/
+/*}*/
