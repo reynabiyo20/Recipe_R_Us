@@ -147,5 +147,10 @@ public class RecipeController {
       return "redirect:/recipes";
    }
 
+   @RequestMapping("/save/{recipeId}")
+   public String saveRecipeToUser(@PathVariable Integer recipeId) {
+      return "index";
+   }
+
 }
 
