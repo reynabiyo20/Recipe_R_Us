@@ -1,6 +1,6 @@
 package org.launchcode.recipeapp.controllers;
 
-import org.launchcode.recipeapp.data.RecipeRepository;
+import org.launchcode.recipeapp.models.data.RecipeRepository;
 import org.launchcode.recipeapp.models.Category;
 import org.launchcode.recipeapp.models.Recipe;
 import org.launchcode.recipeapp.models.Tag;
