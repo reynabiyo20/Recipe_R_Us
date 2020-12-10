@@ -2,8 +2,55 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org/">
 <head>
     <meta charset="UTF-8">
+    <meta charset="ISO-8859-1">
     <title>Title</title>
+    <head th:replace="fragments :: head"></head>
 </head>
 <body>
+<div class="container - xxl">
+    <br><br><br><br>
+
+    <div align="center">
+        <h1>Edit Recipe</h1>
+        <form name="recipe-form"  th:action="@{/recipes/edit}"  method="post" th:object="${recipe}">
+            <div class="form-group">
+                <label>Recipe Name:</label>
+                <input type="text" th:field="*{name}"/><br/>
+            </div><br>
+            <div class="form-group">
+                <label>Photo:</label>
+                <input type="text" th:field="*{img}"/><br/>
+            </div><br>
+            <div class="form-group">
+                <label>Category:</label>
+                <select th:field="*{category}">
+                    <option th:each="category : ${categories}" th:value="${category}"
+                            th:text="${category.name()}"></option>
+                </select>
+            </div><br/>
+            <div class="form-group">
+                <label>Tag:</label>
+                <select th:field="*{tag}">
+                    <option th:each="tag : ${tags}" th:value="${tag}" th:text="${tag.name()}"></option>
+                </select>
+            </div><br/>
+            <div class="form-group">
+                <label>Ingredients:</label>
+                <textarea rows="2" cols="45" th:field="*{ingredients}"></textarea><br/>
+            </div><br>
+            <div class="form-group">
+                <label>Directions:</label>
+                <textarea rows="2" cols="45" th:field="*{directions}"></textarea>
+            </div>
+            <input type="hidden" th:value="${recipe.id}" name="recipeId" />
+            <button  type="submit" class="btn btn-primary" onclick="submitForm()">Update</button>
+
+
+        </form>
+    </div>
+</div>
+
+<div th:replace="fragments :: footer"></div>
 </body>
 </html>
+
