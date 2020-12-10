@@ -1,7 +1,7 @@
 package org.launchcode.recipeapp.controllers;
 
 
-import org.launchcode.recipeapp.data.RecipeRepository;
+import org.launchcode.recipeapp.models.data.RecipeRepository;
 import org.launchcode.recipeapp.models.Recipe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

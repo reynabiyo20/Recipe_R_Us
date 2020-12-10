@@ -5,7 +5,7 @@ package org.launchcode.recipeapp.models;
  */
 public enum Category {
 
-  BEVERAGES, APPETIZER, ENTREE, SOUP, SALAD, DESSERT;
+  BEVERAGES, APPETIZER, ENTREE, SOUP, SIDES, DESSERT;
 
 }
 
