@@ -17,7 +17,6 @@ import java.util.List;
  * @author Oksana
  */
 @Entity
-@Table
 public class User extends AbstractEntity {
 
    /* @updated AH*/

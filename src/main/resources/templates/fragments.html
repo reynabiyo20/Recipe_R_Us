@@ -12,14 +12,30 @@
         <link th:href="@{/css/style.css}" rel="stylesheet" />
         <link th:href="@{/css/rating.css}" rel="stylesheet" />-->
 
-    </head>
-    <body>
+</head>
+<body>
 
-    <h1>Hello Friends!</h1>
+<header th:fragment="header">
+    <div id="logo-img">
+        <h1>Recipes R Us</h1>
+    </div>
+    <nav>
+        <ul class="menu">
+            <li class="menu-item"><a href="/categories/1">Category 1</a></li>
+            <li class="menu-item"><a href="/categories/2">Category 2</a></li>
+            <li class="menu-item"><a href="/categories/3">Category 3</a></li>
+            <li class="menu-item"><a href="/categories/4">Category 4</a></li>
+            <li class="menu-item"><a href="/categories/5">Category 5</a></li>
+        </ul>
+    </nav>
+</header>
 
-    <div th:fragment="footer">
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.bundle.min.js" integrity="sha384-BOsAfwzjNJHrJ8cZidOg56tcQWfp6y72vEJ8xQ9w6Quywb24iOsW913URv1IS4GD" crossorigin="anonymous"}></script>
-        <!--    <script type="text/javascript" th:src="@{/js/carousel.js}"></script>-->
+
+<h1>Hello Friends!</h1>
+
+<div th:fragment="footer">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.bundle.min.js" integrity="sha384-BOsAfwzjNJHrJ8cZidOg56tcQWfp6y72vEJ8xQ9w6Quywb24iOsW913URv1IS4GD" crossorigin="anonymous"}></script>
+    <!--    <script type="text/javascript" th:src="@{/js/carousel.js}"></script>-->
 </div>
 </body>
 </html>
