@@ -92,9 +92,11 @@ public class RecipeController {
          model.addAttribute("recipe", recipe);
          if (recipe.getReviews().isEmpty()) {
             model.addAttribute("averageRating", "no ratings yet");
+            model.addAttribute("numRatings", "no ratings yet");
          } else {
-            recipe.calcAverage();
+            recipe.calculateAverageRating();
             model.addAttribute("averageRating", recipe.getAverageRating());
+            model.addAttribute("numRatings", recipe.getReviews().size());
          }
       }
 
@@ -111,8 +113,9 @@ public class RecipeController {
 
       reviewRepository.save(newReview);
 
-      recipe.calcAverage();
+      recipe.calculateAverageRating();
       model.addAttribute("averageRating", recipe.getAverageRating());
+      model.addAttribute("numRatings", recipe.getReviews().size());
 
       return "recipes/display";
    }

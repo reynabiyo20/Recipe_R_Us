@@ -37,7 +37,7 @@ public class Recipe extends AbstractEntity {
    public Recipe() {
    }
 
-   public void calcAverage(){
+   public void calculateAverageRating(){
       List<Review> reviewList = getReviews();
       int numRatings = reviewList.size();
       int sumRatings = 0;

@@ -34,8 +34,14 @@
         </tr>
     </table>
 
-        <p>Rating:</p>
-        <div th:text="${averageRating}"></div>
+
+    <div>
+
+        <div th:text="'Average Rating: ' + ${averageRating}"></div>
+        <div th:text="'Total Ratings: ' + ${numRatings}"></div>
+
+    </div>
+
         <br>
         <div class="rating-area">
             <p>Leave a Review</p>
@@ -51,11 +57,21 @@
                 <input type="radio" id="4" name="rating" value="4">
                 <label for="5">5</label>
                 <input type="radio" id="5" name="rating" value="5"><br>
-                <textarea id="comment" name="comment" rows="4" cols="50"></textarea><br>
+                <textarea id="comment" name="comment" rows="4" cols="50" placeholder="What did you think of the recipe?"></textarea><br>
                 <input type="submit" value="Submit" name="submit">
             </form>
 </div>
 
+    <div id="reviews">
+        <table>
+           <tr>
+               <th>Comments</th>
+            </tr>
+            <tr th:each="review : ${recipe.reviews}">
+                <td th:text = "${review.comment}"></td>
+            </tr>
+        </table>
+        <div>
 
 
 
