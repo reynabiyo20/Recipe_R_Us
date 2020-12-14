@@ -7,9 +7,6 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Oksana
- */
 @Entity
 public class Recipe extends AbstractEntity {
 
@@ -26,6 +23,10 @@ public class Recipe extends AbstractEntity {
    private Tag tag;
 
    private String img;
+   private Double averageRating;
+
+   @OneToMany(mappedBy = "recipe")
+   private final List<Review> reviews = new ArrayList<>();
 
    @OneToMany(mappedBy = "recipe", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
    @NotNull(message = "User is required")
@@ -33,6 +34,22 @@ public class Recipe extends AbstractEntity {
 
    public Recipe() {
    }
+
+
+   public double calculateAverageRating(){
+      int numRatings = reviews.size();
+      int sumRatings = 0;
+
+      for( int i =0; i < numRatings; i++){
+        int rating = reviews.get(i).getRating();
+         sumRatings += rating;
+      }
+      double average = sumRatings / numRatings;
+      averageRating = average;
+      return averageRating;
+   }
+
+
 
    public String getName() {
       return name;
@@ -89,5 +106,32 @@ public class Recipe extends AbstractEntity {
 
    public void setTag(Tag tag) {
       this.tag = tag;
+   }
+
+   public Double getAverageRating() {
+      return averageRating;
+   }
+
+   public void setAverageRating(Double averageRating) {
+      this.averageRating = averageRating;
+   }
+
+   public List<Review> getReviews() {
+      return reviews;
+   }
+
+   @Override
+   public String toString() {
+      return "Recipe{" +
+              "name='" + name + '\'' +
+              ", ingredients='" + ingredients + '\'' +
+              ", directions='" + directions + '\'' +
+              ", category=" + category +
+              ", tag=" + tag +
+              ", img='" + img + '\'' +
+              ", averageRating=" + averageRating +
+              ", reviews=" + reviews +
+              ", users=" + users +
+              '}';
    }
 }

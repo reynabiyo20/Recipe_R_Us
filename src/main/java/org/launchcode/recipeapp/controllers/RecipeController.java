@@ -1,9 +1,11 @@
 package org.launchcode.recipeapp.controllers;
 
+import org.launchcode.recipeapp.models.Review;
 import org.launchcode.recipeapp.models.data.RecipeRepository;
 import org.launchcode.recipeapp.models.Category;
 import org.launchcode.recipeapp.models.Recipe;
 import org.launchcode.recipeapp.models.Tag;
+import org.launchcode.recipeapp.models.data.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,6 +34,9 @@ public class RecipeController {
    public RecipeController(RecipeRepository recipeRepository) {
       this.recipeRepository = recipeRepository;
    }
+
+   @Autowired
+   public ReviewRepository reviewRepository;
 
    @GetMapping
    public String getListOfRecipes(Model model) {
@@ -80,7 +85,6 @@ public class RecipeController {
          model.addAttribute("title", "Invalid Recipe ID: " + recipeId);
       } else {
          Recipe recipe = result.get();
-
          model.addAttribute("title", recipe.getName());
          model.addAttribute("recipe", recipe);
       }
@@ -88,7 +92,27 @@ public class RecipeController {
       return "recipes/display";
    }
 
-   @GetMapping("edit/{recipeId}")
+   @PostMapping("display")
+   public String processReviewForm(@RequestParam Integer recipeId, @RequestParam String comment, @RequestParam Integer rating, Model model) {
+      Optional<Recipe> result = recipeRepository.findById(recipeId);
+      Recipe recipe = result.get();
+      model.addAttribute("title", recipe.getName());
+      model.addAttribute("recipe", recipe);
+
+      Review newReview = new Review(recipe, rating,comment); // this works properly
+
+      reviewRepository.save(newReview);// can't save to Repository
+      recipe.calculateAverageRating();
+
+      System.out.println("newreview: " + newReview);
+
+
+
+      return "recipes/display";
+   }
+
+
+      @GetMapping("edit/{recipeId}")
    public String displayEditForm(Model model, @PathVariable int recipeId) {
 
       Category[] categories = Category.values();

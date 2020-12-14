@@ -5,29 +5,10 @@
 
 <div class = "container - xxl1">
     <tr>
-        <td><h1 class="centered" th:text="${recipe.name}"></h1></td><br>
+      <td><h1 class="centered" th:text="${recipe.name}"></h1></td><br>
     </tr>
     <tr>
     <img class="img-big" th:src="${recipe.img}"/>
-
-        <td>
-            <div class="rating-area">
-                <tr>
-                <input th:text="'Rate the recipe:'" type="radio" id="star-5" name="rating" value="5">
-                <label for="star-5" title="Оценка «5»"></label>
-                <input type="radio" id="star-4" name="rating" value="4">
-                <label for="star-4" title="Оценка «4»"></label>
-                <input type="radio" id="star-3" name="rating" value="3">
-                <label for="star-3" title="Оценка «3»"></label>
-                <input type="radio" id="star-2" name="rating" value="2">
-                <label for="star-2" title="Оценка «2»"></label>
-                <input type="radio" id="star-1" name="rating" value="1">
-                <label for="star-1" title="Оценка «1»"></label>
-                </tr>
-            </div>
-        </td>
-    </tr>
-
 
     <table class="table table-striped">
 
@@ -52,6 +33,31 @@
             <td class="save_button"><a  th:href="'/myPage' + ${recipe.id}" class="btn btn-primary">Add to favorite</a></td>
         </tr>
     </table>
+
+        <p>Rating:</p>
+        <div th:text="${recipe.averageRating}"></div>
+        <br>
+        <div class="rating-area">
+            <p>Leave a Review</p>
+            <form method="post">
+                <input type="hidden" id="recipeId" name="recipeId" th:value="${recipe.id}">
+                <label for="1">1</label>
+                <input type="radio" id="1" name="rating" value="1">
+                <label for="2">2</label>
+                <input type="radio" id="2" name="rating" value="2">
+                <label for="3">3</label>
+                <input type="radio" id="3" name="rating" value="3">
+                <label for="4">4</label>
+                <input type="radio" id="4" name="rating" value="4">
+                <label for="5">5</label>
+                <input type="radio" id="5" name="rating" value="5">
+                <input type="text" id="comment" name="comment">
+                <input type="submit" value="Submit" name="submit">
+            </form>
+</div>
+
+
+
 
 </div>
 <div th:replace="fragments :: footer"></div>
