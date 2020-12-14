@@ -6,6 +6,7 @@ import org.launchcode.recipeapp.models.Category;
 import org.launchcode.recipeapp.models.Recipe;
 import org.launchcode.recipeapp.models.Tag;
 import org.launchcode.recipeapp.models.data.ReviewRepository;
+import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.sql.SQLOutput;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -87,6 +90,12 @@ public class RecipeController {
          Recipe recipe = result.get();
          model.addAttribute("title", recipe.getName());
          model.addAttribute("recipe", recipe);
+         if (recipe.getReviews().isEmpty()) {
+            model.addAttribute("averageRating", "no ratings yet");
+         } else {
+            recipe.calcAverage();
+            model.addAttribute("averageRating", recipe.getAverageRating());
+         }
       }
 
       return "recipes/display";
@@ -98,15 +107,12 @@ public class RecipeController {
       Recipe recipe = result.get();
       model.addAttribute("title", recipe.getName());
       model.addAttribute("recipe", recipe);
+      Review newReview = new Review(recipe, rating, comment);
 
-      Review newReview = new Review(recipe, rating,comment); // this works properly
+      reviewRepository.save(newReview);
 
-      reviewRepository.save(newReview);// can't save to Repository
-      recipe.calculateAverageRating();
-
-      System.out.println("newreview: " + newReview);
-
-
+      recipe.calcAverage();
+      model.addAttribute("averageRating", recipe.getAverageRating());
 
       return "recipes/display";
    }

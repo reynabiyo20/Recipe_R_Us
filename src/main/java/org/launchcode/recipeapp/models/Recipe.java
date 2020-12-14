@@ -23,6 +23,8 @@ public class Recipe extends AbstractEntity {
    private Tag tag;
 
    private String img;
+
+   //should this have a 1-to-1 with an averageRating field in the Review class?
    private Double averageRating;
 
    @OneToMany(mappedBy = "recipe")
@@ -35,21 +37,18 @@ public class Recipe extends AbstractEntity {
    public Recipe() {
    }
 
-
-   public double calculateAverageRating(){
-      int numRatings = reviews.size();
+   public void calcAverage(){
+      List<Review> reviewList = getReviews();
+      int numRatings = reviewList.size();
       int sumRatings = 0;
 
-      for( int i =0; i < numRatings; i++){
-        int rating = reviews.get(i).getRating();
-         sumRatings += rating;
+      for(int i =0; i < numRatings; i++){
+         int reviewRating = reviewList.get(i).getRating();
+         sumRatings += reviewRating;
       }
       double average = sumRatings / numRatings;
-      averageRating = average;
-      return averageRating;
+      setAverageRating(average);
    }
-
-
 
    public String getName() {
       return name;
@@ -120,18 +119,4 @@ public class Recipe extends AbstractEntity {
       return reviews;
    }
 
-   @Override
-   public String toString() {
-      return "Recipe{" +
-              "name='" + name + '\'' +
-              ", ingredients='" + ingredients + '\'' +
-              ", directions='" + directions + '\'' +
-              ", category=" + category +
-              ", tag=" + tag +
-              ", img='" + img + '\'' +
-              ", averageRating=" + averageRating +
-              ", reviews=" + reviews +
-              ", users=" + users +
-              '}';
-   }
 }
