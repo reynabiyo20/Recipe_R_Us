@@ -14,12 +14,20 @@
                      th:class="${iterstat.index} == 0  ? 'carousel-item active':'carousel-item'">
                     <div class="row">
                         <div class="offset-md-1 col-10">
-                            <div class="card">
-                                <img th:src="${recipe.img}" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title" th:text="${recipe.name}"></h5>
-                                    <p class="card-text" th:text="${recipe.category}"></p>
-                                    <a th:text="${recipe.name}" th:href="'/recipes/display?recipeId=' + ${recipe.id}" class="btn btn-primary">Recipe Info</a>
+                            <div class="card" style="z-index: 1000">
+                                <img th:src="${recipe.recipe.img}" class="card-img-top" alt="..." >
+                                <div class="card-body" >
+                                    <h5 class="card-title" th:text="${recipe.recipe.name}"></h5>
+                                    <p class="card-text" th:text="${recipe.recipe.category}"></p>
+
+                                    <!--                                    Request param-->
+                                    <a th:text="${recipe.recipe.name}" th:href="'/recipes/display?recipeId=' + ${recipe.recipe.id}" class="btn btn-primary">Recipe Info</a>
+
+                                    <!--                                    Path variable-->
+                                    <form method="post" th:action="'/users/addRecipe/' + ${recipe.recipe.id}">
+
+                                        <input th:disabled="${recipe.isActive()}" value="Add" type="submit" class="btn btn-primary">
+                                    </form>
                                 </div>
                             </div>
                         </div>
