@@ -39,14 +39,17 @@ public class Recipe extends AbstractEntity {
 
    public void calculateAverageRating(){
       List<Review> reviewList = getReviews();
-      int numRatings = reviewList.size();
-      int sumRatings = 0;
+      double numRatings = reviewList.size();
+      double sumRatings = 0.0;
 
       for(int i =0; i < numRatings; i++){
-         int reviewRating = reviewList.get(i).getRating();
+         double reviewRating = reviewList.get(i).getRating();
          sumRatings += reviewRating;
       }
-      double average = sumRatings / numRatings;
+    //  double average = sumRatings / numRatings;
+      double average = Double.parseDouble(String.format("%.1f",(double)sumRatings  /  numRatings)) ;
+
+      System.out.println(average);
       setAverageRating(average);
    }
 

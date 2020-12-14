@@ -32,18 +32,16 @@
 
             <td class="save_button"><a  th:href="'/myPage' + ${recipe.id}" class="btn btn-primary">Add to favorite</a></td>
         </tr>
-    </table>
+    </table><br>
 
 
-    <div>
-
+    <div id="ratings">
         <div th:text="'Average Rating: ' + ${averageRating}"></div>
         <div th:text="'Total Ratings: ' + ${numRatings}"></div>
-
     </div>
-
         <br>
-        <div class="rating-area">
+
+        <div id="submit-review">
             <p>Leave a Review</p>
             <form method="post">
                 <input type="hidden" id="recipeId" name="recipeId" th:value="${recipe.id}">
@@ -60,7 +58,7 @@
                 <textarea id="comment" name="comment" rows="4" cols="50" placeholder="What did you think of the recipe?"></textarea><br>
                 <input type="submit" value="Submit" name="submit">
             </form>
-</div>
+        </div>
 
     <div id="reviews">
         <table>
