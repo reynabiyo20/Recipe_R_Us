@@ -3,55 +3,69 @@
 <head th:replace="fragments :: head"></head>
 <body>
 
-<div class = "container - xxl1">
+<div class="container">
+    <div>
     <tr>
-        <td><h1 class="centered" th:text="${recipe.name}"></h1></td><br>
+        <td><h1 class="centered" th:text="${recipe.name}"></h1></td>
+        <br>
     </tr>
     <tr>
-    <img class="img-big" th:src="${recipe.img}"/>
+        <img class="img-big" th:src="${recipe.img}"/>
 
         <td>
             <div class="rating-area">
-                <tr>
-                <input th:text="'Rate the recipe:'" type="radio" id="star-5" name="rating" value="5">
-                <label for="star-5" title="Оценка «5»"></label>
-                <input type="radio" id="star-4" name="rating" value="4">
-                <label for="star-4" title="Оценка «4»"></label>
-                <input type="radio" id="star-3" name="rating" value="3">
-                <label for="star-3" title="Оценка «3»"></label>
-                <input type="radio" id="star-2" name="rating" value="2">
-                <label for="star-2" title="Оценка «2»"></label>
-                <input type="radio" id="star-1" name="rating" value="1">
-                <label for="star-1" title="Оценка «1»"></label>
-                </tr>
-            </div>
-        </td>
+    <tr>
+        <input th:text="'Rate the recipe:'" type="radio" id="star-5" name="rating" value="5">
+        <label for="star-5" title="Grade «5»"></label>
+        <input type="radio" id="star-4" name="rating" value="4">
+        <label for="star-4" title="Grade «4»"></label>
+        <input type="radio" id="star-3" name="rating" value="3">
+        <label for="star-3" title="Grade «3»"></label>
+        <input type="radio" id="star-2" name="rating" value="2">
+        <label for="star-2" title="Grade «2»"></label>
+        <input type="radio" id="star-1" name="rating" value="1">
+        <label for="star-1" title="Grade «1»"></label>
+    </tr>
+</div>
+</td>
+</tr>
+
+
+
+<table class="table table-striped" style="width: 750px;">
+
+    <tr class="row">
+        <th class="col-sm-3">Ingredients:</th>
+
+        <td class="col-sm-9"th:text="${recipe.ingredients}"></td>
+
+    </tr>
+    <tr class="row">
+        <th class="col-sm-3">Directions:</th>
+        <td class="col-sm-9" th:text="${recipe.directions}"></td>
+
     </tr>
 
+    <tr class="row">
+        <th class="col-sm-3">Category:</th>
+        <td class="col-sm-9" th:text="${recipe.category}"></td>
 
-    <table class="table table-striped">
-
-        <tr>
-            <th>Ingredients:</th>
-            <td th:text="${recipe.ingredients}"></td>
-        </tr>
-        <tr>
-            <th>Directions:</th>
-            <td th:text="${recipe.directions}"></td>
-        </tr>
-
-        <tr>
-            <th>Category:</th>
-            <td th:text="${recipe.category}"></td>
-        </tr> <tr>
-        <th>Tags:</th>
-        <td  th:text="${recipe.tag}"></td>
     </tr>
-        <tr>
+    <tr class="row">
+        <th class="col-sm-3">Tags:</th>
+        <td class="col-sm-9" th:text="${recipe.tag}"></td>
 
-            <td class="save_button"><a  th:href="'/myPage' + ${recipe.id}" class="btn btn-primary">Add to favorite</a></td>
-        </tr>
-    </table>
+    </tr>
+    <tr>
+    <td>
+        <form method="post" th:action="'/users/addRecipe/' + ${recipe.id}">
+
+            <input  value="Add to favorite" type="submit" class="btn btn-primary">
+        </form>
+<!--        <td class="save_button"><a th:href="'/users/addRecipe/{id}' + ${recipe.id}" class="btn btn-primary">Add to favorite</a></td>-->
+    </td>
+    </tr>
+</table>
 
 </div>
 <div th:replace="fragments :: footer"></div>
