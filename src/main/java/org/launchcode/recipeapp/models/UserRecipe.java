@@ -1,5 +1,8 @@
 package org.launchcode.recipeapp.models;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +15,8 @@ import javax.validation.constraints.NotNull;
 /**
  * @author Oksana
  */
+@Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table
 public class UserRecipe extends AbstractEntity {
