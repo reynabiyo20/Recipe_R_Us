@@ -9,7 +9,12 @@
     </tr>
     <tr>
     <img class="img-big" th:src="${recipe.img}"/>
+        <br>
+        <form method="post" th:action="'/users/addRecipe/' + ${recipe.id}">
 
+            <input  value="Add to favorite" type="submit" class="btn btn-primary">
+        </form>
+        <br>
     <table class="table table-striped">
 
         <tr>
@@ -28,10 +33,6 @@
         <th>Tags:</th>
         <td  th:text="${recipe.tag}"></td>
     </tr>
-        <tr>
-
-            <td class="save_button"><a  th:href="'/myPage' + ${recipe.id}" class="btn btn-primary">Add to favorite</a></td>
-        </tr>
     </table><br>
 
 
