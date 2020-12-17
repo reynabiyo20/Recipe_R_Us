@@ -88,7 +88,6 @@ public class RecipeController {
             model.addAttribute("averageRating", "no ratings yet");
             model.addAttribute("numRatings", "no ratings yet");
          } else {
-            recipe.calculateAverageRating();
             model.addAttribute("averageRating", recipe.getAverageRating());
             model.addAttribute("numRatings", recipe.getReviews().size());
          }
@@ -98,17 +97,28 @@ public class RecipeController {
    }
 
    @PostMapping("display")
-   public String processReviewForm(@RequestParam Integer recipeId, @RequestParam String comment, @RequestParam Integer rating, Model model) {
-      Optional<Recipe> result = recipeRepository.findById(recipeId);
-      Recipe recipe = result.get();
+   public String processReviewForm(@RequestParam Integer recipeId,
+                                   @Valid @RequestParam String comment,
+                                   @RequestParam Integer rating,
+                                   @Valid @RequestParam String name,
+                                   Errors errors, Model model) {
+      // not working
+      if (errors.hasErrors()) {
+         return "recipes/display";
+      }
+
+      Recipe recipe = recipeRepository.findById(recipeId).get();
+
+      // Ratings and Reviews
+      Review review = new Review(recipe, rating, comment, name);
+      review.setTimestamp();
+      reviewRepository.save(review);
+      recipe.setAverageRating();
+      recipeRepository.save(recipe);
+
       model.addAttribute("title", recipe.getName());
       model.addAttribute("recipe", recipe);
-      Review newReview = new Review(recipe, rating, comment);
-
-      reviewRepository.save(newReview);
-
-      recipe.calculateAverageRating();
-      model.addAttribute("averageRating", recipe.getAverageRating());
+      model.addAttribute("review", review);
       model.addAttribute("numRatings", recipe.getReviews().size());
 
       return "recipes/display";

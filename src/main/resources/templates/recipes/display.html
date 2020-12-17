@@ -37,7 +37,7 @@
 
 
     <div id="ratings">
-        <div th:text="'Average Rating: ' + ${averageRating}"></div>
+        <div th:text="'Average Rating: ' + ${recipe.averageRating}"></div>
         <div th:text="'Total Ratings: ' + ${numRatings}"></div>
     </div>
         <br>
@@ -46,6 +46,7 @@
             <p>Leave a Review</p>
             <form method="post">
                 <input type="hidden" id="recipeId" name="recipeId" th:value="${recipe.id}">
+                <labe>My Rating:</labe><br>
                 <label for="1">1</label>
                 <input type="radio" id="1" name="rating" value="1">
                 <label for="2">2</label>
@@ -56,18 +57,27 @@
                 <input type="radio" id="4" name="rating" value="4">
                 <label for="5">5</label>
                 <input type="radio" id="5" name="rating" value="5"><br>
-                <textarea id="comment" name="comment" rows="4" cols="50" placeholder="What did you think of the recipe?"></textarea><br>
-                <input type="submit" value="Submit" name="submit">
+                <label>Name:</label><br>
+                <input type="text" id="name" name="name"><br>
+                <label>Comment:</label><br>
+                <textarea id="comment" name="comment" rows="8" cols="100" placeholder="What did you think of the recipe?"></textarea><br>
+                <input type="submit" value="Post Review" name="submit">
             </form>
         </div>
 
     <div id="reviews">
         <table>
            <tr>
-               <th>Comments</th>
-            </tr>
+               <th>Name</th>
+               <th>Rating</th>
+               <th>Comment</th>
+               <th>Date</th>
+           </tr>
             <tr th:each="review : ${recipe.reviews}">
+                <td th:text = "${review.name}"></td>
+                <td th:text = "${review.rating}"></td>
                 <td th:text = "${review.comment}"></td>
+                <td th:text = "${review.timestamp}"></td>
             </tr>
         </table>
         <div>

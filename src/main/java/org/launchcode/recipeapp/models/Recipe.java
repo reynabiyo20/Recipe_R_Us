@@ -24,7 +24,6 @@ public class Recipe extends AbstractEntity {
 
    private String img;
 
-   //should this have a 1-to-1 with an averageRating field in the Review class?
    private Double averageRating;
 
    @OneToMany(mappedBy = "recipe")
@@ -37,22 +36,7 @@ public class Recipe extends AbstractEntity {
    public Recipe() {
    }
 
-   public void calculateAverageRating(){
-      List<Review> reviewList = getReviews();
-      double numRatings = reviewList.size();
-      double sumRatings = 0.0;
-
-      for(int i =0; i < numRatings; i++){
-         double reviewRating = reviewList.get(i).getRating();
-         sumRatings += reviewRating;
-      }
-    //  double average = sumRatings / numRatings;
-      double average = Double.parseDouble(String.format("%.1f",(double)sumRatings  /  numRatings)) ;
-
-      System.out.println(average);
-      setAverageRating(average);
-   }
-
+   // Getters and Setters
    public String getName() {
       return name;
    }
@@ -60,7 +44,6 @@ public class Recipe extends AbstractEntity {
    public void setName(String name) {
       this.name = name;
    }
-
 
    public Category getCategory() {
       return category;
@@ -114,12 +97,38 @@ public class Recipe extends AbstractEntity {
       return averageRating;
    }
 
-   public void setAverageRating(Double averageRating) {
-      this.averageRating = averageRating;
+   public void setAverageRating() {
+      List<Review> reviewList = getReviews();
+      double numRatings = reviewList.size();
+      double sumRatings = 0.0;
+
+      for(int i =0; i < numRatings; i++){
+         double reviewRating = reviewList.get(i).getRating();
+         sumRatings += reviewRating;
+      }
+      double average = Double.parseDouble(String.format("%.1f",(double)sumRatings  /  numRatings));
+      averageRating = average;
    }
 
    public List<Review> getReviews() {
       return reviews;
    }
+
+
+   @Override
+   public String toString() {
+      return "Recipe{" +
+              "name='" + name + '\'' +
+              ", ingredients='" + ingredients + '\'' +
+              ", directions='" + directions + '\'' +
+              ", category=" + category +
+              ", tag=" + tag +
+              ", img='" + img + '\'' +
+              ", averageRating=" + averageRating +
+              ", reviews=" + reviews +
+              ", users=" + users +
+              '}';
+   }
+
 
 }
