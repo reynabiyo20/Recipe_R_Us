@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+<div th:replace="fragments :: header"></div>
+
+
+<h1 th:text="'Recipes found based on keyword'"></h1>
+<!--<h2 th:unless="${keyword}">All Recipes</h2>-->
+<p>Click on the recipe name to view recipe details</p>
+
+<div class = "container">
+    <div class="row">
+        <div th:each="recipe:${recipes}">
+
+            <figcaption>
+                <a th:text="${recipe.name}" th:href="'/recipes/display?recipeId=' + ${recipe.id}"></a>
+            </figcaption>
+            <img th:src="${recipe.img}" width="304" height="236"/>
+
+        </div>
+    </div>
+</div>
+<div th:replace="fragments :: footer"></div>
+</body>
+</html>
