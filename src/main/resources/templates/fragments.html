@@ -7,55 +7,92 @@
 
     <title>Famous Saint Louis Recipes</title>
     <!-- CSS only -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css" th:rel="stylesheet"  integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css" th:rel="stylesheet"
+          integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" th:rel="stylesheet">
-    <link th:href="@{/css/style.css}" rel="stylesheet" />
-    <link th:href="@{/css/rating.css}" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet"/>
+    <link th:href="@{/css/rating.css}" rel="stylesheet"/>
 
 </head>
 <body>
 
 <header th:fragment="header">
-    <div id="logo-img">
-        <h1>Recipes R Us</h1>
-    </div>
-    <nav>
-        <ul class="menu">
-            <li class="menu-item"><a href="/categories/1">Category 1</a></li>
-            <li class="menu-item"><a href="/categories/2">Category 2</a></li>
-            <li class="menu-item"><a href="/categories/3">Category 3</a></li>
-            <li class="menu-item"><a href="/categories/4">Category 4</a></li>
-            <li class="menu-item"><a href="/categories/5">Category 5</a></li>
-        </ul>
-    </nav>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #0a67f2; color: #f2f2f2">
+        <div class="container-fluid">
+            <div class="" id="logo-img">
+                <h1 style="color: #f2f2f2">Recipes R Us</h1>
+            </div>
 
-    <div class="search">
-        <form class="d-flex" action="/search" method="post">
-            <input class="form-control mr-2" type="text" name="keyword" placeholder="Search by keyword"
-                   aria-label="Search">
-            <button class="btn btn-light" type="submit">Search</button>
-        </form>
-<!--        <form class="d-flex" action="/search/selectedCategory" method="post" th:object="${recipe}">        <div class="form-group">-->
-<!--        <label for="category">Choose category</label>-->
-<!--        <select class="form-control selectpicker" th:field="*{category}" id="category">-->
-<!--            <option value="">Nothing selected</option>-->
-<!--            <option th:each="category:${categories}"-->
-<!--                    th:value="${category}"-->
-<!--                    th:text="${category}"></option>-->
-<!--        </select>-->
-<!--        -->
-<!--    </div>       -->
-<!--        <button class="btn btn-light" type="submit">Submit</button>-->
-<!--    </form>-->
-    </div>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="left-header-btn">
+
+                    <div id="login" class="left-space-header">
+                        <span th:if="${session.isEmpty()}"><a class="btn btn-light" th:href="@{/login}">Login</a></span>
+                    </div>
+                    <div id="register" class="left-space-header">
+                        <span th:if="${session.isEmpty()}"><a class="btn btn-light" th:href="@{/register}">Register</a></span>
+                    </div>
+                    <div id="all-recipes" class="left-space-header">
+                        <span><a class="btn btn-light" th:href="@{/recipes/all}">All Recipes</a></span>
+                    </div>
+                    <div id="search" class="search">
+                        <form class="d-flex" action="/search" method="post">
+                            <input class="form-control mr-2" type="text" name="keyword" placeholder="Search by keyword"
+                                   aria-label="Search">
+                            <button class="btn btn-light" type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="right-header-btn">
+                    <div id="home" style="margin-right: 10px">
+                        <span th:if="${session.user}"><a class="btn btn-light" th:href="@{/home}">Home</a></span>
+                    </div>
+                    <div>
+                        <span th:if="${session.user}"><a class="btn btn-light" th:href="@{/logout}">Logout</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
 </header>
 
 
 <h1>Hello Friends!</h1>
-
 <div th:fragment="footer">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.bundle.min.js" integrity="sha384-BOsAfwzjNJHrJ8cZidOg56tcQWfp6y72vEJ8xQ9w6Quywb24iOsW913URv1IS4GD" crossorigin="anonymous"}></script>
-    <!--    <script type="text/javascript" th:src="@{/js/carousel.js}"></script>-->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.bundle.min.js"
+            integrity="sha384-BOsAfwzjNJHrJ8cZidOg56tcQWfp6y72vEJ8xQ9w6Quywb24iOsW913URv1IS4GD"
+            crossorigin="anonymous" }></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (window.location.href.indexOf("/home") > -1) {
+                $("#home").hide();
+            }
+        });
+
+        $(document).ready(function () {
+            if (window.location.href.indexOf("/recipes/all") > -1) {
+                $("#search").hide();
+                $('#all-recipes').hide();
+            }
+        });
+
+
+        $(document).ready(function () {
+            if (window.location.href.indexOf("/login") > -1) {
+                $("#login").hide();
+                $("#search").hide();
+            }
+        });
+        $(document).ready(function () {
+            if (window.location.href.indexOf("/register") > -1) {
+                $("#register").hide();
+                $("#search").hide();
+            }
+        });
+
+    </script>
 </div>
 </body>
 </html>
