@@ -114,7 +114,6 @@ public class Recipe extends AbstractEntity {
       return reviews;
    }
 
-
    @Override
    public String toString() {
       return "Recipe{" +
