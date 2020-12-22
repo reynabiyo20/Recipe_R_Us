@@ -12,4 +12,5 @@ import java.util.List;
 public interface UserRecipeRepository extends CrudRepository<UserRecipe, Integer> {
 
    List<UserRecipe> getAllByUser(User user);
+
 }

@@ -38,4 +38,5 @@ public class UserRecipe extends AbstractEntity {
            foreignKey = @ForeignKey(name = "FK_USER_RECIPE"))
    @NotNull(message = "")
    private Recipe recipe;
+
 }
