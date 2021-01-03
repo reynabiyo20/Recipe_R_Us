@@ -71,7 +71,7 @@ AuthenticationController {
         userRepository.save(newUser);
         setUserInSession(request.getSession(), newUser);
 
-        return "redirect:";
+        return "redirect:/home";
     }
 
     @GetMapping("/login")
@@ -110,7 +110,7 @@ AuthenticationController {
 
         setUserInSession(request.getSession(), theUser);
 
-        return "redirect:";
+        return "redirect:/home";
     }
 
 

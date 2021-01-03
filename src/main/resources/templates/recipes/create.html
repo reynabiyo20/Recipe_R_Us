@@ -6,7 +6,8 @@
     <head th:replace="fragments :: head"></head>
 </head>
 <body>
-<div class="container - xxl">
+<div th:replace="fragments :: header"></div>
+<div class="container-xxl">
     <br><br><br><br>
 
     <div align="center">
@@ -20,10 +21,6 @@
                 <label>Photo:</label>
                 <input type="text" th:field="*{img}"/><br/>
             </div><br>
-
-            <!--        <label>Gender:</label>-->
-            <!--        <input type="radio" th:field="*{gender}" value="Male" />Male-->
-            <!--        <input type="radio" th:field="*{gender}" value="Female" />Female<br/>-->
             <div class="form-group">
                 <label>Category:</label>
                 <select th:field="*{category}">
@@ -39,15 +36,15 @@
             </div><br/>
             <div class="form-group">
                 <label>Ingredients:</label>
-                <textarea rows="2" cols="45" th:field="*{ingredients}"></textarea><br/>
+                <textarea rows="2" cols="58" th:field="*{ingredients}"></textarea><br/>
             </div><br>
             <div class="form-group">
                 <label>Directions:</label>
-                <textarea rows="2" cols="45" th:field="*{directions}"></textarea>
-            </div>
-
+                <textarea rows="2" cols="58" th:field="*{directions}"></textarea>
+            </div><br>
+            <div class="form-group">
             <button  type="submit" class="btn btn-primary" onclick="submitForm()">Create</button>
-
+            </div>
         </form>
     </div>
 </div>

@@ -8,7 +8,7 @@ body {
 }
 
 .container-xxl {
-    max-width: 1700px;
+    max-width: 900px;
     /*background-color: blue;*/
 
 }
@@ -29,11 +29,11 @@ section {
 }
 .card {
     margin-left: 190px;
-    width: 70%;
+    width: 100%;
     border: solid 2px;
     border-radius: 5px;
     border-color: #91701f;
-    /*height: 420px;*/
+
 }
 .card-body {
     background-color: #d1cab8;
@@ -54,16 +54,16 @@ section {
     font-weight: bold;
 }
 .img-big {
-    margin-left: 200px;
+    margin-left: 55px;
     width: 750px;
     /*width: 680px;*/
-    height: 350px;
+    height: 400px;
     border: solid 1px;
     border-radius: 7px;
     border-color: #91701f;
 }
 .table-striped {
-    margin-left: 200px;
+    margin-left: 54px;
     width: 680px;
     background-color: bisque;
 }
@@ -89,8 +89,8 @@ section {
 
 
 .carousel-item {
-    width: 80%;
-    margin-left: 210px;
+    width: 100%;
+
 }
 .carousel-control-prev, .carousel-control-next {
     width: 50%;
@@ -115,7 +115,9 @@ input[type=text], input[type=password], select {
 
 button {
     padding: 5px;
-    margin: 10px;
+    /*margin: 10px;*/
+    margin-right: 10px;
+    background-color: #0a67f2;
 }
 h1 {
     font-weight: bold;
@@ -136,12 +138,11 @@ input[type="text"], input[type="password"], select {
 [type="button"]:not(:disabled), [type="reset"]:not(:disabled), [type="submit"]:not(:disabled), button:not(:disabled) {
     height: 40px;
     margin-top: 1px;
-    background-color: #afb3c9;
+    background-color: #a4893a;
 }
 .d-flex {
     width: 370px;
-    margin-bottom: 15px;
-    height: 42px;
+    margin-bottom: 5px;
     margin-top: 4px;
 }
 .btn btn-light {
@@ -185,7 +186,7 @@ input[type="text"], input[type="password"], select {
 }
 
 .form-control {
-    width: 95%;
+    width: 250px;
 }
 
 .navbar navbar-expand-lg navbar-light bg-light{
@@ -218,12 +219,13 @@ input[type="text"], input[type="password"], select {
 }
 .btn btn-primary {
     background-color: #3c96ff;
-    width: 300px !important;
+    width: 350px !important;
+
 }
-[type="button"]:not(:disabled), [type="reset"]:not(:disabled), [type="submit"]:not(:disabled), button:not(:disabled) {
-    width: 205px;
-    background-color: #3c96ff;
-}
+/*[type="button"]:not(:disabled), [type="reset"]:not(:disabled), [type="submit"]:not(:disabled), button:not(:disabled) {*/
+/*    width: 205px;*/
+/*    background-color: #3c96ff;*/
+/*}*/
 th {
     width: 165px;
 }
@@ -232,9 +234,38 @@ th {
     margin-right: 1px !important;
     margin-left: 1px !important;
 }
-.btn-primary {
-    width: 300px !important;
+.navbar-brand {
+
+    color: #f2f2f2 !important;
 }
+.bg-light {
+    background-color: #0a67f2 !important;
+}
+.right-header-btn {
+    display: flex;
+
+    width: 20%;
+    justify-content: flex-end;
+}
+.left-header-btn {
+    display: flex;
+    width: 50%;
+    justify-content: flex-end;
+}
+.left-space-header {
+    margin-top: 8px;
+    margin-right: 10px;
+}
+.navbar-expand-lg .navbar-collapse {
+    display: contents !important;
+}
+.btn-light {
+    width: 105px;
+    height: 35px;
+    border-color: blue;
+}
+
+
 
 
 
