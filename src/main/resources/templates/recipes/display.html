@@ -44,46 +44,57 @@
 
         <div id="submit-review">
             <h3>Leave a Review</h3>
-            <form method="post">
-                <input type="hidden" id="recipeId" name="recipeId" th:value="${recipe.id}">
-                <labe>My Rating:</labe><br>
-                <label for="1">1</label>
-                <input type="radio" id="1" name="rating" value="1">
-                <label for="2">2</label>
-                <input type="radio" id="2" name="rating" value="2">
-                <label for="3">3</label>
-                <input type="radio" id="3" name="rating" value="3">
-                <label for="4">4</label>
-                <input type="radio" id="4" name="rating" value="4">
-                <label for="5">5</label>
-                <input type="radio" id="5" name="rating" value="5"><br>
-                <label>Name:</label><br>
-                <input type="text" id="name" name="name"><br>
-                <label>Comment:</label><br>
-                <textarea id="comment" name="comment" rows="8" cols="100" placeholder="What did you think of the recipe?"></textarea><br>
-                <input type="submit" value="Post Review" name="submit">
-            </form>
-        </div>
+            <p th:text="${errorMsg}" style="color:red;"></p>
+            <form method="post"  th:object="${review}">
+                <input type="hidden" id="recipeId" name="recipeId" th:value="${recipe.id}" class="form-control">
 
-    <div id="reviews">
-        <h3 th:text = "${comments}"></h3>
+                <label>*My Rating:</label><br>
 
-        <table>
-           <tr>
-               <th>Name</th>
-               <th>Comment</th>
-               <th>Date</th>
-           </tr>
-            <tr th:each="review : ${recipe.reviews}">
-                <div th:if ="${!review.comment.isEmpty()}">
-                <td th:text = "${review.name}"></td>
-                <td th:text = "${review.comment}"></td>
-                <td th:text = "${review.timestamp}"></td>
-                 </th:if>
-                </div>
+                <label>1</label>
+                <input type="radio" th:field="*{rating}" value="1" class="form-control" required>
+                <label>2</label>
+                <input type="radio" th:field="*{rating}" value="2" class="form-control">
+                <label>3</label>
+                <input type="radio" th:field="*{rating}" value="3" class="form-control">
+                <label>4</label>
+                <input type="radio" th:field="*{rating}" value="4" class="form-control">
+                <label>5</label>
+                <input type="radio" th:field="*{rating}" value="5" class="form-control">
+                <p class="error" th:errors="${review.rating}"></p>
+                <br>
+
+                <label>*Name:</label><br>
+                <input type="text" th:field="*{name}" class="form-control" required>
+                <p class="error" th:errors="${review.name}"></p>
+
+                   <br>
+                   <label>Comment:</label><br>
+                   <textarea th:field="*{comment}" rows="8" cols="100" placeholder="What did you think of the recipe?"></textarea><br>
+                   <input type="submit" value="Post Review" name="submit">
+                <p class="error" th:errors="${review.comment}"></p>
+
+             </form>
+         </div>
+
+     <div id="reviews">
+         <h3 th:text = "${comments}"></h3>
+
+         <table>
+            <tr>
+                <th>Name</th>
+                <th>Comment</th>
+                <th>Date</th>
             </tr>
-        </table>
-</div>
-<div th:replace="fragments :: footer"></div>
-</body>
-</html>
+             <tr th:each="review : ${recipe.reviews}">
+                 <div th:if ="${!review.comment.isEmpty()}">
+                 <td th:text = "${review.name}"></td>
+                 <td th:text = "${review.comment}"></td>
+                 <td th:text = "${review.timestamp}"></td>
+                  </th:if>
+                 </div>
+             </tr>
+         </table>
+ </div>
+ <div th:replace="fragments :: footer"></div>
+ </body>
+ </html>

@@ -77,7 +77,7 @@ public class RecipeController {
 
    @GetMapping("display")
    public String displayRecipe(@RequestParam Integer recipeId, Model model) {
-
+      model.addAttribute("review", new Review());
       Optional<Recipe> result = recipeRepository.findById(recipeId);
 
       if (result.isEmpty()) { // invalid id
@@ -111,19 +111,29 @@ public class RecipeController {
    }
 
    @PostMapping("display")
-   public String processReviewForm(@RequestParam Integer recipeId,
-                                   @RequestParam String comment,
-                                   @RequestParam Integer rating,
-                                   @RequestParam String name,
+   public String processReviewForm(@ModelAttribute @Valid  Review newReview, Errors errors,
+                                     @RequestParam Integer recipeId,
                                    Model model) {
-
-//      if (errors.hasErrors()) {
-//         model.addAttribute("title", "Complete Review");
-//         return "display";
-//      }
-
+      System.out.println(errors.hasErrors());
       Recipe recipe = recipeRepository.findById(recipeId).get();
-      Review review = new Review(recipe, rating, comment, name);
+
+      if (errors.hasErrors()) {
+         model.addAttribute("title", recipe.getName());
+         model.addAttribute("recipe", recipe);
+         model.addAttribute("averageRating", recipe.getAverageRating());
+         model.addAttribute("numRatings", recipe.getReviews().size());
+         Integer numComments = recipe.getNumComments();
+
+         if(numComments != 0){ // has comments
+            model.addAttribute("comments", "Comments");
+         } else if (numComments == 0 || numComments == null){ // no comments
+            model.addAttribute("comments", "No comments yet");
+         }
+         return "recipes/display";
+      }
+
+      Review review = new Review(recipe, newReview.getRating(),newReview.getComment(), newReview.getName());
+
       review.setTimestamp();
       reviewRepository.save(review);
       recipe.setAverageRating();
@@ -134,6 +144,7 @@ public class RecipeController {
       model.addAttribute("recipe", recipe);
       model.addAttribute("review", review);
       model.addAttribute("averageRating", recipe.getAverageRating());
+
       model.addAttribute("numRatings", recipe.getReviews().size());
 
       Integer numComments = recipe.getNumComments();
