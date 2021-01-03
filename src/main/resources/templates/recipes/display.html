@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<head th:replace="fragments :: head"></head>
+<!--<head th:replace="fragments :: head"></head>-->
+<head>
+<link th:rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" th:rel="stylesheet">
+    <link th:href="@{/css/rating.css}" rel="stylesheet" />
+
+</head>
+
 <body>
 
 <div class = "container - xxl1">
@@ -42,29 +49,27 @@
     </div>
         <br>
 
+
+
         <div id="submit-review">
             <h3>Leave a Review</h3>
-            <p th:text="${errorMsg}" style="color:red;"></p>
             <form method="post"  th:object="${review}">
                 <input type="hidden" id="recipeId" name="recipeId" th:value="${recipe.id}" class="form-control">
 
-                <label>*My Rating:</label><br>
+                <fieldset class="rating">
+                    <input type="radio" id="5" th:field="*{rating}" value="5" /><label class = "full" for="5"></label>
+                    <input type="radio" id="4" th:field="*{rating}" value="4" /><label class = "full" for="4"></label>
+                    <input type="radio" id="3" th:field="*{rating}" value="3" /><label class = "full" for="3"></label>
+                    <input type="radio" id="2" th:field="*{rating}" value="2" /><label class = "full" for="2"></label>
+                    <input type="radio" id="1" th:field="*{rating}" value="1" /><label class = "full" for="1"></label>
 
-                <label>1</label>
-                <input type="radio" th:field="*{rating}" value="1" class="form-control" required>
-                <label>2</label>
-                <input type="radio" th:field="*{rating}" value="2" class="form-control">
-                <label>3</label>
-                <input type="radio" th:field="*{rating}" value="3" class="form-control">
-                <label>4</label>
-                <input type="radio" th:field="*{rating}" value="4" class="form-control">
-                <label>5</label>
-                <input type="radio" th:field="*{rating}" value="5" class="form-control">
+                </fieldset>
                 <p class="error" th:errors="${review.rating}"></p>
                 <br>
-
-                <label>*Name:</label><br>
+                <br>
+                <label>Name:
                 <input type="text" th:field="*{name}" class="form-control" required>
+                </label><br>
                 <p class="error" th:errors="${review.name}"></p>
 
                    <br>

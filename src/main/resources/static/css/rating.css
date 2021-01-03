@@ -1,50 +1,29 @@
-.rating-area {
-    overflow: hidden;
-    width: 900px;
-    margin: 0 auto;
-    background-color: #a89a76;
 
-}
-.rating-area:not(:checked) > input {
-    display: none;
-}
-.rating-area:not(:checked) > label {
-    float: none ;
-    margin-left: 18px;
-    width: 42px;
-    padding: 0;
-    cursor: pointer;
-    font-size: 32px;
-    line-height: 32px;
-    color: lightgrey;
-    text-shadow: 1px 1px #bbb;
-}
-.rating-area:not(:checked) > label:before {
-    content: '★';
+fieldset, label { margin: 0; padding: 0; }
 
-}
-.rating-area > input:checked ~ label {
-    color: gold;
-    text-shadow: 1px 1px #c60;
-
-}
-.rating-area:not(:checked) > label:hover,
-.rating-area:not(:checked) > label:hover ~ label {
-    color: gold;
-}
-.rating-area > input:checked + label:hover,
-.rating-area > input:checked + label:hover ~ label,
-.rating-area > input:checked ~ label:hover,
-.rating-area > input:checked ~ label:hover ~ label,
-.rating-area > label:hover ~ input:checked ~ label {
-    color: gold;
-    text-shadow: 1px 1px goldenrod;
-}
-.rate-area > label:active {
-    position: relative;
-    background-color: #a89a76;
-}
-.btn-primary {
-    width: 220px;
+.rating {
+  border: none;
+  float: left;
 }
 
+.rating > input { display: none; }
+.rating > label:before {
+  margin: 5px;
+  font-size: 1.25em;
+  font-family: FontAwesome;
+  display: inline-block;
+  content: "\f005";
+}
+
+.rating > label {
+  color: #ddd;
+ float: right;
+}
+
+/***** Highlight Stars on Hover *****/
+.rating > input:checked ~ label, /* show gold star when clicked */
+.rating:not(:checked) > label:hover, /* hover current star */
+.rating:not(:checked) > label:hover ~ label { color: #FFD700;  } /* hover previous stars in list */
+
+.rating > input:checked + label:hover, /* hover current star when changing rating */
+.rating > input:checked ~ label:hover,
