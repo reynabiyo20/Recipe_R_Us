@@ -3,7 +3,6 @@ package org.launchcode.recipeapp.models;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,11 +13,11 @@ public class Review extends AbstractEntity{
     @ManyToOne
     private Recipe recipe;
 
-    @NotBlank(message = "name is required")
-    @Size(min=2)
+   // @NotBlank(message = "name is required")
+    //@Size(min=2)
     private String name;
 
-    @Size(min=5, max=250)
+   // @Size(max=250)
     private String comment;
 
     private Integer rating;

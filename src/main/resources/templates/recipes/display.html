@@ -37,13 +37,13 @@
 
 
     <div id="ratings">
-        <div th:text="'Average Rating: ' + ${recipe.averageRating}"></div>
+        <div th:text="'Average Rating: ' + ${averageRating}"></div>
         <div th:text="'Total Ratings: ' + ${numRatings}"></div>
     </div>
         <br>
 
         <div id="submit-review">
-            <p>Leave a Review</p>
+            <h3>Leave a Review</h3>
             <form method="post">
                 <input type="hidden" id="recipeId" name="recipeId" th:value="${recipe.id}">
                 <labe>My Rating:</labe><br>
@@ -66,24 +66,23 @@
         </div>
 
     <div id="reviews">
+        <h3 th:text = "${comments}"></h3>
+
         <table>
            <tr>
                <th>Name</th>
-               <th>Rating</th>
                <th>Comment</th>
                <th>Date</th>
            </tr>
             <tr th:each="review : ${recipe.reviews}">
+                <div th:if ="${!review.comment.isEmpty()}">
                 <td th:text = "${review.name}"></td>
-                <td th:text = "${review.rating}"></td>
                 <td th:text = "${review.comment}"></td>
                 <td th:text = "${review.timestamp}"></td>
+                 </th:if>
+                </div>
             </tr>
         </table>
-        <div>
-
-
-
 </div>
 <div th:replace="fragments :: footer"></div>
 </body>

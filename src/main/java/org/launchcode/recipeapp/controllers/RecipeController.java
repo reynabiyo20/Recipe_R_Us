@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -53,7 +55,7 @@ public class RecipeController {
       model.addAttribute("categories", categories);
       model.addAttribute("tags", tags);
 
-      return "recipes/create";
+      return "/recipes/create";
    }
 
    @PostMapping("create")
@@ -78,19 +80,31 @@ public class RecipeController {
 
       Optional<Recipe> result = recipeRepository.findById(recipeId);
 
-      if (result.isEmpty()) {
+      if (result.isEmpty()) { // invalid id
          model.addAttribute("title", "Invalid Recipe ID: " + recipeId);
-      } else {
+      } else { // valid id
          Recipe recipe = result.get();
          model.addAttribute("title", recipe.getName());
          model.addAttribute("recipe", recipe);
-         if (recipe.getReviews().isEmpty()) {
-            model.addAttribute("averageRating", "no ratings yet");
-            model.addAttribute("numRatings", "no ratings yet");
-         } else {
+
+         Integer numComments = recipe.getNumComments();
+         List<Review> reviews = recipe.getReviews();
+
+         if (reviews.isEmpty()) { // no reviews
+            model.addAttribute("numRatings", "0");
+            model.addAttribute("averageRating", "No ratings");
+            model.addAttribute("comments", "No comments yet");
+         } else { // has reviews
             model.addAttribute("averageRating", recipe.getAverageRating());
             model.addAttribute("numRatings", recipe.getReviews().size());
+
+            if(numComments != 0){ // has comments
+               model.addAttribute("comments", "Comments");
+            } else if (numComments == 0 || numComments == null){ // no comments
+               model.addAttribute("comments", "No comments yet");
+            }
          }
+
       }
 
       return "recipes/display";
@@ -98,34 +112,42 @@ public class RecipeController {
 
    @PostMapping("display")
    public String processReviewForm(@RequestParam Integer recipeId,
-                                   @Valid @RequestParam String comment,
+                                   @RequestParam String comment,
                                    @RequestParam Integer rating,
-                                   @Valid @RequestParam String name,
-                                   Errors errors, Model model) {
-      // not working
-      if (errors.hasErrors()) {
-         return "recipes/display";
-      }
+                                   @RequestParam String name,
+                                   Model model) {
+
+//      if (errors.hasErrors()) {
+//         model.addAttribute("title", "Complete Review");
+//         return "display";
+//      }
 
       Recipe recipe = recipeRepository.findById(recipeId).get();
-
-      // Ratings and Reviews
       Review review = new Review(recipe, rating, comment, name);
       review.setTimestamp();
       reviewRepository.save(review);
       recipe.setAverageRating();
+      recipe.setNumComments(review);
       recipeRepository.save(recipe);
 
       model.addAttribute("title", recipe.getName());
       model.addAttribute("recipe", recipe);
       model.addAttribute("review", review);
+      model.addAttribute("averageRating", recipe.getAverageRating());
       model.addAttribute("numRatings", recipe.getReviews().size());
 
+      Integer numComments = recipe.getNumComments();
+      if(numComments != 0){ // has comments
+            model.addAttribute("comments", "Comments");
+         } else if (numComments == 0 || numComments == null){ // no comments
+            model.addAttribute("comments", "No comments yet");
+         }
       return "recipes/display";
    }
 
 
-      @GetMapping("edit/{recipeId}")
+
+   @GetMapping("edit/{recipeId}")
    public String displayEditForm(Model model, @PathVariable int recipeId) {
 
       Category[] categories = Category.values();

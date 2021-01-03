@@ -25,6 +25,7 @@ public class Recipe extends AbstractEntity {
    private String img;
 
    private Double averageRating;
+   private Integer numComments = 0;
 
    @OneToMany(mappedBy = "recipe")
    private final List<Review> reviews = new ArrayList<>();
@@ -35,6 +36,7 @@ public class Recipe extends AbstractEntity {
 
    public Recipe() {
    }
+
 
    // Getters and Setters
    public String getName() {
@@ -93,6 +95,11 @@ public class Recipe extends AbstractEntity {
       this.tag = tag;
    }
 
+   public List<Review> getReviews() {
+      return reviews;
+   }
+
+
    public Double getAverageRating() {
       return averageRating;
    }
@@ -110,9 +117,22 @@ public class Recipe extends AbstractEntity {
       averageRating = average;
    }
 
-   public List<Review> getReviews() {
-      return reviews;
+   public Integer getNumComments() {
+      return numComments;
    }
+
+
+   public Integer setNumComments(Review review){
+      if(numComments == null){
+         numComments = 0;
+      }
+      if (!review.getComment().isEmpty()){
+            numComments ++;
+         }
+      return numComments;
+   }
+
+
 
    @Override
    public String toString() {
