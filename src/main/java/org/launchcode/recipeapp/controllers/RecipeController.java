@@ -157,6 +157,16 @@ public class RecipeController {
    }
 
 
+   @GetMapping("all")
+   public String getAllRecipes (Model model){
+
+      List<Recipe> all = ((List<Recipe>) recipeRepository.findAll());
+
+      model.addAttribute("recipes", all);
+
+      return "recipes/all";
+
+   }
 
    @GetMapping("edit/{recipeId}")
    public String displayEditForm(Model model, @PathVariable int recipeId) {

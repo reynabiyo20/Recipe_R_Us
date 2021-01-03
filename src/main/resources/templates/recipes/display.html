@@ -9,6 +9,7 @@
 </head>
 
 <body>
+<div th:replace="fragments :: header"></div>
 
 <div class = "container - xxl1">
     <tr>
@@ -21,6 +22,11 @@
 
             <input  value="Add to favorite" type="submit" class="btn btn-primary">
         </form>
+        <br>
+        <div id="ratings">
+            <div th:text="'Average Rating: ' + ${averageRating}"></div>
+            <div th:text="'Total Ratings: ' + ${numRatings}"></div>
+        </div>
         <br>
     <table class="table table-striped">
 
@@ -43,47 +49,36 @@
     </table><br>
 
 
-    <div id="ratings">
-        <div th:text="'Average Rating: ' + ${averageRating}"></div>
-        <div th:text="'Total Ratings: ' + ${numRatings}"></div>
-    </div>
         <br>
-
-
-
+        <br>
         <div id="submit-review">
             <h3>Leave a Review</h3>
             <form method="post"  th:object="${review}">
                 <input type="hidden" id="recipeId" name="recipeId" th:value="${recipe.id}" class="form-control">
-
                 <fieldset class="rating">
                     <input type="radio" id="5" th:field="*{rating}" value="5" /><label class = "full" for="5"></label>
                     <input type="radio" id="4" th:field="*{rating}" value="4" /><label class = "full" for="4"></label>
                     <input type="radio" id="3" th:field="*{rating}" value="3" /><label class = "full" for="3"></label>
                     <input type="radio" id="2" th:field="*{rating}" value="2" /><label class = "full" for="2"></label>
                     <input type="radio" id="1" th:field="*{rating}" value="1" /><label class = "full" for="1"></label>
-
                 </fieldset>
-                <p class="error" th:errors="${review.rating}"></p>
-                <br>
-                <br>
-                <label>Name:
-                <input type="text" th:field="*{name}" class="form-control" required>
-                </label><br>
-                <p class="error" th:errors="${review.name}"></p>
-
-                   <br>
-                   <label>Comment:</label><br>
-                   <textarea th:field="*{comment}" rows="8" cols="100" placeholder="What did you think of the recipe?"></textarea><br>
+                <p class="error" th:errors="${review.rating}"></p><br><br>
+                <label>Name:</label><br>
+                    <input type="text" th:field="*{name}" class="form-control" required>
+                    <p class="error" th:errors="${review.name}"></p><br>
+                <label>Comment:</label><br>
+                   <textarea th:field="*{comment}" rows="6" cols="50" placeholder="What did you think of the recipe?"></textarea><br>
                    <input type="submit" value="Post Review" name="submit">
-                <p class="error" th:errors="${review.comment}"></p>
+                    <p class="error" th:errors="${review.comment}"></p>
 
              </form>
          </div>
 
+        <br>
+        <br>
      <div id="reviews">
          <h3 th:text = "${comments}"></h3>
-
+<div th:if="${recipe.numComments != 0}">
          <table>
             <tr>
                 <th>Name</th>
@@ -99,6 +94,7 @@
                  </div>
              </tr>
          </table>
+    </div>
  </div>
  <div th:replace="fragments :: footer"></div>
  </body>
