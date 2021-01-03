@@ -15,6 +15,7 @@ public class Review extends AbstractEntity{
     private Recipe recipe;
 
     @NotBlank(message = "Name is required")
+    @Size(min=2, message = "Name is required")
     private String name;
 
     @Size(max=250, message = "Comments must be under 250 characters")
