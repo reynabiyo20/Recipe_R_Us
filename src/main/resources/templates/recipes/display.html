@@ -12,39 +12,36 @@
 <div th:replace="fragments :: header"></div>
 
 <div class = "container - xxl1">
-    <tr>
-      <td><h1 class="centered" th:text="${recipe.name}"></h1></td><br>
-    </tr>
-    <tr>
+    <h1 class="centered" th:text="${recipe.name}"></h1><br>
     <img class="img-big" th:src="${recipe.img}"/>
         <br>
         <form method="post" th:action="'/users/addRecipe/' + ${recipe.id}">
-
             <input  value="Add to favorite" type="submit" class="btn btn-primary">
-        </form>
-        <br>
-        <div id="ratings">
+        </form><br>
+
+    <div id="ratings">
             <div th:text="'Average Rating: ' + ${averageRating}"></div>
             <div th:text="'Total Ratings: ' + ${numRatings}"></div>
-        </div>
-        <br>
+    </div><br>
+
     <table class="table table-striped">
 
-        <tr>
-            <th>Ingredients:</th>
-            <td th:text="${recipe.ingredients}"></td>
+        <tr class="row">
+            <th class="col-sm-3">Ingredients:</th>
+            <td class="col-sm-9" th:text="${recipe.ingredients}"></td>
         </tr>
-        <tr>
-            <th>Directions:</th>
-            <td th:text="${recipe.directions}"></td>
+        <tr class="row">
+            <th class="col-sm-3">Directions:</th>
+            <td class="col-sm-9" th:text="${recipe.directions}"></td>
         </tr>
 
-        <tr>
-            <th>Category:</th>
-            <td th:text="${recipe.category}"></td>
-        </tr> <tr>
-        <th>Tags:</th>
-        <td  th:text="${recipe.tag}"></td>
+        <tr class="row">
+            <th class="col-sm-3">Category:</th>
+            <td class="col-sm-9" th:text="${recipe.category}"></td>
+        </tr>
+        <tr class="row">
+        <th class="col-sm-3">Tags:</th>
+        <td class="col-sm-9" th:text="${recipe.tag}"></td>
     </tr>
     </table><br>
 
