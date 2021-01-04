@@ -89,7 +89,10 @@ public class UserController {
          userRecipe.setUser(user);
          userRecipe.setRecipe(recipe);
 
-         List<UserRecipe> allByUser = userRecipeRepository.getAllByUser(user);
+         List<UserRecipe> allByUser = userRecipeRepository.findAllByUser(user);
+         if(allByUser.size() == 0){
+            userRecipeRepository.save(userRecipe);
+         }
          for (UserRecipe userrecipe:allByUser) {
 
             if (!userrecipe.getRecipe().equals(recipe)) {
@@ -101,8 +104,8 @@ public class UserController {
             }
          }
 
-            model.addAttribute("user", userRecipe.getUser());
-            model.addAttribute("recipe", userRecipe.getRecipe());
+//            model.addAttribute("user", userRecipe.getUser());
+//            model.addAttribute("recipe", userRecipe.getRecipe());
          }
 
       return "redirect:/users/profile";
