@@ -1,74 +1,93 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<head th:replace="fragments :: head"></head>
+<head th:replace="fragments :: head">
+</head>
+
 <body>
 <div th:replace="fragments :: header"></div>
-<div class="container">
-    <div>
-    <tr>
-        <td><h1 class="centered" th:text="${recipe.name}"></h1></td>
+
+<div class = "container - xxl1">
+    <h1 class="centered" th:text="${recipe.name}"></h1><br>
+    <img class="img-big" th:src="${recipe.img}"/>
         <br>
-    </tr>
-    <tr>
-        <img class="img-big" th:src="${recipe.img}"/>
+        <form method="post" th:action="'/users/addRecipe/' + ${recipe.id}">
+            <input  value="Add to favorite" type="submit" class="btn btn-primary">
+        </form><br>
 
-        <td>
-            <div class="rating-area">
-    <tr>
-        <input th:text="'Rate the recipe:'" type="radio" id="star-5" name="rating" value="5">
-        <label for="star-5" title="Grade «5»"></label>
-        <input type="radio" id="star-4" name="rating" value="4">
-        <label for="star-4" title="Grade «4»"></label>
-        <input type="radio" id="star-3" name="rating" value="3">
-        <label for="star-3" title="Grade «3»"></label>
-        <input type="radio" id="star-2" name="rating" value="2">
-        <label for="star-2" title="Grade «2»"></label>
-        <input type="radio" id="star-1" name="rating" value="1">
-        <label for="star-1" title="Grade «1»"></label>
-    </tr>
-</div>
-</td>
-</tr>
+    <div id="ratings">
+            <div th:text="'Average Rating: ' + ${averageRating}"></div>
+            <div th:text="'Total Ratings: ' + ${numRatings}"></div>
+    </div><br>
 
+    <table class="table table-striped">
 
+        <tr class="row">
+            <th class="col-sm-3">Ingredients:</th>
+            <td class="col-sm-9" th:text="${recipe.ingredients}"></td>
+        </tr>
+        <tr class="row">
+            <th class="col-sm-3">Directions:</th>
+            <td class="col-sm-9" th:text="${recipe.directions}"></td>
+        </tr>
 
-<table class="table table-striped" style="width: 750px;">
-
-    <tr class="row">
-        <th class="col-sm-3">Ingredients:</th>
-
-        <td class="col-sm-9"th:text="${recipe.ingredients}"></td>
-
-    </tr>
-    <tr class="row">
-        <th class="col-sm-3">Directions:</th>
-        <td class="col-sm-9" th:text="${recipe.directions}"></td>
-
-    </tr>
-
-    <tr class="row">
-        <th class="col-sm-3">Category:</th>
-        <td class="col-sm-9" th:text="${recipe.category}"></td>
-
-    </tr>
-    <tr class="row">
+        <tr class="row">
+            <th class="col-sm-3">Category:</th>
+            <td class="col-sm-9" th:text="${recipe.category}"></td>
+        </tr>
+        <tr class="row">
         <th class="col-sm-3">Tags:</th>
         <td class="col-sm-9" th:text="${recipe.tag}"></td>
-
     </tr>
-    <tr>
-    <td>
-        <form method="post" th:action="'/users/addRecipe/' + ${recipe.id}">
+    </table><br>
 
-            <input  value="Add to favorite" type="submit" class="btn btn-primary">
-        </form>
-        <span th:text="${title1}"></span>
-<!--        <td class="save_button"><a th:href="'/users/addRecipe/{id}' + ${recipe.id}" class="btn btn-primary">Add to favorite</a></td>-->
-    </td>
-    </tr>
-</table>
 
-</div>
-<div th:replace="fragments :: footer"></div>
-</body>
-</html>
+        <br>
+        <br>
+        <div id="submit-review">
+            <h3>Leave a Review</h3>
+            <form method="post"  th:object="${review}">
+                <input type="hidden" id="recipeId" name="recipeId" th:value="${recipe.id}" class="form-control">
+                <fieldset class="rating">
+                    <input type="radio" id="5" th:field="*{rating}" value="5" /><label class = "full" for="5"></label>
+                    <input type="radio" id="4" th:field="*{rating}" value="4" /><label class = "full" for="4"></label>
+                    <input type="radio" id="3" th:field="*{rating}" value="3" /><label class = "full" for="3"></label>
+                    <input type="radio" id="2" th:field="*{rating}" value="2" /><label class = "full" for="2"></label>
+                    <input type="radio" id="1" th:field="*{rating}" value="1" /><label class = "full" for="1"></label>
+                </fieldset>
+                <p class="error" th:errors="${review.rating}"></p><br><br>
+                <label>Name:</label><br>
+                    <input type="text" th:field="*{name}" class="form-control" required>
+                    <p class="error" th:errors="${review.name}"></p><br>
+                <label>Comment:</label><br>
+                   <textarea th:field="*{comment}" rows="6" cols="50" placeholder="What did you think of the recipe?"></textarea><br>
+                   <input type="submit" value="Post Review" name="submit">
+                    <p class="error" th:errors="${review.comment}"></p>
+
+             </form>
+         </div>
+
+        <br>
+        <br>
+     <div id="reviews">
+         <h3 th:text = "${comments}"></h3>
+<div th:if="${recipe.numComments != 0}">
+         <table>
+            <tr>
+                <th>Name</th>
+                <th>Comment</th>
+                <th>Date</th>
+            </tr>
+             <tr th:each="review : ${recipe.reviews}">
+                 <div th:if ="${!review.comment.isEmpty()}">
+                 <td th:text = "${review.name}"></td>
+                 <td th:text = "${review.comment}"></td>
+                 <td th:text = "${review.timestamp}"></td>
+                  </th:if>
+                 </div>
+             </tr>
+         </table>
+    </div>
+ </div>
+ <div th:replace="fragments :: footer"></div>
+ </body>
+ </html>

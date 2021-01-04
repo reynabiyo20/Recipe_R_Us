@@ -7,9 +7,6 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Oksana
- */
 @Entity
 public class Recipe extends AbstractEntity {
 
@@ -27,6 +24,12 @@ public class Recipe extends AbstractEntity {
 
    private String img;
 
+   private Double averageRating;
+   private Integer numComments = 0;
+
+   @OneToMany(mappedBy = "recipe")
+   private final List<Review> reviews = new ArrayList<>();
+
    @OneToMany(mappedBy = "recipe", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
    @NotNull(message = "User is required")
    private List<UserRecipe> users = new ArrayList<>();
@@ -34,6 +37,8 @@ public class Recipe extends AbstractEntity {
    public Recipe() {
    }
 
+
+   // Getters and Setters
    public String getName() {
       return name;
    }
@@ -41,7 +46,6 @@ public class Recipe extends AbstractEntity {
    public void setName(String name) {
       this.name = name;
    }
-
 
    public Category getCategory() {
       return category;
@@ -90,4 +94,60 @@ public class Recipe extends AbstractEntity {
    public void setTag(Tag tag) {
       this.tag = tag;
    }
+
+   public List<Review> getReviews() {
+      return reviews;
+   }
+
+
+   public Double getAverageRating() {
+      return averageRating;
+   }
+
+   public void setAverageRating() {
+      List<Review> reviewList = getReviews();
+      double numRatings = reviewList.size();
+      double sumRatings = 0.0;
+
+      for(int i =0; i < numRatings; i++){
+         double reviewRating = reviewList.get(i).getRating();
+         sumRatings += reviewRating;
+      }
+      double average = Double.parseDouble(String.format("%.1f",(double)sumRatings  /  numRatings));
+      averageRating = average;
+   }
+
+   public Integer getNumComments() {
+      return numComments;
+   }
+
+
+   public Integer setNumComments(Review review){
+      if(numComments == null){
+         numComments = 0;
+      }
+      if (!review.getComment().isEmpty()){
+            numComments ++;
+         }
+      return numComments;
+   }
+
+
+
+   @Override
+   public String toString() {
+      return "Recipe{" +
+              "name='" + name + '\'' +
+              ", ingredients='" + ingredients + '\'' +
+              ", directions='" + directions + '\'' +
+              ", category=" + category +
+              ", tag=" + tag +
+              ", img='" + img + '\'' +
+              ", averageRating=" + averageRating +
+              ", reviews=" + reviews +
+              ", users=" + users +
+              '}';
+   }
+
+
 }
