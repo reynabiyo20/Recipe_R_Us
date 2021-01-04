@@ -13,4 +13,7 @@ public interface UserRecipeRepository extends CrudRepository<UserRecipe, Integer
 
    List<UserRecipe> getAllByUser(User user);
 
+   List<UserRecipe> findAllByUser(User user);
+
+
 }
