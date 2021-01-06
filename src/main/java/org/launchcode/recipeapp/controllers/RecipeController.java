@@ -5,6 +5,7 @@ import org.launchcode.recipeapp.models.*;
 import org.launchcode.recipeapp.models.data.IngredientRepository;
 import org.launchcode.recipeapp.models.data.InstructionRepository;
 import org.launchcode.recipeapp.models.data.RecipeRepository;
+import org.launchcode.recipeapp.models.data.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,6 +42,9 @@ public class RecipeController {
       this.ingredientRepository = ingredientRepository;
       this.instructionRepository = instructionRepository;
    }
+
+   @Autowired
+   public ReviewRepository reviewRepository;
 
    @GetMapping
    public String getListOfRecipes(Model model) {
@@ -133,6 +137,53 @@ public class RecipeController {
 
       return "recipes/display";
    }
+
+   @PostMapping("display")
+   public String processReviewForm(@ModelAttribute @Valid  Review newReview, Errors errors,
+                                   @RequestParam Integer recipeId,
+                                   Model model) {
+      System.out.println(errors.hasErrors());
+      Recipe recipe = recipeRepository.findById(recipeId).get();
+
+      if (errors.hasErrors()) {
+         model.addAttribute("title", recipe.getName());
+         model.addAttribute("recipe", recipe);
+         model.addAttribute("averageRating", recipe.getAverageRating());
+         model.addAttribute("numRatings", recipe.getReviews().size());
+         Integer numComments = recipe.getNumComments();
+
+         if(numComments != 0){ // has comments
+            model.addAttribute("comments", "Comments");
+         } else if (numComments == 0 || numComments == null){ // no comments
+            model.addAttribute("comments", "No comments yet");
+         }
+         return "recipes/display";
+      }
+
+      Review review = new Review(recipe, newReview.getRating(),newReview.getComment(), newReview.getName());
+
+      review.setTimestamp();
+      reviewRepository.save(review);
+      recipe.setAverageRating();
+      recipe.setNumComments(review);
+      recipeRepository.save(recipe);
+
+      model.addAttribute("title", recipe.getName());
+      model.addAttribute("recipe", recipe);
+      model.addAttribute("review", review);
+      model.addAttribute("averageRating", recipe.getAverageRating());
+
+      model.addAttribute("numRatings", recipe.getReviews().size());
+
+      Integer numComments = recipe.getNumComments();
+      if(numComments != 0){ // has comments
+         model.addAttribute("comments", "Comments");
+      } else if (numComments == 0 || numComments == null){ // no comments
+         model.addAttribute("comments", "No comments yet");
+      }
+      return "recipes/display";
+   }
+
 
    @GetMapping("edit/{recipeId}")
    public String displayEditForm(Model model, @PathVariable int recipeId) {

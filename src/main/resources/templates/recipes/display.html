@@ -49,6 +49,29 @@
             </form>
         </div>
 
+        <br>
+        <br>
+        <div id="reviews">
+            <h3 th:text = "${comments}"></h3>
+            <div th:if="${recipe.numComments != 0}">
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Comment</th>
+                        <th>Date</th>
+                    </tr>
+                    <tr th:each="review : ${recipe.reviews}">
+                        <div th:if ="${!review.comment.isEmpty()}">
+                            <td th:text = "${review.name}"></td>
+                            <td th:text = "${review.comment}"></td>
+                            <td th:text = "${review.timestamp}"></td>
+                            </th:if>
+                        </div>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
     </div>
 </div>
 
