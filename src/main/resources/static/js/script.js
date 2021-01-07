@@ -6,9 +6,20 @@ let addInstructionButton = document.getElementById("addInstructionButton");
 if(addIngredientButton) {
     addIngredientButton.addEventListener('click', (e) => {
         e.preventDefault();
+
         let newIngredient = document.createElement("input");
         newIngredient.setAttribute("name", "ingredient");
+        newIngredient.setAttribute("placeholder", "Ingredient")
         ingredientsContainer.appendChild(newIngredient);
+
+        let newQuantity = document.createElement("input");
+        newQuantity.setAttribute("name", newQuantity);
+        newQuantity.setAttribute("placeholder", "Quantity");
+        ingredientsContainer.appendChild(newQuantity);
+        let linebreak = document.createElement("br");
+        ingredientsContainer.appendChild(linebreak);
+
+
     })
 }
 

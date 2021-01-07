@@ -57,12 +57,14 @@ public class RecipeController {
    @GetMapping("create")
    public String createRecipe(Model model) {
       Category[] categories = Category.values();
+      Measurement[] measurements = Measurement.values();
       Tag[] tags = Tag.values();
 
       model.addAttribute("title", "Create Recipe");
       model.addAttribute("recipe", new Recipe());
       model.addAttribute("categories", categories);
       model.addAttribute("tags", tags);
+      model.addAttribute("measurements", measurements);
 
       return "recipes/create";
    }
@@ -79,14 +81,18 @@ public class RecipeController {
 
       String[] ingredients = request.getParameterValues("ingredient");
       String[] instructions = request.getParameterValues("instruction");
+      String[] measurements = request.getParameterValues("measurement");
+      String[] quantity = request.getParameterValues("quantity");
 
       List<Ingredient> ingredientsList = new ArrayList<Ingredient>();
       List<Instruction> instructionsList = new ArrayList<Instruction>();
 
       Recipe recipe = recipeRepository.save(newRecipe);
+      System.out.println(measurements);
+      System.out.println(quantity);
 
       for (int i = 0; i < ingredients.length; i++) {
-         Ingredient newIngredient = new Ingredient(ingredients[i]);
+         Ingredient newIngredient = new Ingredient(ingredients[i], Double.parseDouble(quantity[i]), measurements[i]);
          newIngredient.setRecipe(recipe);
          ingredientsList.add(newIngredient);
          ingredientRepository.save(newIngredient);
@@ -189,6 +195,7 @@ public class RecipeController {
    public String displayEditForm(Model model, @PathVariable int recipeId) {
 
       Category[] categories = Category.values();
+      Measurement[] measurements = Measurement.values();
       Tag[] tags = Tag.values();
       Optional<Recipe> recipeOpt = recipeRepository.findById(recipeId);
       if (recipeOpt.isPresent()) {
@@ -200,6 +207,7 @@ public class RecipeController {
          model.addAttribute("recipe", new Recipe());
       }
       model.addAttribute("categories", categories);
+      model.addAttribute("measurements", measurements);
       model.addAttribute("tags", tags);
 
       return "recipes/edit";
@@ -216,6 +224,8 @@ public class RecipeController {
 
       String[] ingredients = request.getParameterValues("ingredient");
       String[] instructions = request.getParameterValues("instruction");
+      String[] measurements = request.getParameterValues("measurement");
+      String[] quantity = request.getParameterValues("quantity");
 
       List<Ingredient> ingredientsList = new ArrayList<Ingredient>();
       List<Instruction> instructionsList = new ArrayList<Instruction>();
@@ -240,7 +250,7 @@ public class RecipeController {
          recipe.setTag(newRecipe.getTag());
 
          for (int i = 0; i < ingredients.length; i++) {
-            Ingredient newIngredient = new Ingredient(ingredients[i]);
+            Ingredient newIngredient = new Ingredient(ingredients[i], Double.parseDouble(quantity[i]), measurements[i]);
             newIngredient.setRecipe(recipe);
             ingredientsList.add(newIngredient);
             ingredientRepository.save(newIngredient);

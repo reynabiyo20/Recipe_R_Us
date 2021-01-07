@@ -11,23 +11,27 @@ public class Ingredient extends AbstractEntity{
     @ManyToOne
     private Recipe recipe;
 
-    private double measurement;
+    private String measurement;
+
+    private double quantity;
 
     private String ingredient;
 
-    public Ingredient(String ingredient) {
+    public Ingredient(String ingredient, double quantity, String measurement) {
         this.ingredient = ingredient;
+        this.measurement = measurement;
+        this.quantity = quantity;
     }
 
     public Ingredient() {
 
     }
 
-    public double getMeasurement() {
+    public String getMeasurement() {
         return measurement;
     }
 
-    public void setMeasurement(double measurement) {
+    public void setMeasurement(String measurement) {
         this.measurement = measurement;
     }
 

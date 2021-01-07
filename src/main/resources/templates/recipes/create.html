@@ -37,8 +37,13 @@
                     <option th:each="tag : ${tags}" th:value="${tag}" th:text="${tag.name()}"></option>
                 </select>
             </div><br/>
-            <div class="form-group" id="ingredientsContainer">
+            <div id="ingredientsContainer">
                 <label>Ingredients:</label>
+                <input type="number" step=".1" name="quantity" id="" placeholder="Quantity">
+                <select name="measurement">
+                    <option th:each="measurement : ${measurements}"
+                            th:text="${measurement.name()}"></option>
+                </select>
                 <input type="text" name="ingredient"></input><br/>
             </div>
             <button id="addIngredientButton">Add Ingredient</button><br>
