@@ -16,10 +16,6 @@ if(addIngredientButton) {
         newQuantity.setAttribute("name", newQuantity);
         newQuantity.setAttribute("placeholder", "Quantity");
         ingredientsContainer.appendChild(newQuantity);
-        let linebreak = document.createElement("br");
-        ingredientsContainer.appendChild(linebreak);
-
-
     })
 }
 
