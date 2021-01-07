@@ -132,6 +132,7 @@ public class RecipeController {
          } else { // has reviews
             model.addAttribute("averageRating", recipe.getAverageRating());
             model.addAttribute("numRatings", recipe.getReviews().size());
+            model.addAttribute("reviews", reviews);
 
             if(numComments != 0){ // has comments
                model.addAttribute("comments", "Comments");

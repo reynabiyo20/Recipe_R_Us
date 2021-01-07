@@ -1,6 +1,7 @@
 package org.launchcode.recipeapp.controllers;
 
 import org.launchcode.recipeapp.models.Recipe;
+import org.launchcode.recipeapp.models.Review;
 import org.launchcode.recipeapp.models.User;
 import org.launchcode.recipeapp.models.UserRecipe;
 import org.launchcode.recipeapp.models.data.RecipeRepository;
@@ -100,6 +101,7 @@ public class UserController {
             } else {
                model.addAttribute("title1", "This recipe has already been added to your profile ");
                model.addAttribute("recipe", recipe);
+               model.addAttribute("review", new Review());
                return "recipes/display";
             }
          }
