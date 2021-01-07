@@ -6,6 +6,7 @@
     <head th:replace="fragments :: head"></head>
 </head>
 <body>
+<header th:replace="fragments :: header"></header>
 <div class="container - xxl">
     <br><br><br><br>
 
@@ -39,7 +40,7 @@
             </div><br/>
             <div id="ingredientsContainer">
                 <label>Ingredients:</label>
-                <input type="number" step=".1" name="quantity" id="" placeholder="Quantity">
+                <input type="number" pattern="^\d*(\.\d{0,2})?$" name="quantity" id="" placeholder="Quantity">
                 <select name="measurement">
                     <option th:each="measurement : ${measurements}"
                             th:text="${measurement.name()}"></option>

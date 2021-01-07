@@ -18,14 +18,16 @@
                 <input  value="Add to favorite" type="submit" class="btn btn-primary">
             </form>
             <h3 class="mt-3">Ingredients</h3>
-            <ul class="list-group my-3" th:each="ingredient: ${recipe.ingredients}">
-                <li class="list-group-item" th:text="${ingredient.ingredient}"></li>
+            <ul class="list-group my-3" th:each="ingredient : ${recipe.ingredients}">
+                <li class="list-group-item" th:text="${ingredient.quantity} + ' ' + ${ingredient.measurement} + ' ' + ${ingredient.ingredient}"></li>
+
             </ul>
             <h3 class="mt-3">Directions</h3>
             <ul class="list-group my-3" th:each=" instruction : ${recipe.instructions}">
                 <li class="list-group-item" th:text="${instruction.step}"></li>
             </ul>
         </div>
+
         <div id="submit-review" class="px-3 mb-3">
             <h3>Leave a Review</h3>
             <form method="post"  th:object="${review}">

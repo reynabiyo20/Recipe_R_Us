@@ -43,6 +43,14 @@ public class Ingredient extends AbstractEntity{
         this.ingredient = ingredient;
     }
 
+    public double getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
+    }
+
     public Recipe getRecipe() {
         return recipe;
     }
