@@ -36,6 +36,8 @@
             </div><br/>
             <div class="form-group" th:each="ingredient: ${recipe.ingredients}">
                 <label>Ingredients:</label>
+                <input type="number" name="quantity" th:value="${ingredient.quantity}">
+                <input type="text" name="measurement" th:value="${ingredient.measurement}">
                 <textarea rows="2" cols="45" th:text="${ingredient.ingredient}" name="ingredient"></textarea><br/>
             </div><br>
             <div class="form-group" th:each="instruction : ${recipe.instructions}">
@@ -44,8 +46,6 @@
             </div>
             <input type="hidden" th:value="${recipe.id}" name="recipeId" />
             <button  type="submit" class="btn btn-primary" onclick="submitForm()">Update</button>
-
-
         </form>
     </div>
 </div>

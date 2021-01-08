@@ -41,7 +41,7 @@
             <div id="ingredientsContainer">
                 <label>Ingredients:</label>
                 <input type="number" pattern="^\d*(\.\d{0,2})?$" name="quantity" id="" placeholder="Quantity">
-                <select name="measurement">
+                <select name="measurement" id="measurement">
                     <option th:each="measurement : ${measurements}"
                             th:text="${measurement.name()}"></option>
                 </select>

@@ -88,8 +88,7 @@ public class RecipeController {
       List<Instruction> instructionsList = new ArrayList<Instruction>();
 
       Recipe recipe = recipeRepository.save(newRecipe);
-      System.out.println(measurements);
-      System.out.println(quantity);
+
 
       for (int i = 0; i < ingredients.length; i++) {
          Ingredient newIngredient = new Ingredient(ingredients[i], Double.parseDouble(quantity[i]), measurements[i]);
@@ -280,6 +279,7 @@ public class RecipeController {
          Iterable<Recipe> recipes = recipeRepository.findAll();
 
          redirectAttrs.addAttribute("recipes", recipes);
+
 
       }
       return "redirect:";
