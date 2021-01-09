@@ -37,7 +37,11 @@
             <div class="form-group" th:each="ingredient: ${recipe.ingredients}">
                 <label>Ingredients:</label>
                 <input type="number" name="quantity" th:value="${ingredient.quantity}">
-                <input type="text" name="measurement" th:value="${ingredient.measurement}">
+                <select name="measurement" id="measurement">
+                    <option th:each="measurement : ${measurements}"
+                            th:text="${measurement.name()}" th:selected="(${measurement.name()} == ${ingredient.measurement})" ></option>
+
+                </select>
                 <textarea rows="2" cols="45" th:text="${ingredient.ingredient}" name="ingredient"></textarea><br/>
             </div><br>
             <div class="form-group" th:each="instruction : ${recipe.instructions}">
