@@ -15,11 +15,11 @@
         <form name="recipe-form" action="#" th:action="@{/recipes/create}" method="post" th:object="${recipe}">
             <div class="form-group">
                 <label>Recipe Name:</label>
-                <input type="text" th:field="*{name}"/><br/>
+                <input type="text" th:field="*{name}" required/><br/>
             </div><br>
             <div class="form-group">
                 <label>Photo:</label>
-                <input type="text" th:field="*{img}"/><br/>
+                <input type="text" th:field="*{img}" required/><br/>
             </div><br>
 
             <!--        <label>Gender:</label>-->
