@@ -36,7 +36,7 @@
             </div><br/>
             <div class="form-group" th:each="ingredient: ${recipe.ingredients}">
                 <label>Ingredients:</label>
-                <input type="number" name="quantity" min="1" th:value="${ingredient.quantity}" required>
+                <input type="number" pattern="^\d*(\.\d{0,2})?$" step=".1" min="1" name="quantity" id="quantity" th:value="${ingredient.quantity} "required>
                 <select name="measurement" id="measurement">
                     <option th:each="measurement : ${measurements}"
                             th:text="${measurement.name()}" th:selected="(${measurement.name()} == ${ingredient.measurement})" ></option>
