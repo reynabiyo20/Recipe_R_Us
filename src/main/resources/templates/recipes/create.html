@@ -46,12 +46,12 @@
                     <option th:each="measurement : ${measurements}"
                             th:text="${measurement.name()}"></option>
                 </select>
-                <input type="text" name="ingredient" id="ingredient" required></input><br/>
+                <input type="text" name="ingredient" id="ingredient" placeholder="ingredient" required></input><br/>
             </div>
             <button id="addIngredientButton">Add Ingredient</button><br>
             <div class="form-group" id="instructionsContainer">
                 <label>Directions:</label>
-                <input type="text" name="instruction" id="instruction" required></input>
+                <input type="text" name="instruction" id="instruction" placeholder="instruction" required></input>
             </div>
             <button id="addInstructionButton">Add Instruction</button><br>
 
