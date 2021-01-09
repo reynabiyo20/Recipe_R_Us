@@ -15,11 +15,11 @@
         <form name="recipe-form"  th:action="@{/recipes/edit}"  method="post" th:object="${recipe}">
             <div class="form-group">
                 <label>Recipe Name:</label>
-                <input type="text" th:field="*{name}"/><br/>
+                <input type="text" th:field="*{name}" required/><br/>
             </div><br>
             <div class="form-group">
                 <label>Photo:</label>
-                <input type="text" th:field="*{img}"/><br/>
+                <input type="text" th:field="*{img}" required/><br/>
             </div><br>
             <div class="form-group">
                 <label>Category:</label>
@@ -36,7 +36,7 @@
             </div><br/>
             <div class="form-group" th:each="ingredient: ${recipe.ingredients}">
                 <label>Ingredients:</label>
-                <input type="number" name="quantity" th:value="${ingredient.quantity}">
+                <input type="number" name="quantity" th:value="${ingredient.quantity}" required>
                 <select name="measurement" id="measurement">
                     <option th:each="measurement : ${measurements}"
                             th:text="${measurement.name()}" th:selected="(${measurement.name()} == ${ingredient.measurement})" ></option>
