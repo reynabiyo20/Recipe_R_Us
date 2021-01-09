@@ -7,28 +7,29 @@ if(addIngredientButton) {
     addIngredientButton.addEventListener('click', (e) => {
         e.preventDefault();
 
-        let newQuantity = document.createElement("input");
-        newQuantity.setAttribute("name", "quantity");
-        newQuantity.setAttribute("placeholder", "Quantity");
-        ingredientsContainer.appendChild(newQuantity);
+        let quantityEl = document.getElementById('quantity')
+        let quanClone = quantityEl.cloneNode(true);
+        quanClone.setAttributeNode('value', '')
+        ingredientsContainer.appendChild(quanClone);
 
         let measurementEl = document.getElementById('measurement');
         let msrClone = measurementEl.cloneNode(true);
-        console.log(msrClone)
+        msrClone.setAttributeNode('value', '')
         ingredientsContainer.appendChild(msrClone);
 
-        let newIngredient = document.createElement("input");
-        newIngredient.setAttribute("name", "ingredient");
-        newIngredient.setAttribute("placeholder", "Ingredient")
-        ingredientsContainer.appendChild(newIngredient);
+        let ingredientEl = document.getElementById('ingredient')
+        let ingredClone = ingredientEl.cloneNode(true);
+        ingredClone.setAttributeNode('value', '')
+        ingredientsContainer.appendChild(ingredClone);
     })
 }
 
 if(addInstructionButton) {
     addInstructionButton.addEventListener('click', (e) => {
         e.preventDefault();
-        let newInstruction = document.createElement("input");
-        newInstruction.setAttribute("name", "instruction");
-        instructionsContainer.appendChild(newInstruction);
+        let instructionEl = document.getElementById('instruction');
+        let instructClone = instructionEl.cloneNode(true);
+        instructClone.setAttribute('value', '')
+        instructionsContainer.appendChild(instructClone);
     })
 }

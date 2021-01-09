@@ -40,17 +40,18 @@
             </div><br/>
             <div id="ingredientsContainer">
                 <label>Ingredients:</label>
-                <input type="number" pattern="^\d*(\.\d{0,2})?$" name="quantity" id="" placeholder="Quantity" required>
-                <select name="measurement" id="measurement">
+                <input type="number" pattern="^\d*(\.\d{0,2})?$" step=".1" min="1" name="quantity" id="quantity" placeholder="Quantity" required>
+
+                <select name="measurement" id="measurement">1
                     <option th:each="measurement : ${measurements}"
                             th:text="${measurement.name()}"></option>
                 </select>
-                <input type="text" name="ingredient" required></input><br/>
+                <input type="text" name="ingredient" id="ingredient" required></input><br/>
             </div>
             <button id="addIngredientButton">Add Ingredient</button><br>
             <div class="form-group" id="instructionsContainer">
                 <label>Directions:</label>
-                <input type="text" name="instruction" required></input>
+                <input type="text" name="instruction" id="instruction" required></input>
             </div>
             <button id="addInstructionButton">Add Instruction</button><br>
 
