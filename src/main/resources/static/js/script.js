@@ -9,17 +9,14 @@ if(addIngredientButton) {
 
         let quantityEl = document.getElementById('quantity')
         let quanClone = quantityEl.cloneNode(true);
-        quanClone.setAttributeNode('value', '')
         ingredientsContainer.appendChild(quanClone);
 
         let measurementEl = document.getElementById('measurement');
         let msrClone = measurementEl.cloneNode(true);
-        msrClone.setAttributeNode('value', '')
         ingredientsContainer.appendChild(msrClone);
 
         let ingredientEl = document.getElementById('ingredient')
         let ingredClone = ingredientEl.cloneNode(true);
-        ingredClone.setAttributeNode('value', '')
         ingredientsContainer.appendChild(ingredClone);
     })
 }
