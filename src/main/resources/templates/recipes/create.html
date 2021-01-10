@@ -6,62 +6,68 @@
     <head th:replace="fragments :: head"></head>
 </head>
 <body>
-<header th:replace="fragments :: header"></header>
-<div class="container - xxl">
-    <br><br><br><br>
-
-    <div align="center">
-        <h1>Create Recipe</h1>
-        <form name="recipe-form" action="#" th:action="@{/recipes/create}" method="post" th:object="${recipe}">
-            <div class="form-group">
-                <label>Recipe Name:</label>
-                <input type="text" th:field="*{name}" required/><br/>
-            </div><br>
-            <div class="form-group">
-                <label>Photo:</label>
-                <input type="text" th:field="*{img}" required/><br/>
-            </div><br>
-
-            <!--        <label>Gender:</label>-->
-            <!--        <input type="radio" th:field="*{gender}" value="Male" />Male-->
-            <!--        <input type="radio" th:field="*{gender}" value="Female" />Female<br/>-->
-            <div class="form-group">
-                <label>Category:</label>
-                <select th:field="*{category}">
-                    <option th:each="category : ${categories}" th:value="${category}"
-                            th:text="${category.name()}"></option>
-                </select>
-            </div><br/>
-            <div class="form-group">
-                <label>Tag:</label>
-                <select th:field="*{tag}">
-                    <option th:each="tag : ${tags}" th:value="${tag}" th:text="${tag.name()}"></option>
-                </select>
-            </div><br/>
-            <div id="ingredientsContainer">
-                <label>Ingredients:</label>
-                <input type="number" pattern="^\d*(\.\d{0,2})?$" step=".05" min=".05" name="quantity" id="quantity" placeholder="Quantity" required>
-
-                <select name="measurement" id="measurement">1
-                    <option th:each="measurement : ${measurements}"
-                            th:text="${measurement.name()}"></option>
-                </select>
-                <input type="text" name="ingredient" id="ingredient" placeholder="ingredient" required></input><br/>
+<div th:replace="fragments :: header"></div>
+<div class="container">
+    <form th:action="@{/recipes/create}" method="POST" th:object="${recipe}">
+        <div class="form-group">
+            <label for="name">Recipe Name</label>
+            <input type="text" class="form-control" id="name"th:field="*{name}"required>
+        </div>
+        <!--  -->
+        <div class="form-group">
+            <label for="img">Recipe Image</label>
+            <input type="text" class="form-control" id="img" th:field="*{img}" required>
+            <small id="emailHelp" class="form-text text-muted">Please enter a URL to your recipe image.</small>
+        </div>
+        <!--  -->
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select class="custom-select" id="category" th:field="*{category}">
+                <option th:each="category : ${categories}" th:value="${category}" th:text="${category.name()}"></option>
+            </select>
+        </div>
+        <!--  -->
+        <div class="form-group">
+            <label for="tag">Tag</label>
+            <select class="custom-select" id="tag" th:field="*{tag}">
+                <option th:each="tag : ${tags}" th:value="${tag}" th:text="${tag.name()}"></option>
+            </select>
+        </div>
+        <!--  -->
+        <div class="form-group" id="ingredientsContainer">
+            <label for="ingredient">Ingredients</label>
+            <div class="form-row" id="recipeIngredient">
+                <div class="col-2">
+                    <input type="number" class="form-control" pattern="^\d*(\.\d{0,2})?$" step=".05" min=".05" name="quantity" id="quantity" placeholder="Quantity" required>
+                </div>
+                <div class="col-4">
+                    <select name="measurement" id="measurement" class="custom-select">
+                        <option th:each="measurement : ${measurements}" th:text="${measurement.name()}"></option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <input type="text" class="form-control" name="ingredient" id="ingredient" placeholder="Ingredient Name" required></input>
+                </div>
             </div>
-            <button id="addIngredientButton">Add Ingredient</button><br>
-            <div class="form-group" id="instructionsContainer">
-                <label>Directions:</label>
-                <input type="text" name="instruction" id="instruction" placeholder="instruction" required></input>
-            </div>
-            <button id="addInstructionButton">Add Instruction</button><br>
+            <button class="btn btn-primary my-4" id="addIngredientButton">Add Ingredient</button>
+        </div>
 
-            <button  type="submit" class="btn btn-primary" onclick="submitForm()">Create</button>
+        <!--  -->
+        <div class="form-group" id="instructionsContainer">
+            <label for="ingredient">Instructions</label>
+            <input type="text" class="form-control" name="instruction" id="instruction" placeholder="Instruction" required>
+            <button class="btn btn-primary my-4" id="addInstructionButton">Add Instruction</button>
+        </div>
 
-        </form>
-    </div>
+        <!--  -->
+
+        <button class="btn btn-primary" type="submit" onClick="submitForm()">Create Recipe</button>
+
+    </form>
 </div>
 
-<div th:replace="fragments :: footer"></div>
+<!--  -->
+
 <script>
 
 
@@ -75,5 +81,6 @@
     }
 
 </script>
+<footer th:replace="fragments :: footer"></footer>
 </body>
 </html>

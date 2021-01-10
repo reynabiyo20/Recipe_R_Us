@@ -3,27 +3,16 @@
 <head th:replace="fragments :: head"></head>
 <body>
 <div th:replace="fragments :: header"></div>
-<div class = "container-xxl">
-    <h1 class="centered" th:text="'All recipes'"></h1><br>
-    <div class="centered">
-        <span th:if="${session.isEmpty()}"><h3 style="color: red">To review recipes you need log in. You can do it <a href="/login">here</a>.  </h3></span>
+
+<div class="container m-5" th:each="recipe:${recipes}">
+    <div class="card" style="width: 18rem;">
+        <img class="card-img-top" th:src="${recipe.img}" alt="Card image cap">
+        <div class="card-body">
+            <a  th:href="'/recipes/display?recipeId=' + ${recipe.id}"><h5 th:text="${recipe.name}"></h5></a>
+        </div>
     </div>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Recipes</th>
-        </tr>
-        </thead>
-        <tr th:each="recipe:${recipes}">
-            <td>
-                <img class="img-smal" th:src="${recipe.img}"/>
-
-                <a th:text="${recipe.name}" th:href="'/recipes/display?recipeId=' + ${recipe.id}"></a>
-            </td>
-        </tr>
-    </table>
-
 </div>
+
 <div th:replace="fragments :: footer"></div>
 </body>
 </html>
