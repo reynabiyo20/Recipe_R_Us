@@ -35,9 +35,10 @@
             </select>
         </div>
         <!--  -->
-        <div class="form-group" id="ingredientsContainer">
+        <div class="form-group">
             <label for="ingredient">Ingredients</label>
-            <div class="form-row" id="recipeIngredient">
+            <div id="ingredientsContainer">
+            <div class="form-row my-2" id="recipeIngredient">
                 <div class="col-2">
                     <input type="number" class="form-control" pattern="^\d*(\.\d{0,2})?$" step=".05" min=".05" name="quantity" id="quantity" placeholder="Quantity" required>
                 </div>
@@ -46,23 +47,36 @@
                         <option th:each="measurement : ${measurements}" th:text="${measurement.name()}"></option>
                     </select>
                 </div>
-                <div class="col-6">
+                <div class="col-5">
                     <input type="text" class="form-control" name="ingredient" id="ingredient" placeholder="Ingredient Name" required></input>
                 </div>
+                <div class="col-1 d-flex align-items-center deleteIngredient" >
+                    <i class="fa fa-times text-danger fa-lg"></i>
+                </div>
+            </div>
             </div>
             <button class="btn btn-primary my-4" id="addIngredientButton">Add Ingredient</button>
         </div>
 
         <!--  -->
-        <div class="form-group" id="instructionsContainer">
-            <label for="ingredient">Instructions</label>
-            <input type="text" class="form-control" name="instruction" id="instruction" placeholder="Instruction" required>
+        <div class="form-group">
+            <label for="instruction">Instructions</label>
+            <div id="instructionsContainer">
+                <div id="recipeInstruction" class="my-2 form-row">
+                    <div class="col-11">
+                        <input type="text" class="form-control" name="instruction" id="instruction" placeholder="Instruction" required>
+                    </div>
+                <div class="col-1 d-flex align-items-center deleteIngredient" >
+                    <i class="fa fa-times text-danger fa-lg"></i>
+                </div>
+                </div>
+            </div>
             <button class="btn btn-primary my-4" id="addInstructionButton">Add Instruction</button>
         </div>
 
         <!--  -->
 
-        <button class="btn btn-primary" type="submit" onClick="submitForm()">Create Recipe</button>
+        <button class="btn btn-primary" type="submit">Create Recipe</button>
 
     </form>
 </div>

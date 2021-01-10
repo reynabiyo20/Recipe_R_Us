@@ -12,12 +12,14 @@
 
 <div class="container">
     <form th:action="@{/recipes/edit}" method="POST" th:object="${recipe}">
+        <input type="hidden" th:value="${recipe.id}" name="recipeId" />
+        <!-- Recipe Name -->
         <div class="form-group">
             <label for="name">Recipe Name</label>
             <input type="text" class="form-control" id="name"th:field="*{name}"required>
         </div>
 
-        <!--  -->
+        <!-- Recipe Image -->
 
         <div class="form-group">
             <label for="img">Recipe Image</label>
@@ -25,7 +27,7 @@
             <small id="emailHelp" class="form-text text-muted">Please enter a URL to your recipe image.</small>
         </div>
 
-        <!--  -->
+        <!-- Category Selection -->
 
         <div class="form-group">
             <label for="category">Category</label>
@@ -34,7 +36,7 @@
             </select>
         </div>
 
-        <!--  -->
+        <!-- Tag Select -->
 
         <div class="form-group">
             <label for="tag">Tag</label>
@@ -43,39 +45,52 @@
             </select>
         </div>
 
-        <!--  -->
+        <!-- Ingredients -->
 
-        <div class="form-group" id="ingredientsContainer">
+        <div class="form-group">
             <label for="ingredient">Ingredients</label>
-            <div class="form-row" id="recipeIngredient">
-                <div class="col-2">
-                    <input type="number" class="form-control" pattern="^\d*(\.\d{0,2})?$" step=".05" min=".05" name="quantity" id="quantity" placeholder="Quantity" required>
-                </div>
-                <div class="col-4">
-                    <select name="measurement" id="measurement" class="custom-select">
-                        <option th:each="measurement : ${measurements}" th:text="${measurement.name()}"></option>
-                    </select>
-                </div>
-                <div class="col-6">
-                    <input type="text" class="form-control" name="ingredient" id="ingredient" placeholder="Ingredient Name" required></input>
+            <div id="ingredientsContainer">
+                <div class="form-row my-2" id="recipeIngredient">
+                    <div class="col-2">
+                        <input type="number" class="form-control" pattern="^\d*(\.\d{0,2})?$" step=".05" min=".05" name="quantity" id="quantity" placeholder="Quantity" required>
+                    </div>
+                    <div class="col-4">
+                        <select name="measurement" id="measurement" class="custom-select">
+                            <option th:each="measurement : ${measurements}" th:text="${measurement.name()}"></option>
+                        </select>
+                    </div>
+                    <div class="col-5">
+                        <input type="text" class="form-control" name="ingredient" id="ingredient" placeholder="Ingredient Name" required></input>
+                    </div>
+                    <div class="col-1 d-flex align-items-center deleteIngredient" >
+                        <i class="fa fa-times text-danger fa-lg"></i>
+                    </div>
                 </div>
             </div>
             <button class="btn btn-primary my-4" id="addIngredientButton">Add Ingredient</button>
         </div>
 
-        <!--  -->
-        <div class="form-group" id="instructionsContainer">
-            <label for="ingredient">Instructions</label>
-            <input type="text" class="form-control" name="instruction" id="instruction" placeholder="Instruction" required>
+        <!-- Instructions -->
+        <div class="form-group">
+            <label for="instruction">Instructions</label>
+            <div id="instructionsContainer">
+                <div id="recipeInstruction" class="my-2 form-row">
+                    <div class="col-11">
+                        <input type="text" class="form-control" name="instruction" id="instruction" placeholder="Instruction" required>
+                    </div>
+                    <div class="col-1 d-flex align-items-center deleteIngredient" >
+                        <i class="fa fa-times text-danger fa-lg"></i>
+                    </div>
+                </div>
+            </div>
             <button class="btn btn-primary my-4" id="addInstructionButton">Add Instruction</button>
         </div>
 
-        <!--  -->
+        <!-- Submit Button -->
 
-        <button class="btn btn-primary" type="submit" onClick="submitForm()">Create Recipe</button>
+        <button class="btn btn-primary" type="submit">Update Recipe</button>
     </form>
 </div>
-
 
 <div th:replace="fragments :: footer"></div>
 </body>
