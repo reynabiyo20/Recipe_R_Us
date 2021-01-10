@@ -4,18 +4,23 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Oksana
+ */
 @Entity
 public class Recipe extends AbstractEntity {
 
    private String name;
 
-   @NotNull(message = "Ingredients required")
-   private String ingredients;
+   @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+   private List<Ingredient> ingredients = new ArrayList<Ingredient>();
 
-   private String directions;
+   @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+   private List<Instruction> instructions = new ArrayList<Instruction>();
 
    @NotNull(message = "Category required")
    private Category category;
@@ -37,8 +42,6 @@ public class Recipe extends AbstractEntity {
    public Recipe() {
    }
 
-
-   // Getters and Setters
    public String getName() {
       return name;
    }
@@ -46,6 +49,7 @@ public class Recipe extends AbstractEntity {
    public void setName(String name) {
       this.name = name;
    }
+
 
    public Category getCategory() {
       return category;
@@ -71,21 +75,15 @@ public class Recipe extends AbstractEntity {
       this.img = img;
    }
 
-   public String getIngredients() {
+
+   public List<Ingredient> getIngredients() {
       return ingredients;
    }
 
-   public void setIngredients(String ingredients) {
+   public void setIngredients(List<Ingredient> ingredients) {
       this.ingredients = ingredients;
    }
 
-   public String getDirections() {
-      return directions;
-   }
-
-   public void setDirections(String directions) {
-      this.directions = directions;
-   }
 
    public Tag getTag() {
       return tag;
@@ -95,10 +93,17 @@ public class Recipe extends AbstractEntity {
       this.tag = tag;
    }
 
+   public List<Instruction> getInstructions() {
+      return instructions;
+   }
+
+   public void setInstructions(List<Instruction> instructions) {
+      this.instructions = instructions;
+   }
+
    public List<Review> getReviews() {
       return reviews;
    }
-
 
    public Double getAverageRating() {
       return averageRating;
@@ -127,27 +132,8 @@ public class Recipe extends AbstractEntity {
          numComments = 0;
       }
       if (!review.getComment().isEmpty()){
-            numComments ++;
-         }
+         numComments ++;
+      }
       return numComments;
    }
-
-
-
-   @Override
-   public String toString() {
-      return "Recipe{" +
-              "name='" + name + '\'' +
-              ", ingredients='" + ingredients + '\'' +
-              ", directions='" + directions + '\'' +
-              ", category=" + category +
-              ", tag=" + tag +
-              ", img='" + img + '\'' +
-              ", averageRating=" + averageRating +
-              ", reviews=" + reviews +
-              ", users=" + users +
-              '}';
-   }
-
-
 }

@@ -15,11 +15,11 @@
         <form name="recipe-form"  th:action="@{/recipes/edit}"  method="post" th:object="${recipe}">
             <div class="form-group">
                 <label>Recipe Name:</label>
-                <input type="text" th:field="*{name}"/><br/>
+                <input type="text" th:field="*{name}" required/><br/>
             </div><br>
             <div class="form-group">
                 <label>Photo:</label>
-                <input type="text" th:field="*{img}"/><br/>
+                <input type="text" th:field="*{img}" required/><br/>
             </div><br>
             <div class="form-group">
                 <label>Category:</label>
@@ -34,18 +34,22 @@
                     <option th:each="tag : ${tags}" th:value="${tag}" th:text="${tag.name()}"></option>
                 </select>
             </div><br/>
-            <div class="form-group">
+            <div class="form-group" th:each="ingredient: ${recipe.ingredients}">
                 <label>Ingredients:</label>
-                <textarea rows="2" cols="45" th:field="*{ingredients}"></textarea><br/>
+                <input type="number" pattern="^\d*(\.\d{0,2})?$" step=".05" min=".05" name="quantity" id="quantity" th:value="${ingredient.quantity} "required>
+                <select name="measurement" id="measurement">
+                    <option th:each="measurement : ${measurements}"
+                            th:text="${measurement.name()}" th:selected="(${measurement.name()} == ${ingredient.measurement})" ></option>
+
+                </select>
+                <textarea rows="2" cols="45" th:text="${ingredient.ingredient}" name="ingredient"></textarea><br/>
             </div><br>
-            <div class="form-group">
+            <div class="form-group" th:each="instruction : ${recipe.instructions}">
                 <label>Directions:</label>
-                <textarea rows="2" cols="45" th:field="*{directions}"></textarea>
+                <textarea rows="2" cols="45" th:text="${instruction.step}" name="instruction"></textarea>
             </div>
             <input type="hidden" th:value="${recipe.id}" name="recipeId" />
             <button  type="submit" class="btn btn-primary" onclick="submitForm()">Update</button>
-
-
         </form>
     </div>
 </div>
@@ -53,4 +57,3 @@
 <div th:replace="fragments :: footer"></div>
 </body>
 </html>
-

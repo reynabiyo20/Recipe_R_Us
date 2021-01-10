@@ -6,8 +6,8 @@
     <head th:replace="fragments :: head"></head>
 </head>
 <body>
-<div th:replace="fragments :: header"></div>
-<div class="container-xxl">
+<header th:replace="fragments :: header"></header>
+<div class="container - xxl">
     <br><br><br><br>
 
     <div align="center">
@@ -15,12 +15,16 @@
         <form name="recipe-form" action="#" th:action="@{/recipes/create}" method="post" th:object="${recipe}">
             <div class="form-group">
                 <label>Recipe Name:</label>
-                <input type="text" th:field="*{name}"/><br/>
+                <input type="text" th:field="*{name}" required/><br/>
             </div><br>
             <div class="form-group">
                 <label>Photo:</label>
-                <input type="text" th:field="*{img}"/><br/>
+                <input type="text" th:field="*{img}" required/><br/>
             </div><br>
+
+            <!--        <label>Gender:</label>-->
+            <!--        <input type="radio" th:field="*{gender}" value="Male" />Male-->
+            <!--        <input type="radio" th:field="*{gender}" value="Female" />Female<br/>-->
             <div class="form-group">
                 <label>Category:</label>
                 <select th:field="*{category}">
@@ -34,17 +38,25 @@
                     <option th:each="tag : ${tags}" th:value="${tag}" th:text="${tag.name()}"></option>
                 </select>
             </div><br/>
-            <div class="form-group">
+            <div id="ingredientsContainer">
                 <label>Ingredients:</label>
-                <textarea rows="2" cols="58" th:field="*{ingredients}"></textarea><br/>
-            </div><br>
-            <div class="form-group">
-                <label>Directions:</label>
-                <textarea rows="2" cols="58" th:field="*{directions}"></textarea>
-            </div><br>
-            <div class="form-group">
-            <button  type="submit" class="btn btn-primary" onclick="submitForm()">Create</button>
+                <input type="number" pattern="^\d*(\.\d{0,2})?$" step=".05" min=".05" name="quantity" id="quantity" placeholder="Quantity" required>
+
+                <select name="measurement" id="measurement">1
+                    <option th:each="measurement : ${measurements}"
+                            th:text="${measurement.name()}"></option>
+                </select>
+                <input type="text" name="ingredient" id="ingredient" placeholder="ingredient" required></input><br/>
             </div>
+            <button id="addIngredientButton">Add Ingredient</button><br>
+            <div class="form-group" id="instructionsContainer">
+                <label>Directions:</label>
+                <input type="text" name="instruction" id="instruction" placeholder="instruction" required></input>
+            </div>
+            <button id="addInstructionButton">Add Instruction</button><br>
+
+            <button  type="submit" class="btn btn-primary" onclick="submitForm()">Create</button>
+
         </form>
     </div>
 </div>
