@@ -4,8 +4,9 @@
 <body>
 <div th:replace="fragments :: header"></div>
 
-<div class="container m-5" th:each="recipe:${recipes}">
-    <div class="card" style="width: 18rem;">
+<div class="container-fluid p-5 m-auto" th:each="recipe:${recipes}">
+    <h1>View All Recipes</h1>
+    <div class="card col-sm-4">
         <img class="card-img-top" th:src="${recipe.img}" alt="Card image cap">
         <div class="card-body">
             <a  th:href="'/recipes/display?recipeId=' + ${recipe.id}"><h5 th:text="${recipe.name}"></h5></a>
