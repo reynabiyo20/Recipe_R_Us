@@ -197,7 +197,7 @@ public class RecipeController {
 
       model.addAttribute("recipes", all);
 
-      return "redirect:";
+      return "recipes/all";
 
    }
 
