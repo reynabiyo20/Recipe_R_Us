@@ -1,9 +1,5 @@
 $(document).ready(function () {
 
-    const instructionsContainer = document.getElementById("instructionsContainer");
-    const addInstructionButton = document.getElementById("addInstructionButton");
-
-
 //add ingredient on add ingredent button click
     if($('#addIngredientButton')) {
         $('#addIngredientButton').on('click', function(e){
@@ -33,4 +29,33 @@ $(document).ready(function () {
             }
         })
     }
+
+    function addCategory() {
+        $.get("/recipes/create/addCategory").done(function (fragment) { // get from controller
+            $("#new-input").replaceWith(fragment); // update snippet of page
+        });
+    }
+    function submitForm() {
+        document.recipe - form.reset();
+    }
+
+    if (window.location.href.indexOf("/home") > -1) {
+        $("#home").hide();
+    }
+
+    if (window.location.href.indexOf("/recipes/all") > -1) {
+        $("#search").hide();
+        $('#all-recipes').hide();
+    }
+
+    if (window.location.href.indexOf("/login") > -1) {
+        $("#login").hide();
+        $("#search").hide();
+    }
+
+    if (window.location.href.indexOf("/register") > -1) {
+        $("#register").hide();
+        $("#search").hide();
+    }
+
 })

@@ -14,27 +14,32 @@
             <label for="name">Recipe Name</label>
             <input type="text" class="form-control" id="name"th:field="*{name}"required>
         </div>
-        <!--  -->
+
+        <!-- Recipe Image -->
         <div class="form-group">
             <label for="img">Recipe Image</label>
             <input type="text" class="form-control" id="img" th:field="*{img}" required>
             <small id="emailHelp" class="form-text text-muted">Please enter a URL to your recipe image.</small>
         </div>
-        <!--  -->
+
+        <!-- Category -->
         <div class="form-group">
             <label for="category">Category</label>
             <select class="custom-select" id="category" th:field="*{category}">
-                <option th:each="category : ${categories}" th:value="${category}" th:text="${category.name()}"></option>
+                <option th:each="category : ${categories}" th:value="${category}" th:text="${category.getName()}"></option>
             </select>
         </div>
-        <!--  -->
+
+
+        <!-- Tag -->
         <div class="form-group">
             <label for="tag">Tag</label>
             <select class="custom-select" id="tag" th:field="*{tag}">
-                <option th:each="tag : ${tags}" th:value="${tag}" th:text="${tag.name()}"></option>
+                <option th:each="tag : ${tags}" th:value="${tag}" th:text="${tag.getName()}"></option>
             </select>
         </div>
-        <!--  -->
+
+        <!-- Ingredients -->
         <div class="form-group">
             <label for="ingredient">Ingredients</label>
             <div id="ingredientsContainer">
@@ -44,7 +49,7 @@
                 </div>
                 <div class="col-4">
                     <select name="measurement" id="measurement" class="custom-select">
-                        <option th:each="measurement : ${measurements}" th:text="${measurement.name()}"></option>
+                        <option th:each="measurement : ${measurements}" th:value="${measurement}" th:text="${measurement.getName()}"></option>
                     </select>
                 </div>
                 <div class="col-5">
@@ -58,7 +63,7 @@
             <button class="btn btn-primary my-4" id="addIngredientButton">Add Ingredient</button>
         </div>
 
-        <!--  -->
+        <!-- Instructions -->
         <div class="form-group">
             <label for="instruction">Instructions</label>
             <div id="instructionsContainer">
@@ -82,20 +87,6 @@
 </div>
 
 <!--  -->
-
-<script>
-
-
-    function addCategory() {
-        $.get("/recipes/create/addCategory").done(function (fragment) { // get from controller
-            $("#new-input").replaceWith(fragment); // update snippet of page
-        });
-    }
-    function submitForm() {
-        document.recipe - form.reset();
-    }
-
-</script>
 <footer th:replace="fragments :: footer"></footer>
 </body>
 </html>
