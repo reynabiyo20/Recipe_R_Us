@@ -33,8 +33,6 @@ public class Review extends AbstractEntity{
 
     private String timestamp;
 
-
-
     public Review(Recipe recipe, Integer rating, String comment, User user, String username, String timestamp) {
         this();
         this.recipe = recipe;
@@ -88,6 +86,10 @@ public class Review extends AbstractEntity{
     public String getTimestamp() {
         return timestamp;
     }
-
+    public void updateCalculations(Recipe recipe, Review review){
+        recipe.setAverageRating();
+        recipe.setTotalRatings(review);
+        recipe.setNumComments(review);
+    }
 
 }

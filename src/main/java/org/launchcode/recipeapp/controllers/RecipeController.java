@@ -36,11 +36,6 @@ public class RecipeController {
    private final UserRepository userRepository;
    public final ReviewRepository reviewRepository;
 
-   private static final String userSessionKey = "user";
-//   public User getUserFromSession(HttpSession session) {
-//      return (User) session.getAttribute(userSessionKey);
-//   }
-
    @Autowired
    public RecipeController(RecipeRepository recipeRepository, IngredientRepository ingredientRepository, InstructionRepository instructionRepository, UserRepository userRepository, ReviewRepository reviewRepository) {
       this.recipeRepository = recipeRepository;
@@ -114,7 +109,7 @@ public class RecipeController {
 
 
    @GetMapping("display")
-   public String displayRecipe(@RequestParam Integer recipeId, Model model, HttpServletRequest request) {
+   public String displayRecipe(@RequestParam Integer recipeId, Model model) {
       model.addAttribute("review", new Review());
       Optional<Recipe> result = recipeRepository.findById(recipeId);
 
@@ -122,30 +117,8 @@ public class RecipeController {
          model.addAttribute("title", "Invalid Recipe ID: " + recipeId);
       } else {
          Recipe recipe = result.get();
-
          model.addAttribute("title", recipe.getName());
          model.addAttribute("recipe", recipe);
-
-         //User sessionUser = (User) request.getSession().getAttribute("user");
-
-         Integer numComments = recipe.getNumComments();
-         List<Review> reviews = recipe.getReviews();
-
-         if (reviews.isEmpty()) { // no reviews
-            model.addAttribute("numRatings", "0");
-            model.addAttribute("averageRating", "No ratings");
-            model.addAttribute("comments", "No comments yet");
-         } else { // has reviews
-            model.addAttribute("averageRating", recipe.getAverageRating());
-            model.addAttribute("numRatings", recipe.getReviews().size());
-            model.addAttribute("reviews", reviews);
-
-            if(numComments != 0){ // has comments
-               model.addAttribute("comments", "Comments");
-            } else if (numComments == 0 || numComments == null){ // no comments
-               model.addAttribute("comments", "No comments yet");
-            }
-         }
       }
 
       return "recipes/display";
@@ -160,39 +133,20 @@ public class RecipeController {
       if (errors.hasErrors()) {
          model.addAttribute("title", recipe.getName());
          model.addAttribute("recipe", recipe);
-         model.addAttribute("averageRating", recipe.getAverageRating());
-         model.addAttribute("numRatings", recipe.getReviews().size());
-         Integer numComments = recipe.getNumComments();
-
-         if(numComments != 0){ // has comments
-            model.addAttribute("comments", "Comments");
-         } else if (numComments == 0 || numComments == null){ // no comments
-            model.addAttribute("comments", "No comments yet");
-         }
          return "recipes/display";
       }
 
+      // add review & update recipe calculations
       User sessionUser = (User) request.getSession().getAttribute("user");
-
       Review review = new Review(recipe, newReview.getRating(), newReview.getComment(), sessionUser, sessionUser.getUsername(), recipe.getCurrentTime());
       reviewRepository.save(review);
-
-      recipe.setAverageRating();
-      recipe.setNumComments(review);
+      review.updateCalculations(recipe,review);
       recipeRepository.save(recipe);
 
       model.addAttribute("title", recipe.getName());
       model.addAttribute("recipe", recipe);
       model.addAttribute("review", review);
-      model.addAttribute("averageRating", recipe.getAverageRating());
-      model.addAttribute("numRatings", recipe.getReviews().size());
 
-      Integer numComments = recipe.getNumComments();
-      if(numComments != 0){ // has comments
-         model.addAttribute("comments", "Comments");
-      } else if (numComments == 0 || numComments == null){ // no comments
-         model.addAttribute("comments", "No comments yet");
-      }
       return "recipes/display";
    }
 
