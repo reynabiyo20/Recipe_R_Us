@@ -33,15 +33,13 @@ public class RecipeController {
    private final org.launchcode.recipeapp.models.data.RecipeRepository recipeRepository;
    private final IngredientRepository ingredientRepository;
    private final InstructionRepository instructionRepository;
-   private final UserRepository userRepository;
    public final ReviewRepository reviewRepository;
 
    @Autowired
-   public RecipeController(RecipeRepository recipeRepository, IngredientRepository ingredientRepository, InstructionRepository instructionRepository, UserRepository userRepository, ReviewRepository reviewRepository) {
+   public RecipeController(RecipeRepository recipeRepository, IngredientRepository ingredientRepository, InstructionRepository instructionRepository, ReviewRepository reviewRepository) {
       this.recipeRepository = recipeRepository;
       this.ingredientRepository = ingredientRepository;
       this.instructionRepository = instructionRepository;
-      this.userRepository = userRepository;
       this.reviewRepository = reviewRepository;
    }
 
