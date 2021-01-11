@@ -40,9 +40,7 @@
                     <input type="radio" id="1" th:field="*{rating}" value="1" /><label class = "full" for="1"></label>
                 </fieldset>
                 <p class="error" th:errors="${review.rating}"></p><br><br>
-                <label>Name:</label><br>
-                <input type="text" th:field="*{name}" class="form-control" required>
-                <p class="error" th:errors="${review.name}"></p><br>
+                <input type="hidden" th:field="*{user}" th:value="${user}">
                 <label>Comment:</label><br>
                 <textarea th:field="*{comment}" rows="6" cols="50" placeholder="What did you think of the recipe?"></textarea><br>
                 <input type="submit" value="Post Review" name="submit">
@@ -58,13 +56,13 @@
             <div th:if="${recipe.numComments != 0}">
                 <table>
                     <tr>
-                        <th>Name</th>
+                        <th>Username</th>
                         <th>Comment</th>
                         <th>Date</th>
                     </tr>
                     <tr th:each="review : ${recipe.reviews}">
                         <div th:if ="${!review.comment.isEmpty()}">
-                            <td th:text = "${review.name}"></td>
+                            <td th:text = "${review.username}"></td>
                             <td th:text = "${review.comment}"></td>
                             <td th:text = "${review.timestamp}"></td>
                             </th:if>

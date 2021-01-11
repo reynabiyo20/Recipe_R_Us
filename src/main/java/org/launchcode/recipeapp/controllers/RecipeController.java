@@ -1,11 +1,9 @@
 package org.launchcode.recipeapp.controllers;
 
 import org.apache.catalina.Store;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.launchcode.recipeapp.models.*;
-import org.launchcode.recipeapp.models.data.IngredientRepository;
-import org.launchcode.recipeapp.models.data.InstructionRepository;
-import org.launchcode.recipeapp.models.data.RecipeRepository;
-import org.launchcode.recipeapp.models.data.ReviewRepository;
+import org.launchcode.recipeapp.models.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,17 +33,23 @@ public class RecipeController {
    private final org.launchcode.recipeapp.models.data.RecipeRepository recipeRepository;
    private final IngredientRepository ingredientRepository;
    private final InstructionRepository instructionRepository;
+   private final UserRepository userRepository;
+   public final ReviewRepository reviewRepository;
 
+   private static final String userSessionKey = "user";
+//   public User getUserFromSession(HttpSession session) {
+//      return (User) session.getAttribute(userSessionKey);
+//   }
 
    @Autowired
-   public RecipeController(RecipeRepository recipeRepository, IngredientRepository ingredientRepository, InstructionRepository instructionRepository) {
+   public RecipeController(RecipeRepository recipeRepository, IngredientRepository ingredientRepository, InstructionRepository instructionRepository, UserRepository userRepository, ReviewRepository reviewRepository) {
       this.recipeRepository = recipeRepository;
       this.ingredientRepository = ingredientRepository;
       this.instructionRepository = instructionRepository;
+      this.userRepository = userRepository;
+      this.reviewRepository = reviewRepository;
    }
 
-   @Autowired
-   public ReviewRepository reviewRepository;
 
    @GetMapping
    public String getListOfRecipes(Model model) {
@@ -109,7 +114,7 @@ public class RecipeController {
 
 
    @GetMapping("display")
-   public String displayRecipe(@RequestParam Integer recipeId, Model model) {
+   public String displayRecipe(@RequestParam Integer recipeId, Model model, HttpServletRequest request) {
       model.addAttribute("review", new Review());
       Optional<Recipe> result = recipeRepository.findById(recipeId);
 
@@ -120,6 +125,8 @@ public class RecipeController {
 
          model.addAttribute("title", recipe.getName());
          model.addAttribute("recipe", recipe);
+
+         //User sessionUser = (User) request.getSession().getAttribute("user");
 
          Integer numComments = recipe.getNumComments();
          List<Review> reviews = recipe.getReviews();
@@ -147,8 +154,7 @@ public class RecipeController {
    @PostMapping("display")
    public String processReviewForm(@ModelAttribute @Valid  Review newReview, Errors errors,
                                    @RequestParam Integer recipeId,
-                                   Model model) {
-      System.out.println(errors.hasErrors());
+                                   Model model, HttpServletRequest request) {
       Recipe recipe = recipeRepository.findById(recipeId).get();
 
       if (errors.hasErrors()) {
@@ -166,10 +172,11 @@ public class RecipeController {
          return "recipes/display";
       }
 
-      Review review = new Review(recipe, newReview.getRating(),newReview.getComment(), newReview.getName());
+      User sessionUser = (User) request.getSession().getAttribute("user");
 
-      review.setTimestamp();
+      Review review = new Review(recipe, newReview.getRating(), newReview.getComment(), sessionUser, sessionUser.getUsername(), recipe.getCurrentTime());
       reviewRepository.save(review);
+
       recipe.setAverageRating();
       recipe.setNumComments(review);
       recipeRepository.save(recipe);
@@ -178,7 +185,6 @@ public class RecipeController {
       model.addAttribute("recipe", recipe);
       model.addAttribute("review", review);
       model.addAttribute("averageRating", recipe.getAverageRating());
-
       model.addAttribute("numRatings", recipe.getReviews().size());
 
       Integer numComments = recipe.getNumComments();

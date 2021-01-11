@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.Array;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -136,4 +138,13 @@ public class Recipe extends AbstractEntity {
       }
       return numComments;
    }
+
+   public String getCurrentTime(){
+      LocalDateTime timestampObj = LocalDateTime.now();
+      DateTimeFormatter dateObj = DateTimeFormatter.ofPattern("MMMM d, yyyy");
+      DateTimeFormatter timeObj = DateTimeFormatter.ofPattern("h:mm a");
+      String dateTime = timestampObj.format(dateObj) + " at " + timestampObj.format(timeObj);
+      return dateTime;
+   }
+
 }
