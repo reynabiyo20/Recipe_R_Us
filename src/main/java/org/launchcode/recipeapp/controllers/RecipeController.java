@@ -1,11 +1,9 @@
 package org.launchcode.recipeapp.controllers;
 
 import org.apache.catalina.Store;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.launchcode.recipeapp.models.*;
-import org.launchcode.recipeapp.models.data.IngredientRepository;
-import org.launchcode.recipeapp.models.data.InstructionRepository;
-import org.launchcode.recipeapp.models.data.RecipeRepository;
-import org.launchcode.recipeapp.models.data.ReviewRepository;
+import org.launchcode.recipeapp.models.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,17 +33,16 @@ public class RecipeController {
    private final org.launchcode.recipeapp.models.data.RecipeRepository recipeRepository;
    private final IngredientRepository ingredientRepository;
    private final InstructionRepository instructionRepository;
-
+   public final ReviewRepository reviewRepository;
 
    @Autowired
-   public RecipeController(RecipeRepository recipeRepository, IngredientRepository ingredientRepository, InstructionRepository instructionRepository) {
+   public RecipeController(RecipeRepository recipeRepository, IngredientRepository ingredientRepository, InstructionRepository instructionRepository, ReviewRepository reviewRepository) {
       this.recipeRepository = recipeRepository;
       this.ingredientRepository = ingredientRepository;
       this.instructionRepository = instructionRepository;
+      this.reviewRepository = reviewRepository;
    }
 
-   @Autowired
-   public ReviewRepository reviewRepository;
 
    @GetMapping
    public String getListOfRecipes(Model model) {
@@ -117,28 +115,8 @@ public class RecipeController {
          model.addAttribute("title", "Invalid Recipe ID: " + recipeId);
       } else {
          Recipe recipe = result.get();
-
          model.addAttribute("title", recipe.getName());
          model.addAttribute("recipe", recipe);
-
-         Integer numComments = recipe.getNumComments();
-         List<Review> reviews = recipe.getReviews();
-
-         if (reviews.isEmpty()) { // no reviews
-            model.addAttribute("numRatings", "0");
-            model.addAttribute("averageRating", "No ratings");
-            model.addAttribute("comments", "No comments yet");
-         } else { // has reviews
-            model.addAttribute("averageRating", recipe.getAverageRating());
-            model.addAttribute("numRatings", recipe.getReviews().size());
-            model.addAttribute("reviews", reviews);
-
-            if(numComments != 0){ // has comments
-               model.addAttribute("comments", "Comments");
-            } else if (numComments == 0 || numComments == null){ // no comments
-               model.addAttribute("comments", "No comments yet");
-            }
-         }
       }
 
       return "recipes/display";
@@ -147,46 +125,26 @@ public class RecipeController {
    @PostMapping("display")
    public String processReviewForm(@ModelAttribute @Valid  Review newReview, Errors errors,
                                    @RequestParam Integer recipeId,
-                                   Model model) {
-      System.out.println(errors.hasErrors());
+                                   Model model, HttpServletRequest request) {
       Recipe recipe = recipeRepository.findById(recipeId).get();
 
       if (errors.hasErrors()) {
          model.addAttribute("title", recipe.getName());
          model.addAttribute("recipe", recipe);
-         model.addAttribute("averageRating", recipe.getAverageRating());
-         model.addAttribute("numRatings", recipe.getReviews().size());
-         Integer numComments = recipe.getNumComments();
-
-         if(numComments != 0){ // has comments
-            model.addAttribute("comments", "Comments");
-         } else if (numComments == 0 || numComments == null){ // no comments
-            model.addAttribute("comments", "No comments yet");
-         }
          return "recipes/display";
       }
 
-      Review review = new Review(recipe, newReview.getRating(),newReview.getComment(), newReview.getName());
-
-      review.setTimestamp();
+      // add review & update recipe calculations
+      User sessionUser = (User) request.getSession().getAttribute("user");
+      Review review = new Review(recipe, newReview.getRating(), newReview.getComment(), sessionUser, sessionUser.getUsername(), recipe.getCurrentTime());
       reviewRepository.save(review);
-      recipe.setAverageRating();
-      recipe.setNumComments(review);
+      review.updateCalculations(recipe,review);
       recipeRepository.save(recipe);
 
       model.addAttribute("title", recipe.getName());
       model.addAttribute("recipe", recipe);
       model.addAttribute("review", review);
-      model.addAttribute("averageRating", recipe.getAverageRating());
 
-      model.addAttribute("numRatings", recipe.getReviews().size());
-
-      Integer numComments = recipe.getNumComments();
-      if(numComments != 0){ // has comments
-         model.addAttribute("comments", "Comments");
-      } else if (numComments == 0 || numComments == null){ // no comments
-         model.addAttribute("comments", "No comments yet");
-      }
       return "recipes/display";
    }
 
