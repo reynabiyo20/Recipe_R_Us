@@ -8,6 +8,8 @@ import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -117,11 +119,11 @@ public class Recipe extends AbstractEntity {
       double numRatings = reviewList.size();
       double sumRatings = 0.0;
 
-      for(int i =0; i < numRatings; i++){
+      for (int i = 0; i < numRatings; i++) {
          double reviewRating = reviewList.get(i).getRating();
          sumRatings += reviewRating;
       }
-      double average = Double.parseDouble(String.format("%.1f",(double)sumRatings  /  numRatings));
+      double average = Double.parseDouble(String.format("%.1f", (double) sumRatings / numRatings));
       averageRating = average;
    }
 
@@ -130,34 +132,34 @@ public class Recipe extends AbstractEntity {
    }
 
 
-   public Integer setNumComments(Review review){
-      if(numComments == null){
+   public Integer setNumComments(Review review) {
+      if (numComments == null) {
          numComments = 0;
       }
-      if (!review.getComment().isEmpty()){
-         numComments ++;
+      if (!review.getComment().isEmpty()) {
+         numComments++;
       }
       return numComments;
    }
 
    public Integer getTotalRatings() {
-      if(totalRatings == null){
+      if (totalRatings == null) {
          totalRatings = 0;
       }
       return totalRatings;
    }
 
    public void setTotalRatings(Review review) {
-     if (totalRatings == null){
-        totalRatings = 0;
-     }
-      if (!reviews.isEmpty()){
-         totalRatings ++;
+      if (totalRatings == null) {
+         totalRatings = 0;
+      }
+      if (!reviews.isEmpty()) {
+         totalRatings++;
       }
       this.totalRatings = totalRatings;
    }
 
-   public String getCurrentTime(){
+   public String getCurrentTime() {
       LocalDateTime timestampObj = LocalDateTime.now();
       DateTimeFormatter dateObj = DateTimeFormatter.ofPattern("MMMM d, yyyy");
       DateTimeFormatter timeObj = DateTimeFormatter.ofPattern("h:mm a");
@@ -165,4 +167,17 @@ public class Recipe extends AbstractEntity {
       return dateTime;
    }
 
+   public LocalDateTime timestamp() {
+      LocalDateTime timestampObj = LocalDateTime.now();
+      return timestampObj;
+   }
+
+   public Comparator<Review> getComparator() {
+      Comparator<Review> comparator = new Comparator<Review>() {
+         public int compare(Review left, Review right) {
+            return left.getId() - right.getId();
+         }
+      };
+      return comparator;
+   }
 }

@@ -73,7 +73,7 @@
                         <th>Comment</th>
                         <th>Date</th>
                     </tr>
-                    <tr th:each="review : ${recipe.reviews}">
+                    <tr th:each="review : ${reviews}">
                         <div th:if ="${!review.comment.isEmpty()}">
                             <td th:text = "${review.username}"></td>
                             <td th:text = "${review.comment}"></td>

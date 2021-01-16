@@ -19,9 +19,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.lang.reflect.Array;
+import java.time.LocalDateTime;
+import java.util.*;
 
 /**
  * @author Oksana
@@ -48,7 +48,6 @@ public class RecipeController {
    public String getListOfRecipes(Model model) {
       Iterable<Recipe> recipes = recipeRepository.findAll();
       model.addAttribute("recipes", recipes);
-
       return "recipes/index";
    }
 
@@ -110,6 +109,11 @@ public class RecipeController {
    public String displayRecipe(@RequestParam Integer recipeId, Model model) {
       model.addAttribute("review", new Review());
       Optional<Recipe> result = recipeRepository.findById(recipeId);
+
+      List<Review> reviews = new ArrayList<Review>();
+         reviews = result.get().getReviews();
+    //  Collections.sort(reviews, result.get().getComparator());
+      model.addAttribute("reviews", reviews);
 
       if (result.isEmpty()) {
          model.addAttribute("title", "Invalid Recipe ID: " + recipeId);
