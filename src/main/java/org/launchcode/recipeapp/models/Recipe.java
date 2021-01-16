@@ -175,7 +175,7 @@ public class Recipe extends AbstractEntity {
    public Comparator<Review> getComparator() {
       Comparator<Review> comparator = new Comparator<Review>() {
          public int compare(Review left, Review right) {
-            return left.getId() - right.getId();
+            return right.getId()- left.getId() ;
          }
       };
       return comparator;

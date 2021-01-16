@@ -112,7 +112,7 @@ public class RecipeController {
 
       List<Review> reviews = new ArrayList<Review>();
          reviews = result.get().getReviews();
-    //  Collections.sort(reviews, result.get().getComparator());
+     Collections.sort(reviews, result.get().getComparator());
       model.addAttribute("reviews", reviews);
 
       if (result.isEmpty()) {
@@ -145,9 +145,13 @@ public class RecipeController {
       review.updateCalculations(recipe,review);
       recipeRepository.save(recipe);
 
+      List<Review> reviews = new ArrayList<Review>();
+      reviews = recipe.getReviews();
+      Collections.sort(reviews, recipe.getComparator());
+      model.addAttribute("reviews", reviews);
+
       model.addAttribute("title", recipe.getName());
       model.addAttribute("recipe", recipe);
-      model.addAttribute("review", review);
 
       return "recipes/display";
    }
