@@ -1,21 +1,20 @@
 package org.launchcode.recipeapp.models;
 
+import lombok.Data;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Oksana
  */
+@Data
 @Entity
 public class User extends AbstractEntity {
 
@@ -46,29 +45,9 @@ public class User extends AbstractEntity {
       this.pwHash = encoder.encode(password);
    }
 
-   public String getUsername() {
-      return username;
-   }
-
    public boolean isMatchingPassword(String password) {
       return encoder.matches(password, pwHash);
 
-   }
-
-   public Role getRole() {
-      return role;
-   }
-
-   public void setRole(Role role) {
-      this.role = role;
-   }
-
-   public List<UserRecipe> getRecipes() {
-      return recipes;
-   }
-
-   public void setRecipes(List<UserRecipe> recipes) {
-      this.recipes = recipes;
    }
 
 }

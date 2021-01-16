@@ -22,6 +22,11 @@
                 <tr>
                     <td class="save_button"><a style="margin:auto" th:href="'/recipes/display?recipeId=' + ${recipe.id}"
                                                class="btn btn-primary">Description</a></td>
+                    <td>
+                        <form method="post" th:action="'/users/deleteRecipe/' + ${recipe.id}">
+                            <input class="btn" id="delete_button" value="Delete from favorite" type="submit" >
+                        </form>
+                    </td>
                 </tr>
 
             </table>

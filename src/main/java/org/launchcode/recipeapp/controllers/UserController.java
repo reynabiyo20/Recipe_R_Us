@@ -90,26 +90,45 @@ public class UserController {
          userRecipe.setUser(user);
          userRecipe.setRecipe(recipe);
 
-         List<UserRecipe> allByUser = userRecipeRepository.getAllByUser(user);
-         if(allByUser.size() == 0){
+         Optional<UserRecipe> recipeByUserOptional = userRecipeRepository.findByRecipeAndUser(recipe,user);
+         if (recipeByUserOptional.isPresent()) {
+            return "redirect:/recipes/display?recipeId="+recipe.getId();
+         } else {
             userRecipeRepository.save(userRecipe);
          }
-         for (UserRecipe userrecipe:allByUser) {
+      }
 
-            if (!userrecipe.getRecipe().equals(recipe)) {
-               userRecipeRepository.save(userRecipe);
-            } else {
-               model.addAttribute("title1", "This recipe has already been added to your profile ");
-               model.addAttribute("recipe", recipe);
-               model.addAttribute("review", new Review());
-               return "recipes/display";
+      return "redirect:/users/profile";
+   }
+
+   @PostMapping("/deleteRecipe/{id}")
+   public String deleteRecipeFromFavorite(@PathVariable Integer id, HttpServletRequest request, Model model) {
+      User sessionUser = (User) request.getSession().getAttribute("user");
+      User user = userRepository.getById(sessionUser.getId());
+      List<UserRecipe> userRecipes = userRecipeRepository.getAllByUser(user);
+
+      Optional<Recipe> recipeOptional = recipeRepository.findById(id);
+      if (recipeOptional.isPresent()) {
+
+         Recipe recipe = recipeOptional.get();
+
+
+         for (UserRecipe userRecipe : userRecipes) {
+            Optional<Recipe> recipeOpt = recipeRepository.findById(userRecipe.getRecipe().getId());
+            if (recipeOpt.isPresent()) {
+               Recipe recipe1 = recipeOpt.get();
+               if (recipe1.getId() == recipe.getId()) {
+
+                  userRecipeRepository.delete(userRecipe);
+
+               }
+
             }
          }
 
-         }
+      }
 
       return "redirect:/users/profile";
-//
    }
 }
 
