@@ -1,5 +1,11 @@
 package org.launchcode.recipeapp.models;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -15,6 +21,11 @@ import java.util.List;
 /**
  * @author Oksana
  */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(exclude = "users")
+@DynamicInsert
+@DynamicUpdate
 @Entity
 public class Recipe extends AbstractEntity {
 
