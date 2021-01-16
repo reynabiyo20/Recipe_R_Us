@@ -127,7 +127,7 @@ public class RecipeController {
 
       List<Review> reviews = new ArrayList<Review>();
          reviews = result.get().getReviews();
-     Collections.sort(reviews, result.get().getComparator());
+      Collections.sort(reviews, result.get().getComparator());
       model.addAttribute("reviews", reviews);
 
       if (result.isEmpty()) {
@@ -159,10 +159,25 @@ public class RecipeController {
                                    Model model, HttpServletRequest request) {
       Recipe recipe = recipeRepository.findById(recipeId).get();
 
+      model.addAttribute("title", recipe.getName());
+      model.addAttribute("recipe", recipe);
+
+      List<Review> reviews = new ArrayList<Review>();
+      reviews = recipe.getReviews();
+      Collections.sort(reviews, recipe.getComparator());
+      model.addAttribute("reviews", reviews);
+
       if (errors.hasErrors()) {
-         model.addAttribute("title", recipe.getName());
-         model.addAttribute("recipe", recipe);
-         System.out.println(errors);
+         User sessionUser = (User) request.getSession().getAttribute("user");
+         Optional<UserRecipe> recipeByUserOptional = userRecipeRepository.findByRecipeAndUser(recipe,sessionUser);
+         boolean isFavourite;
+         if (recipeByUserOptional.isPresent()) {
+            isFavourite = true;
+            model.addAttribute("title1", "This recipe has already been added to your profile ");
+         } else {
+            isFavourite = false;
+         }
+         model.addAttribute("isFavourite", isFavourite);
          return "recipes/display";
       }
 
@@ -172,14 +187,6 @@ public class RecipeController {
       reviewRepository.save(review);
       review.updateCalculations(recipe,review);
       recipeRepository.save(recipe);
-
-      List<Review> reviews = new ArrayList<Review>();
-      reviews = recipe.getReviews();
-      Collections.sort(reviews, recipe.getComparator());
-      model.addAttribute("reviews", reviews);
-
-      model.addAttribute("title", recipe.getName());
-      model.addAttribute("recipe", recipe);
 
       return "redirect:/recipes/display?recipeId="+recipeId;
    }
