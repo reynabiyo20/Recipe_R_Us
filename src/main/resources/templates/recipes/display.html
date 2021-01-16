@@ -51,7 +51,7 @@
                 <p class="error" th:errors="${review.rating}"></p><br><br>
                 <input type="hidden" th:field="*{user}" th:value="${user}">
                 <label>Comment:</label><br>
-                <textarea th:field="*{comment}" rows="6" cols="50" placeholder="What did you think of the recipe?"></textarea><br>
+                <textarea style="resize:none" th:field="*{comment}" rows="6" cols="50" placeholder="What did you think of the recipe?"></textarea><br>
                 <input type="submit" value="Post Review" name="submit">
                 <p class="error" th:errors="${review.comment}"></p>
             </form>
