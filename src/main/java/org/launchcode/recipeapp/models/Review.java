@@ -95,8 +95,4 @@ public class Review extends AbstractEntity{
         recipe.setTotalRatings(review);
         recipe.setNumComments(review);
     }
-//    public Review sortComments(List<Review> reviews){
-//        List<Review> sortedReviews = new ArrayList<>();
-//        return;
-//    }
 }

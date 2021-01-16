@@ -162,8 +162,8 @@ public class RecipeController {
       if (errors.hasErrors()) {
          model.addAttribute("title", recipe.getName());
          model.addAttribute("recipe", recipe);
-
-         return "redirect:/recipes/display?recipeId="+recipeId;
+         System.out.println(errors);
+         return "recipes/display";
       }
 
       // add review & update recipe calculations

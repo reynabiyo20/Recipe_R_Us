@@ -21,8 +21,12 @@
             </div>
            <div th:unless="${session.isEmpty()}">
                <p th:text="${title1}" style="color: red; font-size: 18px"></p>
-               <form  th:style="${isFavourite ? 'display:none' : 'display:block'}" method="post" th:action="'/users/addRecipe/' + ${recipe.id}" class="my-2">
-                <input  value="Add to Favorites" type="submit" class="btn btn-primary">
+               <!-- This now breaks the application if someone submits s review with errors
+               th:style="${isFavourite ? 'display:none' : 'display:block'}" -->
+               <div th:unless ="${isFavourite}">
+                    <form method="post" th:action="'/users/addRecipe/' + ${recipe.id}" class="my-2">
+                    <input  value="Add to Favorites" type="submit" class="btn btn-primary">
+               </div>
             </form>
            </div>
             <h3 class="mt-3">Ingredients</h3>
