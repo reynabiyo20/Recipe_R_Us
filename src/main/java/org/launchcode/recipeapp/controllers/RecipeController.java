@@ -23,10 +23,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.*;
 import javax.validation.Valid;
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.*;
+
+import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  * @author Oksana
@@ -118,24 +121,24 @@ public class RecipeController {
       return "redirect:/recipes/display";
    }
 
-   @GetMapping("create-tags")
+   @GetMapping("tags")
    public String displayCreateTag(Model model){
       Iterable<Tag> tags = tagRepository.findAll();
       model.addAttribute("tags", tags);
       model.addAttribute(new Tag());
-      return "recipes/create-tags";
+      return "recipes/tags";
    }
 
-   @PostMapping("create-tags")
+   @PostMapping("tags")
    public String processCreateTag(@ModelAttribute @Valid Tag tag, Errors errors, Model model){
 
       if(errors.hasErrors()) {
-         return "recipes/create-tags";
+         return "recipes/tags";
       } else {
          tagRepository.save(tag);
          Iterable<Tag> tags = tagRepository.findAll();
          model.addAttribute("tags", tags);
-         return "recipes/create-tags";
+         return "recipes/tags";
       }
    }
 
@@ -233,6 +236,16 @@ public class RecipeController {
       model.addAttribute("tag", tag);
       model.addAttribute("recipes", recipes);
       return "recipes/tag";
+   }
+
+   @RequestMapping("tags/delete/{tagId}")
+   public String deleteTag(@PathVariable Integer tagId) {
+      Optional<Tag> tagOpt = tagRepository.findById(tagId);
+      Iterable<Recipe> recipeOpt = recipeRepository.findAll();
+      if (tagOpt.isPresent()) {
+         tagRepository.deleteById(tagId);
+      }
+      return "redirect:/recipes/tags";
    }
 
 
