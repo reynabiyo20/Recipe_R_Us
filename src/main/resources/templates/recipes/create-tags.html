@@ -21,7 +21,7 @@
         <br>
         <h3 class="row">Existing Tags</h3>
         <ul th:each="tag : ${tags}" style="text-align:left">
-            <li th:text="${tag.name}"></li>
+            <a th:href="@{'/recipes/tag?tagId=' + ${tag.id}}"><li th:text="${tag.name}"></li></a>
         </ul>
     </div>
 </div>

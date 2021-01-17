@@ -17,7 +17,7 @@
             <span>TAGS: </span>
             <div class="card-text d-inline">
                 <th:block th:each="tag : ${recipe.tags}">
-                    <span th:text="${tag.name}"></span>
+                    <a th:href="@{'/recipes/tag?tagId=' + ${tag.id}}"><span th:text="${tag.name}"></span></a>
                 </th:block>
             </div>
             <p th:if="${recipe.averageRating} == null" class="card-text">Be the first to <a href="#submit-review">leave a review</a></p>

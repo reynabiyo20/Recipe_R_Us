@@ -226,6 +226,15 @@ public class RecipeController {
 
    }
 
+   @GetMapping("tag")
+   public String getAllRecipesByTag (Model model, @RequestParam int tagId){
+      Tag tag = tagRepository.findById(tagId).get();
+      List<Recipe> recipes = tag.getRecipes();
+      model.addAttribute("tag", tag);
+      model.addAttribute("recipes", recipes);
+      return "recipes/tag";
+   }
+
 
    @GetMapping("edit/{recipeId}")
    public String displayEditForm(Model model, @PathVariable int recipeId) {
