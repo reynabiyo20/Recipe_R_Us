@@ -2,6 +2,7 @@ package org.launchcode.recipeapp.models;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 @Entity
 public class Tag extends AbstractEntity {
    @NotNull(message = "Tag name required")
+   @NotBlank(message = "Tag name required")
    String name;
 
    @ManyToMany(mappedBy="tags")
