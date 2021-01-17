@@ -29,11 +29,22 @@
                             th:text="${category.name()}"></option>
                 </select>
             </div><br/>
-            <div class="form-group">
-                <label>Tag:</label>
-                <select th:field="*{tag}">
-                    <option th:each="tag : ${tags}" th:value="${tag}" th:text="${tag.name()}"></option>
-                </select>
+            <div>
+<!--                <label>Tags:</label>-->
+<!--                <radio th:field="*{tag}">-->
+<!--                    <option th:each="tag : ${tags}" th:value="${tag}" th:text="${tag.name()}"></option>-->
+<!--                </radio>-->
+
+                <label th:for="tags">Tags</label>
+                <th:block th:each="tag : ${tags}">
+                    <input type="checkbox" name="tags" th:value="${tag.id}">
+                    <label th:text="${tag.name}"></label>
+                </th:block>
+                <a th:href="@{'./create-tags'}">Create New Tag</a>
+
+<!--                <select th:field="*{tag}">-->
+<!--                    <option th:each="tag : ${tags}" th:value="${tag}" th:text="${tag.name()}"></option>-->
+<!--                </select>-->
             </div><br/>
             <div id="ingredientsContainer">
                 <label>Ingredients:</label>

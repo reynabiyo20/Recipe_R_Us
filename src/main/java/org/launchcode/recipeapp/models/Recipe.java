@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.Array;
@@ -40,7 +41,8 @@ public class Recipe extends AbstractEntity {
    @NotNull(message = "Category required")
    private Category category;
 
-   private Tag tag;
+   @ManyToMany
+   private List<Tag> tags = new ArrayList<Tag>();
 
    private String img;
 
@@ -100,13 +102,12 @@ public class Recipe extends AbstractEntity {
       this.ingredients = ingredients;
    }
 
-
-   public Tag getTag() {
-      return tag;
+   public List<Tag> getTags() {
+      return tags;
    }
 
-   public void setTag(Tag tag) {
-      this.tag = tag;
+   public void setTags(List<Tag> tags) {
+      this.tags = tags;
    }
 
    public List<Instruction> getInstructions() {

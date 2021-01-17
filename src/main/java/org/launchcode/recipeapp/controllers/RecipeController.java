@@ -9,11 +9,7 @@ import org.launchcode.recipeapp.models.Review;
 import org.launchcode.recipeapp.models.Tag;
 import org.launchcode.recipeapp.models.User;
 import org.launchcode.recipeapp.models.UserRecipe;
-import org.launchcode.recipeapp.models.data.IngredientRepository;
-import org.launchcode.recipeapp.models.data.InstructionRepository;
-import org.launchcode.recipeapp.models.data.RecipeRepository;
-import org.launchcode.recipeapp.models.data.ReviewRepository;
-import org.launchcode.recipeapp.models.data.UserRecipeRepository;
+import org.launchcode.recipeapp.models.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,18 +40,21 @@ public class RecipeController {
    private final InstructionRepository instructionRepository;
    private final ReviewRepository reviewRepository;
    private final UserRecipeRepository userRecipeRepository;
+   private final TagRepository tagRepository;
+
 
    @Autowired
    public RecipeController(RecipeRepository recipeRepository,
                            IngredientRepository ingredientRepository,
                            InstructionRepository instructionRepository,
                            UserRecipeRepository userRecipeRepository,
-                           ReviewRepository reviewRepository) {
+                           ReviewRepository reviewRepository, TagRepository tagRepository) {
       this.recipeRepository = recipeRepository;
       this.userRecipeRepository = userRecipeRepository;
       this.ingredientRepository = ingredientRepository;
       this.instructionRepository = instructionRepository;
       this.reviewRepository = reviewRepository;
+      this.tagRepository = tagRepository;
    }
 
 
@@ -70,7 +69,7 @@ public class RecipeController {
    public String createRecipe(Model model) {
       Category[] categories = Category.values();
       Measurement[] measurements = Measurement.values();
-      Tag[] tags = Tag.values();
+      Iterable<Tag> tags = tagRepository.findAll();
 
       model.addAttribute("title", "Create Recipe");
       model.addAttribute("recipe", new Recipe());
@@ -119,6 +118,28 @@ public class RecipeController {
       return "redirect:/recipes/display";
    }
 
+   @GetMapping("create-tags")
+   public String displayCreateTag(Model model){
+      Iterable<Tag> tags = tagRepository.findAll();
+      model.addAttribute("tags", tags);
+      model.addAttribute(new Tag());
+      return "recipes/create-tags";
+   }
+
+   @PostMapping("create-tags")
+   public String processCreateTag(@ModelAttribute @Valid Tag tag, Errors errors, Model model){
+
+      if(errors.hasErrors()) {
+         return "recipes/create-tags";
+      } else {
+         tagRepository.save(tag);
+         Iterable<Tag> tags = tagRepository.findAll();
+         model.addAttribute("tags", tags);
+         return "recipes/create-tags";
+      }
+   }
+
+
 
    @GetMapping("display")
    public String displayRecipe(@RequestParam Integer recipeId, Model model, HttpServletRequest request) {
@@ -129,6 +150,9 @@ public class RecipeController {
          reviews = result.get().getReviews();
       Collections.sort(reviews, result.get().getComparator());
       model.addAttribute("reviews", reviews);
+
+      List<Tag> tags = new ArrayList<>();
+      tags = result.get().getTags();
 
       if (result.isEmpty()) {
          model.addAttribute("title", "Invalid Recipe ID: " + recipeId);
@@ -208,7 +232,8 @@ public class RecipeController {
 
       Category[] categories = Category.values();
       Measurement[] measurements = Measurement.values();
-      Tag[] tags = Tag.values();
+      Iterable<Tag> tags = tagRepository.findAll();
+
       Optional<Recipe> recipeOpt = recipeRepository.findById(recipeId);
       if (recipeOpt.isPresent()) {
          Recipe recipe = recipeOpt.get();
@@ -259,7 +284,7 @@ public class RecipeController {
          recipe.setCategory(newRecipe.getCategory());
          recipe.setImg(newRecipe.getImg());
          recipe.setName(newRecipe.getName());
-         recipe.setTag(newRecipe.getTag());
+         recipe.setTags(newRecipe.getTags());
 
          for (int i = 0; i < ingredients.length; i++) {
             Ingredient newIngredient = new Ingredient(ingredients[i], Double.parseDouble(quantity[i]), measurements[i]);
