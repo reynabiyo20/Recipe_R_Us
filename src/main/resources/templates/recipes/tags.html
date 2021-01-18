@@ -14,9 +14,9 @@
             <div class="form-group">
                 <label th:for="name">New Tag: </label>
                 <input class="form-control" th:field="*{name}">
-                <span th:errors="${tag.name}" class="error"></span>
             </div>
             <input type="submit" value="Add Tag">
+            <p class="error" th:errors="${tag.name}"></p><br><br>
         </form>
         <br>
         <div>
@@ -32,10 +32,10 @@
             <tr th:each="tag : ${tags}">
                 <td th:text="${tag.name}"></td>
                 <td>
-                    <a th:href="@{'/recipes/tag?tagId=' + ${tag.id}}" th:text="${tag.recipes.size()}"></a>
+                    <a th:href="@{'/recipes/tag?id=' + ${tag.id}}" th:text="${tag.recipes.size()}"></a>
                 </td>
                 <td>
-                    <a th:href="@{'/recipes/edit-tag?tagId=' + ${tag.id}}">Edit</a>
+                    <a th:href="@{'/recipes/edit-tag?id=' + ${tag.id}}">Edit</a>
                 </td>
                 <td th:if="${tag.getRecipes().size()} == 0">
                     <a th:href="@{/recipes/tags/delete/{id}(id=${tag.id})}">Delete</a>

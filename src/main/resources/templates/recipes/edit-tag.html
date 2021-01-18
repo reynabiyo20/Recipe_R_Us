@@ -11,11 +11,12 @@
     <div align="center">
         <h2 th:text="'Edit Tag: ' + ${tag.name}"></h2>
         <form th:object="${tag}" method="post">
+            <input type="hidden" th:object="${tag}" th:value="${tag}">
             <input type="hidden" th:field="*{id}" th:value="${tag.id}">
             <input type="text" placeholder="New Tag Name" name="name">
+            <p class="error" th:errors="${tag.name}"></p>
             <input type="submit" value="Update Tag">
         </form>
-
     </div>
 </div>
 </body>

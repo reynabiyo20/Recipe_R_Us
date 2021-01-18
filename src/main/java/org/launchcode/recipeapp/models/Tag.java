@@ -12,7 +12,6 @@ import java.util.List;
  */
 @Entity
 public class Tag extends AbstractEntity {
-   @NotNull(message = "Tag name required")
    @NotBlank(message = "Tag name required")
    String name;
 

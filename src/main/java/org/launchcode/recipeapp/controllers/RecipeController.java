@@ -121,27 +121,6 @@ public class RecipeController {
       return "redirect:/recipes/display";
    }
 
-   @GetMapping("tags")
-   public String displayCreateTag(Model model){
-      Iterable<Tag> tags = tagRepository.findAll();
-      model.addAttribute("tags", tags);
-      model.addAttribute(new Tag());
-      return "recipes/tags";
-   }
-
-   @PostMapping("tags")
-   public String processCreateTag(@ModelAttribute @Valid Tag tag, Errors errors, Model model){
-      if(errors.hasErrors()) {
-         return "recipes/tags";
-      } else {
-         tagRepository.save(tag);
-         Iterable<Tag> tags = tagRepository.findAll();
-         model.addAttribute("tags", tags);
-         return "recipes/tags";
-      }
-   }
-
-
 
    @GetMapping("display")
    public String displayRecipe(@RequestParam Integer recipeId, Model model, HttpServletRequest request) {
@@ -228,42 +207,7 @@ public class RecipeController {
 
    }
 
-   @GetMapping("tag")
-   public String getAllRecipesByTag (Model model, @RequestParam int tagId){
-      Tag tag = tagRepository.findById(tagId).get();
-      List<Recipe> recipes = tag.getRecipes();
-      model.addAttribute("tag", tag);
-      model.addAttribute("recipes", recipes);
-      return "recipes/tag";
-   }
 
-   @RequestMapping("tags/delete/{tagId}")
-   public String deleteTag(@PathVariable Integer tagId) {
-      Optional<Tag> tagOpt = tagRepository.findById(tagId);
-      Iterable<Recipe> recipeOpt = recipeRepository.findAll();
-      if (tagOpt.isPresent()) {
-         tagRepository.deleteById(tagId);
-      }
-      return "redirect:/recipes/tags";
-   }
-
-   @GetMapping("edit-tag")
-   public String renderEditTag(@RequestParam Integer tagId, Model model) {
-      Optional<Tag> tagOpt = tagRepository.findById(tagId);
-      if (tagOpt.isPresent()) {
-         model.addAttribute("tag", tagOpt.get());
-      } else{
-         model.addAttribute("tag" , "Tag not found");
-      }
-      return "recipes/edit-tag";
-   }
-   @PostMapping("edit-tag")
-   public String processEditTagForm(@RequestParam Integer tagId, String name, Model model) {
-      Tag tag = tagRepository.findById(tagId).get();
-      tag.setName(name);
-      tagRepository.save(tag);
-      return "redirect:/recipes/tags";
-   }
 
 
    @GetMapping("edit/{recipeId}")
