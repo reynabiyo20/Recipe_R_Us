@@ -1,9 +1,19 @@
 package org.launchcode.recipeapp.controllers;
 
-import org.apache.catalina.Store;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
-import org.launchcode.recipeapp.models.*;
-import org.launchcode.recipeapp.models.data.*;
+import org.launchcode.recipeapp.models.Category;
+import org.launchcode.recipeapp.models.Ingredient;
+import org.launchcode.recipeapp.models.Instruction;
+import org.launchcode.recipeapp.models.Measurement;
+import org.launchcode.recipeapp.models.Recipe;
+import org.launchcode.recipeapp.models.Review;
+import org.launchcode.recipeapp.models.Tag;
+import org.launchcode.recipeapp.models.User;
+import org.launchcode.recipeapp.models.UserRecipe;
+import org.launchcode.recipeapp.models.data.IngredientRepository;
+import org.launchcode.recipeapp.models.data.InstructionRepository;
+import org.launchcode.recipeapp.models.data.RecipeRepository;
+import org.launchcode.recipeapp.models.data.ReviewRepository;
+import org.launchcode.recipeapp.models.data.UserRecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +42,17 @@ public class RecipeController {
    private final org.launchcode.recipeapp.models.data.RecipeRepository recipeRepository;
    private final IngredientRepository ingredientRepository;
    private final InstructionRepository instructionRepository;
-   public final ReviewRepository reviewRepository;
+   private final ReviewRepository reviewRepository;
+   private final UserRecipeRepository userRecipeRepository;
 
    @Autowired
-   public RecipeController(RecipeRepository recipeRepository, IngredientRepository ingredientRepository, InstructionRepository instructionRepository, ReviewRepository reviewRepository) {
+   public RecipeController(RecipeRepository recipeRepository,
+                           IngredientRepository ingredientRepository,
+                           InstructionRepository instructionRepository,
+                           UserRecipeRepository userRecipeRepository,
+                           ReviewRepository reviewRepository) {
       this.recipeRepository = recipeRepository;
+      this.userRecipeRepository = userRecipeRepository;
       this.ingredientRepository = ingredientRepository;
       this.instructionRepository = instructionRepository;
       this.reviewRepository = reviewRepository;
@@ -107,7 +122,7 @@ public class RecipeController {
 
 
    @GetMapping("display")
-   public String displayRecipe(@RequestParam Integer recipeId, Model model) {
+   public String displayRecipe(@RequestParam Integer recipeId, Model model, HttpServletRequest request) {
       model.addAttribute("review", new Review());
       Optional<Recipe> result = recipeRepository.findById(recipeId);
 
@@ -117,6 +132,18 @@ public class RecipeController {
          Recipe recipe = result.get();
          model.addAttribute("title", recipe.getName());
          model.addAttribute("recipe", recipe);
+         User sessionUser = (User) request.getSession().getAttribute("user");
+
+         Optional<UserRecipe> recipeByUserOptional = userRecipeRepository.findByRecipeAndUser(recipe,sessionUser);
+
+         boolean isFavourite;
+         if (recipeByUserOptional.isPresent()) {
+            isFavourite = true;
+            model.addAttribute("title1", "This recipe has already been added to your profile ");
+         } else {
+            isFavourite = false;
+         }
+         model.addAttribute("isFavourite", isFavourite);
       }
 
       return "recipes/display";
@@ -131,7 +158,8 @@ public class RecipeController {
       if (errors.hasErrors()) {
          model.addAttribute("title", recipe.getName());
          model.addAttribute("recipe", recipe);
-         return "recipes/display";
+
+         return "redirect:/recipes/display?recipeId="+recipeId;
       }
 
       // add review & update recipe calculations
@@ -145,7 +173,7 @@ public class RecipeController {
       model.addAttribute("recipe", recipe);
       model.addAttribute("review", review);
 
-      return "recipes/display";
+      return "redirect:/recipes/display?recipeId="+recipeId;
    }
 
    @GetMapping("all")
@@ -155,7 +183,7 @@ public class RecipeController {
 
       model.addAttribute("recipes", all);
 
-      return "recipes/all";
+      return "redirect:/recipes";
 
    }
 

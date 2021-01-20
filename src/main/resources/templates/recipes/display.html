@@ -20,7 +20,8 @@
                 <p th:text="'Total Ratings: ' + ${recipe.totalRatings}" class="card-text"></p>
             </div>
            <div th:unless="${session.isEmpty()}">
-            <form method="post" th:action="'/users/addRecipe/' + ${recipe.id}" class="my-2">
+               <p th:text="${title1}" style="color: red; font-size: 18px"></p>
+               <form  th:style="${isFavourite ? 'display:none' : 'display:block'}" method="post" th:action="'/users/addRecipe/' + ${recipe.id}" class="my-2">
                 <input  value="Add to Favorites" type="submit" class="btn btn-primary">
             </form>
            </div>
