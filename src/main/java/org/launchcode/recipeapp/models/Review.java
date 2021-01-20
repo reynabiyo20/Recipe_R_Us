@@ -10,6 +10,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Entity
 public class Review extends AbstractEntity{
@@ -86,10 +89,10 @@ public class Review extends AbstractEntity{
     public String getTimestamp() {
         return timestamp;
     }
+
     public void updateCalculations(Recipe recipe, Review review){
         recipe.setAverageRating();
         recipe.setTotalRatings(review);
         recipe.setNumComments(review);
     }
-
 }

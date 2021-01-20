@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Tag</title>
+    <head th:replace="fragments :: head"></head>
+</head>
+<body>
+<header th:replace="fragments :: header"></header>
+<div class="container - xxl" style="padding:50px">
+    <div align="center">
+
+        <form method="post" th:object="${tag}">
+            <div class="form-group">
+                <label th:for="name">New Tag: </label>
+                <input class="form-control" th:field="*{name}">
+            </div>
+            <input type="submit" value="Add Tag">
+            <p class="error" th:errors="${tag.name}"></p><br><br>
+        </form>
+        <br>
+        <div>
+            <h3>All Tags</h3>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <th>Tag</th>
+                <th>Recipes</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </thead>
+            <tr th:each="tag : ${tags}">
+                <td th:text="${tag.name}"></td>
+                <td>
+                    <a th:href="@{'/recipes/tag?id=' + ${tag.id}}" th:text="${tag.recipes.size()}"></a>
+                </td>
+                <td>
+                    <a th:href="@{'/recipes/edit-tag?id=' + ${tag.id}}">Edit</a>
+                </td>
+                <td th:if="${tag.getRecipes().size()} == 0">
+                    <a th:href="@{/recipes/tags/delete/{id}(id=${tag.id})}">Delete</a>
+                </td>
+                <td th:unless="${tag.getRecipes().size()} == 0">Remove Tag From Recipes To Delete</td>
+            </tr>
+        </table>
+    <br>
+    </div>
+</div>
+</body>
+</html>
