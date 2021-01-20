@@ -22,3 +22,7 @@ div.imagecontainer {
 .card-deck .card {
     min-width: 250px;
 }
+
+i.fa.fa-times:hover {
+    cursor: pointer
+}

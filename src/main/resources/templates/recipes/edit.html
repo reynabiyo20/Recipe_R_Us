@@ -38,12 +38,18 @@
 
         <!-- Tag Select -->
 
-        <div class="form-group">
-            <label for="tag">Tag</label>
-            <select class="custom-select" id="tag" th:field="*{tag}">
-                <option th:each="tag : ${tags}" th:value="${tag}" th:text="${tag.name()}"></option>
-            </select>
-        </div>
+        <label th:for="tags">Tags</label>
+        <th:block th:each="tag : ${tags}">
+            <div th:if="${recipe.tags.contains(tag)}">
+                <input type="checkbox" name="tags" th:value="${tag.id}" checked>
+                <label th:text="${tag.name}" style="font-size:15px"></label>
+            </div>
+            <div th:unless="${recipe.tags.contains(tag)}">
+                <input type="checkbox" name="tags" th:value="${tag.id}">
+                <label th:text="${tag.name}" style="font-size:15px"></label>
+            </div>
+        </th:block>
+        <a th:href="@{'../tags'}">Create New Tag</a>
 
         <!-- Ingredients -->
 

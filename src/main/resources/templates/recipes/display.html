@@ -13,7 +13,9 @@
         <div class="card-body">
             <h2 class="card-title" th:text="${recipe.name}"></h2>
             <p class="card-text d-inline" th:text="${recipe.category + ' | '}"></p>
-            <p class="card-text d-inline" th:text="${recipe.tag}"></p>
+            <th:block th:each="tag : ${recipe.tags}">
+                <p class="card-text d-inline" th:text="${tag.name +', '}"></p>
+            </th:block>
             <p th:if="${recipe.averageRating} == null" class="card-text">Be the first to <a href="#submit-review">leave a review</a></p>
             <div th:unless="${recipe.averageRating} == null" id="has-reviews">
                 <p th:text="'Average Rating: ' + ${recipe.averageRating}" class="card-text"></p>

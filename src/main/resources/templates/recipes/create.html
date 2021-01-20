@@ -32,12 +32,12 @@
 
 
         <!-- Tag -->
-        <div class="form-group">
-            <label for="tag">Tag</label>
-            <select class="custom-select" id="tag" th:field="*{tag}">
-                <option th:each="tag : ${tags}" th:value="${tag}" th:text="${tag.getName()}"></option>
-            </select>
-        </div>
+        <label th:for="tags">Tags</label>
+        <th:block th:each="tag : ${tags}">
+            <input type="checkbox" name="tags" th:value="${tag.id}">
+            <label th:text="${tag.name}" style="font-size:15px"></label>
+        </th:block>
+        <a th:href="@{'./tags'}">Create New Tag</a>
 
         <!-- Ingredients -->
         <div class="form-group">
