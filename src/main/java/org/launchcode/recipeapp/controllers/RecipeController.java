@@ -9,11 +9,7 @@ import org.launchcode.recipeapp.models.Review;
 import org.launchcode.recipeapp.models.Tag;
 import org.launchcode.recipeapp.models.User;
 import org.launchcode.recipeapp.models.UserRecipe;
-import org.launchcode.recipeapp.models.data.IngredientRepository;
-import org.launchcode.recipeapp.models.data.InstructionRepository;
-import org.launchcode.recipeapp.models.data.RecipeRepository;
-import org.launchcode.recipeapp.models.data.ReviewRepository;
-import org.launchcode.recipeapp.models.data.UserRecipeRepository;
+import org.launchcode.recipeapp.models.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,10 +23,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.*;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.lang.reflect.Array;
+import java.time.LocalDateTime;
+import java.util.*;
+
+import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  * @author Oksana
@@ -44,18 +43,21 @@ public class RecipeController {
    private final InstructionRepository instructionRepository;
    private final ReviewRepository reviewRepository;
    private final UserRecipeRepository userRecipeRepository;
+   private final TagRepository tagRepository;
+
 
    @Autowired
    public RecipeController(RecipeRepository recipeRepository,
                            IngredientRepository ingredientRepository,
                            InstructionRepository instructionRepository,
                            UserRecipeRepository userRecipeRepository,
-                           ReviewRepository reviewRepository) {
+                           ReviewRepository reviewRepository, TagRepository tagRepository) {
       this.recipeRepository = recipeRepository;
       this.userRecipeRepository = userRecipeRepository;
       this.ingredientRepository = ingredientRepository;
       this.instructionRepository = instructionRepository;
       this.reviewRepository = reviewRepository;
+      this.tagRepository = tagRepository;
    }
 
 
@@ -63,7 +65,6 @@ public class RecipeController {
    public String getListOfRecipes(Model model) {
       Iterable<Recipe> recipes = recipeRepository.findAll();
       model.addAttribute("recipes", recipes);
-
       return "recipes/index";
    }
 
@@ -71,7 +72,7 @@ public class RecipeController {
    public String createRecipe(Model model) {
       Category[] categories = Category.values();
       Measurement[] measurements = Measurement.values();
-      Tag[] tags = Tag.values();
+      Iterable<Tag> tags = tagRepository.findAll();
 
       model.addAttribute("title", "Create Recipe");
       model.addAttribute("recipe", new Recipe());
@@ -126,6 +127,14 @@ public class RecipeController {
       model.addAttribute("review", new Review());
       Optional<Recipe> result = recipeRepository.findById(recipeId);
 
+      List<Review> reviews = new ArrayList<Review>();
+         reviews = result.get().getReviews();
+      Collections.sort(reviews, result.get().getComparator());
+      model.addAttribute("reviews", reviews);
+
+      List<Tag> tags = new ArrayList<>();
+      tags = result.get().getTags();
+
       if (result.isEmpty()) {
          model.addAttribute("title", "Invalid Recipe ID: " + recipeId);
       } else {
@@ -155,11 +164,26 @@ public class RecipeController {
                                    Model model, HttpServletRequest request) {
       Recipe recipe = recipeRepository.findById(recipeId).get();
 
-      if (errors.hasErrors()) {
-         model.addAttribute("title", recipe.getName());
-         model.addAttribute("recipe", recipe);
+      model.addAttribute("title", recipe.getName());
+      model.addAttribute("recipe", recipe);
 
-         return "redirect:/recipes/display?recipeId="+recipeId;
+      List<Review> reviews = new ArrayList<Review>();
+      reviews = recipe.getReviews();
+      Collections.sort(reviews, recipe.getComparator());
+      model.addAttribute("reviews", reviews);
+
+      if (errors.hasErrors()) {
+         User sessionUser = (User) request.getSession().getAttribute("user");
+         Optional<UserRecipe> recipeByUserOptional = userRecipeRepository.findByRecipeAndUser(recipe,sessionUser);
+         boolean isFavourite;
+         if (recipeByUserOptional.isPresent()) {
+            isFavourite = true;
+            model.addAttribute("title1", "This recipe has already been added to your profile ");
+         } else {
+            isFavourite = false;
+         }
+         model.addAttribute("isFavourite", isFavourite);
+         return "recipes/display";
       }
 
       // add review & update recipe calculations
@@ -168,10 +192,6 @@ public class RecipeController {
       reviewRepository.save(review);
       review.updateCalculations(recipe,review);
       recipeRepository.save(recipe);
-
-      model.addAttribute("title", recipe.getName());
-      model.addAttribute("recipe", recipe);
-      model.addAttribute("review", review);
 
       return "redirect:/recipes/display?recipeId="+recipeId;
    }
@@ -188,12 +208,15 @@ public class RecipeController {
    }
 
 
+
+
    @GetMapping("edit/{recipeId}")
    public String displayEditForm(Model model, @PathVariable int recipeId) {
 
       Category[] categories = Category.values();
       Measurement[] measurements = Measurement.values();
-      Tag[] tags = Tag.values();
+      Iterable<Tag> tags = tagRepository.findAll();
+
       Optional<Recipe> recipeOpt = recipeRepository.findById(recipeId);
       if (recipeOpt.isPresent()) {
          Recipe recipe = recipeOpt.get();
@@ -244,7 +267,7 @@ public class RecipeController {
          recipe.setCategory(newRecipe.getCategory());
          recipe.setImg(newRecipe.getImg());
          recipe.setName(newRecipe.getName());
-         recipe.setTag(newRecipe.getTag());
+         recipe.setTags(newRecipe.getTags());
 
          for (int i = 0; i < ingredients.length; i++) {
             Ingredient newIngredient = new Ingredient(ingredients[i], Double.parseDouble(quantity[i]), measurements[i]);

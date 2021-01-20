@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Tag</title>
+    <head th:replace="fragments :: head"></head>
+</head>
+<body>
+<header th:replace="fragments :: header"></header>
+<div class="container - xxl" style="padding:50px">
+    <div align="center">
+        <h2 th:text="'Edit Tag: ' + ${tag.name}"></h2>
+        <form th:object="${tag}" method="post">
+            <input type="hidden" th:field="*{id}" th:value="${tag.id}">
+            <input type="text" th:field="*{name}" required>
+            <p class="error" th:errors="${tag.name}"></p>
+            <input type="submit" value="Update Tag">
+        </form>
+    </div>
+</div>
+</body>
+</html>
