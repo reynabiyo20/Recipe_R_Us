@@ -8,7 +8,7 @@
     <h1>View All Recipes</h1>
     <div class="card-deck justify-content-center pt-5">
         <div class="card col-2 thumb-post p-1" th:each="recipe:${recipes}">
-            <a th:href="'/recipes/display?recipeId=' + ${recipe.id}"><img class="card-img-top img" th:src="${recipe.img}" alt="Card image cap"></a>
+            <a th:href="'/recipes/display?recipeId=' + ${recipe.id}"><div class="imagecontainer"><img class="card-img-top img my-auto" th:src="${recipe.img}" alt="Card image cap"></div></a>
             <div class="card-body">
                 <h5 class="card-title"><a th:href="'/recipes/display?recipeId=' + ${recipe.id}" th:text="${recipe.name}"></a></h5>
             </div>

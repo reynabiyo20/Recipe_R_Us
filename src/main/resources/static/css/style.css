@@ -11,3 +11,14 @@
   display: flex;
   flex:1 0 auto;
 }
+
+
+div.imagecontainer {
+    height: 250px;
+    display: flex;
+    align-items: center;
+}
+
+.card-deck .card {
+    min-width: 250px;
+}

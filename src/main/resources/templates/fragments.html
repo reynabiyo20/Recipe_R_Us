@@ -41,7 +41,8 @@
                     </div>
                 </li>
             </ul>
-            <a data-toggle="collapse" href="#searchcollapse" role="button" aria-expanded="false" aria-controls="searchcollapse"><i class="fa fa-search" ></i></a>
+            <a data-toggle="collapse" href="#searchcollapse" role="button" aria-expanded="false" aria-controls="searchcollapse" class="mx-2"><i class="fa fa-search" ></i></a>
+            <a th:if=${session.user} th:href="@{/users/profile}" class="mx-2"><i class="fa fa-user"></i></a>
             <ul class="navbar-nav ml-3">
                 <li class="nav-item">
                     <a th:if="${session.isEmpty()}" th:href="@{/login}" class="nav-link">Login</a>
