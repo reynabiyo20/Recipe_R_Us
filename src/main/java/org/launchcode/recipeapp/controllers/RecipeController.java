@@ -190,6 +190,8 @@ public class RecipeController {
       User sessionUser = (User) request.getSession().getAttribute("user");
       Review review = new Review(recipe, newReview.getRating(), newReview.getComment(), sessionUser, sessionUser.getUsername(), recipe.getCurrentTime());
       reviewRepository.save(review);
+      recipe.getReviews().add(review);
+
       review.updateCalculations(recipe,review);
       recipeRepository.save(recipe);
 
