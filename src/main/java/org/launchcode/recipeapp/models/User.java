@@ -1,6 +1,7 @@
 package org.launchcode.recipeapp.models;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.CascadeType;
@@ -16,6 +17,7 @@ import java.util.List;
  */
 @Data
 @Entity
+@EqualsAndHashCode(callSuper=false)
 public class User extends AbstractEntity {
 
    /* @updated AH*/

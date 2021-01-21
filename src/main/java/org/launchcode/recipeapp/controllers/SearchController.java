@@ -33,6 +33,7 @@ public class SearchController {
             }
         }
         model.addAttribute("recipes", foundRecipes);
+        model.addAttribute("keyword", keyword);
         return "search";
     }
 

@@ -7,62 +7,95 @@
     <head th:replace="fragments :: head"></head>
 </head>
 <body>
-<div class="container - xxl">
-    <br><br><br><br>
+<header th:replace="fragments :: header"></header>
 
-    <div align="center">
-        <h1>Edit Recipe</h1>
-        <form name="recipe-form"  th:action="@{/recipes/edit}"  method="post" th:object="${recipe}">
-            <div class="form-group">
-                <label>Recipe Name:</label>
-                <input type="text" th:field="*{name}" required/><br/>
-            </div><br>
-            <div class="form-group">
-                <label>Photo:</label>
-                <input type="text" th:field="*{img}" required/><br/>
-            </div><br>
-            <div class="form-group">
-                <label>Category:</label>
-                <select th:field="*{category}">
-                    <option th:each="category : ${categories}" th:value="${category}"
-                            th:text="${category.name()}"></option>
-                </select>
-            </div><br/>
-            <div class="form-group">
-            <div>
-                <label th:for="tags">Tags</label>
-                <th:block th:each="tag : ${tags}">
-                    <div th:if="${recipe.tags.contains(tag)}">
-                        <input type="checkbox" name="tags" th:value="${tag.id}" checked>
-                        <label th:text="${tag.name}" style="font-size:15px"></label>
-                    </div>
-                    <div th:unless="${recipe.tags.contains(tag)}">
-                        <input type="checkbox" name="tags" th:value="${tag.id}">
-                        <label th:text="${tag.name}" style="font-size:15px"></label>
-                    </div>
-                </th:block>
-                <a th:href="@{'../tags'}">Create New Tag</a>
+
+<div class="container">
+    <form th:action="@{/recipes/edit}" method="POST" th:object="${recipe}">
+        <input type="hidden" th:value="${recipe.id}" name="recipeId" />
+        <!-- Recipe Name -->
+        <div class="form-group">
+            <label for="name">Recipe Name</label>
+            <input type="text" class="form-control" id="name"th:field="*{name}"required>
+        </div>
+
+        <!-- Recipe Image -->
+
+        <div class="form-group">
+            <label for="img">Recipe Image</label>
+            <input type="text" class="form-control" id="img" th:field="*{img}" required>
+            <small id="emailHelp" class="form-text text-muted">Please enter a URL to your recipe image.</small>
+        </div>
+
+        <!-- Category Selection -->
+
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select class="custom-select" id="category" th:field="*{category}">
+                <option th:each="category : ${categories}" th:value="${category}" th:text="${category.name()}"></option>
+            </select>
+        </div>
+
+        <!-- Tag Select -->
+
+        <label th:for="tags">Tags</label>
+        <th:block th:each="tag : ${tags}">
+            <div th:if="${recipe.tags.contains(tag)}">
+                <input type="checkbox" name="tags" th:value="${tag.id}" checked>
+                <label th:text="${tag.name}" style="font-size:15px"></label>
             </div>
-
-            </div><br/>
-            <div class="form-group" th:each="ingredient: ${recipe.ingredients}">
-                <label>Ingredients:</label>
-                <input type="number" pattern="^\d*(\.\d{0,2})?$" step=".05" min=".05" name="quantity" id="quantity" th:value="${ingredient.quantity} "required>
-                <select name="measurement" id="measurement">
-                    <option th:each="measurement : ${measurements}"
-                            th:text="${measurement.name()}" th:selected="(${measurement.name()} == ${ingredient.measurement})" ></option>
-
-                </select>
-                <textarea rows="2" cols="45" th:text="${ingredient.ingredient}" name="ingredient"></textarea><br/>
-            </div><br>
-            <div class="form-group" th:each="instruction : ${recipe.instructions}">
-                <label>Directions:</label>
-                <textarea rows="2" cols="45" th:text="${instruction.step}" name="instruction"></textarea>
+            <div th:unless="${recipe.tags.contains(tag)}">
+                <input type="checkbox" name="tags" th:value="${tag.id}">
+                <label th:text="${tag.name}" style="font-size:15px"></label>
             </div>
-            <input type="hidden" th:value="${recipe.id}" name="recipeId" />
-            <button  type="submit" class="btn btn-primary" onclick="submitForm()">Update</button>
-        </form>
-    </div>
+        </th:block>
+        <a th:href="@{'../tags'}">Create New Tag</a>
+
+        <!-- Ingredients -->
+
+        <div class="form-group">
+            <label for="ingredient">Ingredients</label>
+            <div id="ingredientsContainer">
+                <div class="form-row my-2" id="recipeIngredient" th:each="ingredient : ${ingredients}">
+                    <div class="col-2">
+                        <input type="number" class="form-control" pattern="^\d*(\.\d{0,2})?$" step=".05" min=".05" name="quantity" id="quantity" th:value="${ingredient.quantity}" placeholder="Quantity" required>
+                    </div>
+                    <div class="col-4">
+                        <select name="measurement" id="measurement" class="custom-select">
+                            <option th:each="measurement : ${measurements}" th:selected="${ingredient.measurement} == ${measurement.name()}" th:text="${measurement.name()}"></option>
+                        </select>
+                    </div>
+                    <div class="col-5">
+                        <input type="text" class="form-control" name="ingredient" id="ingredient" placeholder="Ingredient Name" th:value="${ingredient.ingredient} "required></input>
+                    </div>
+                    <div class="col-1 d-flex align-items-center deleteIngredient" >
+                        <i class="fa fa-times text-danger fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary my-4" id="addIngredientButton">Add Ingredient</button>
+        </div>
+
+        <!-- Instructions -->
+        <div class="form-group">
+            <label for="instruction">Instructions</label>
+            <div id="instructionsContainer">
+                <div th:each=" instruction : ${instructions}" id="recipeInstruction" class="my-2 form-row">
+                    <div class="col-11">
+                        <input type="text" class="form-control" name="instruction" id="instruction" th:value="${instruction.step}" placeholder="Instruction" required>
+                    </div>
+                    <div class="col-1 d-flex align-items-center deleteIngredient" >
+                        <i class="fa fa-times text-danger fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary my-4" id="addInstructionButton">Add Instruction</button>
+        </div>
+
+        <!-- Submit Button -->
+
+        <button class="btn btn-primary" type="submit">Update Recipe</button>
+    </form>
 </div>
 
 <div th:replace="fragments :: footer"></div>
