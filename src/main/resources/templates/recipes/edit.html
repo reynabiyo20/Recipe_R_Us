@@ -56,17 +56,17 @@
         <div class="form-group">
             <label for="ingredient">Ingredients</label>
             <div id="ingredientsContainer">
-                <div class="form-row my-2" id="recipeIngredient">
+                <div class="form-row my-2" id="recipeIngredient" th:each="ingredient : ${ingredients}">
                     <div class="col-2">
-                        <input type="number" class="form-control" pattern="^\d*(\.\d{0,2})?$" step=".05" min=".05" name="quantity" id="quantity" placeholder="Quantity" required>
+                        <input type="number" class="form-control" pattern="^\d*(\.\d{0,2})?$" step=".05" min=".05" name="quantity" id="quantity" th:value="${ingredient.quantity}" placeholder="Quantity" required>
                     </div>
                     <div class="col-4">
                         <select name="measurement" id="measurement" class="custom-select">
-                            <option th:each="measurement : ${measurements}" th:text="${measurement.name()}"></option>
+                            <option th:each="measurement : ${measurements}" th:selected="${ingredient.measurement} == ${measurement.name()}" th:text="${measurement.name()}"></option>
                         </select>
                     </div>
                     <div class="col-5">
-                        <input type="text" class="form-control" name="ingredient" id="ingredient" placeholder="Ingredient Name" required></input>
+                        <input type="text" class="form-control" name="ingredient" id="ingredient" placeholder="Ingredient Name" th:value="${ingredient.ingredient} "required></input>
                     </div>
                     <div class="col-1 d-flex align-items-center deleteIngredient" >
                         <i class="fa fa-times text-danger fa-lg"></i>
@@ -80,9 +80,9 @@
         <div class="form-group">
             <label for="instruction">Instructions</label>
             <div id="instructionsContainer">
-                <div id="recipeInstruction" class="my-2 form-row">
+                <div th:each=" instruction : ${instructions}" id="recipeInstruction" class="my-2 form-row">
                     <div class="col-11">
-                        <input type="text" class="form-control" name="instruction" id="instruction" placeholder="Instruction" required>
+                        <input type="text" class="form-control" name="instruction" id="instruction" th:value="${instruction.step}" placeholder="Instruction" required>
                     </div>
                     <div class="col-1 d-flex align-items-center deleteIngredient" >
                         <i class="fa fa-times text-danger fa-lg"></i>
