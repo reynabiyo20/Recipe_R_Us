@@ -68,12 +68,12 @@
             </div>
             <div th:unless="${recipe.numComments == 0}" id="recipeReviews">
                 <div class="recipeReview mx-5 my-2 border-bottom row" th:each="review : ${recipe.reviews}">
-                <p class="col-12">
+                    <p class="col-12">
                     <strong th:text="${review.username}" class="text-capitalize">Paal</strong> says...
-                </p>
                 <p class="col-12" th:text="${review.timestamp}"></p>
                 <p class="col-12" th:text="${review.comment}">
                 </p>
+                </div>
                 </div>
             </div>
         </div>
