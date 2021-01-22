@@ -1,10 +1,9 @@
 package org.launchcode.recipeapp.controllers;
 
 
-import org.launchcode.recipeapp.models.Category;
-import org.launchcode.recipeapp.models.Recipe;
-import org.launchcode.recipeapp.models.SortParameter;
+import org.launchcode.recipeapp.models.*;
 import org.launchcode.recipeapp.models.data.RecipeRepository;
+import org.launchcode.recipeapp.models.data.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +23,9 @@ public class SearchController {
     @Autowired
     private RecipeRepository recipeRepository;
 
+    @Autowired
+    private TagRepository tagRepository;
+
     List<Recipe> foundRecipes = new ArrayList<>();
 
     // Search by KEYWORD
@@ -31,7 +33,7 @@ public class SearchController {
     public String searchByKeyword(Model model, @RequestParam String keyword) {
         String lower_val = keyword.toLowerCase();
         Iterable<Recipe> recipes = recipeRepository.findAll();
-        List<Recipe> foundRecipes = new ArrayList<>();
+        foundRecipes.clear();
         for (Recipe recipe : recipes) {
             if (recipe.getName().toLowerCase().contains(keyword.toLowerCase())) {
                 foundRecipes.add(recipe);
@@ -53,8 +55,6 @@ public class SearchController {
     }
 
 
-
-
     //Search by CATEGORY
     @PostMapping(value = "/categoryResults")
     public String searchRecipeByCategory(Model model, @RequestParam Category category, HttpServletRequest request) {
@@ -64,7 +64,6 @@ public class SearchController {
 
         model.addAttribute("category", category);
 
-        //if  part is not working
         if (category == null) {
             //get all recipes
             for (Recipe recipe : recipes) {
@@ -91,19 +90,67 @@ public class SearchController {
 
     //SORTING
     @PostMapping(value = "/sort")
-    public String sortSearchResults(@RequestParam SortParameter sortParameter, Model model) {
-
+    public String sortSearchResults(@RequestParam SortParameter sortParameter, Category category, Model model) {
         Iterable<Recipe> recipes = foundRecipes;
+
+        //If selected sort is NAME ASCENDING
         if ((sortParameter.getName().equals(SortParameter.NAME_ASCENDING.getName()))) {
             Collections.sort(foundRecipes, new Recipe.SortByNameAsc());
-        }
 
-        //render filtered recipes from CATEGORY search OR KEYWORD search by ASCENDING NAME
+        //render recipes  by ASCENDING NAME
         model.addAttribute("recipes", foundRecipes);
         model.addAttribute("categories", Category.values());
+        model.addAttribute("category", category);
         model.addAttribute("sort", SortParameter.values());
-        return "search";
+
+        //If selected sort is NAME DESCENDING
+        } else if((sortParameter.getName().equals(SortParameter.NAME_DESCENDING.getName()))) {
+            Collections.sort(foundRecipes, new Recipe.SortByNameDesc());
+
+        //render recipes  by DESCENDING NAME
+            model.addAttribute("recipes", foundRecipes);
+            model.addAttribute("categories", Category.values());
+            model.addAttribute("category", category);
+            model.addAttribute("sort", SortParameter.values());
+
+        //if selected sort is ASCENDING RATING
+        } else if((sortParameter.getName().equals(SortParameter.RATING_ASCENDING.getName()))) {
+            Collections.sort(foundRecipes, new Recipe.SortByRatingAsc());
+
+        //render  recipes from  by ASCENDING RATING
+            model.addAttribute("recipes", foundRecipes);
+            model.addAttribute("categories", Category.values());
+            model.addAttribute("category", category);
+            model.addAttribute("sort", SortParameter.values());
+
+        //if selected sort is DESCENDING RATING
+        } else if((sortParameter.getName().equals(SortParameter.RATING_DESCENDING.getName()))) {
+        Collections.sort(foundRecipes, new Recipe.SortByRatingDsc());
+
+        //render  recipes from  by DESCENDING RATING
+        model.addAttribute("recipes", foundRecipes);
+        model.addAttribute("categories", Category.values());
+        model.addAttribute("category", category);
+        model.addAttribute("sort", SortParameter.values());
     }
+
+    return "search";
+    }
+
+//    @PostMapping(value = "/filter")
+//    public String filterResults(@RequestParam FilterParameter filterParameter, Model model) {
+//        Iterable<Recipe> recipes = foundRecipes;
+//        List<Recipe> filteredRecipes = new ArrayList<>();
+//        for (Recipe recipe : recipes) {
+//            if (recipe.getTags().toArray().to.equals(filterParameter.getName().toLowerCase())) {
+//                filteredRecipes.add(recipe);
+//
+//                //render filtered recipes from "SORT BY"
+//                model.addAttribute("recipes", filteredRecipes);
+//                model.addAttribute("categories", Category.values());
+//                model.addAttribute("sort", SortParameter.values());
+//            }
+//        }
 
 }
 

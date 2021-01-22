@@ -7,14 +7,12 @@ import org.launchcode.recipeapp.models.data.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,7 +65,9 @@ public class UserController {
          model.addAttribute("user", sessionUser);
          model.addAttribute("recipes", recipes);
          model.addAttribute("title1", redirectAttributes.getAttribute("title1"));
+         model.addAttribute("categories", Category.values());
          model.addAttribute("sort", SortParameter.values());
+
 
       }
       return "users/profile";
@@ -127,6 +127,60 @@ public class UserController {
       }
 
       return "redirect:/users/profile";
+   }
+
+
+   @PostMapping("/sort")
+   public String sortSearchResults(@RequestParam SortParameter sortParameter, Category category, Model model) {
+      Iterable<UserRecipe> recipes = userRecipeRepository.findAll();
+      List<Recipe> userRecipes = new ArrayList<>();
+
+      for (UserRecipe recipe : recipes) {
+
+
+         //If selected sort is NAME ASCENDING
+         if ((sortParameter.getName().equals(SortParameter.NAME_ASCENDING.getName()))) {
+            Collections.sort(userRecipes, new Recipe.SortByNameAsc());
+
+            //render user recipes by ASCENDING NAME
+            model.addAttribute("recipes", userRecipes);
+            model.addAttribute("categories", Category.values());
+            model.addAttribute("category", category);
+            model.addAttribute("sort", SortParameter.values());
+
+            //If selected sort is NAME DESCENDING
+         } else if ((sortParameter.getName().equals(SortParameter.NAME_DESCENDING.getName()))) {
+            Collections.sort(userRecipes, new Recipe.SortByNameDesc());
+
+            //render user recipes by DESCENDING NAME
+            model.addAttribute("recipes", userRecipes);
+            model.addAttribute("categories", Category.values());
+            model.addAttribute("category", category);
+            model.addAttribute("sort", SortParameter.values());
+
+            //if selected sort is ASCENDING RATING
+         } else if ((sortParameter.getName().equals(SortParameter.RATING_ASCENDING.getName()))) {
+            Collections.sort(userRecipes, new Recipe.SortByRatingAsc());
+
+            //render  recipes from  by ASCENDING RATING
+            model.addAttribute("recipes", userRecipes);
+            model.addAttribute("categories", Category.values());
+            model.addAttribute("category", category);
+            model.addAttribute("sort", SortParameter.values());
+
+            //if selected sort is DESCENDING RATING
+         } else if ((sortParameter.getName().equals(SortParameter.RATING_DESCENDING.getName()))) {
+            Collections.sort(userRecipes, new Recipe.SortByRatingDsc());
+
+            //render  recipes from  by DESCENDING RATING
+            model.addAttribute("recipes", userRecipes);
+            model.addAttribute("categories", Category.values());
+            model.addAttribute("category", category);
+            model.addAttribute("sort", SortParameter.values());
+         }
+
+      }
+      return "profile";
    }
 }
 

@@ -5,8 +5,9 @@
 <div th:replace="fragments :: header"></div>
 
 <div class="container-fluid p-5 m-auto">
+
+    <h1 th:if="${keyword == null && category == null}" th:text="${'Showing All Recipes'}"></h1>
     <h1 th:unless="${keyword == null}" th:text="${'Search Results for: ' + keyword}"></h1>
-    <h1 th:if="${category == null && keyword == null}" th:text="${'Showing All Recipes'}"></h1>
     <h1 th:unless="${category == null}" th:text="${'Search Results for: ' + category.name}"></h1>
 
     <form action="/search/sort" method="post" th:object="${recipe}">
