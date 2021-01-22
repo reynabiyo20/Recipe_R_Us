@@ -130,27 +130,37 @@ public class UserController {
    }
 
 
-   @PostMapping("/sort")
+   @PostMapping("/profile/sort")
    public String sortSearchResults(@RequestParam SortParameter sortParameter, Category category, Model model) {
-      Iterable<UserRecipe> recipes = userRecipeRepository.findAll();
-      List<Recipe> userRecipes = new ArrayList<>();
+      Iterable<UserRecipe> userRecipes = userRecipeRepository.findAll();
+      List<Recipe> recipes = new ArrayList<>();
 
-      for (UserRecipe recipe : recipes) {
+      for (UserRecipe userRecipe : userRecipes) {
+         Optional<Recipe> newRecipe = recipeRepository.findById(userRecipe.getRecipe().getId());
+         if(newRecipe.isPresent()) {
+            recipes.add(newRecipe.get());
+         }
+      }
 
+      for (Recipe recipe : recipes) {
 
          //If selected sort is NAME ASCENDING
          if ((sortParameter.getName().equals(SortParameter.NAME_ASCENDING.getName()))) {
-            Collections.sort(userRecipes, new Recipe.SortByNameAsc());
+
+
+//            IDK WHAT BUT ITS HERE THO
+            Collections.sort(recipes);
 
             //render user recipes by ASCENDING NAME
             model.addAttribute("recipes", userRecipes);
+            model.addAttribute("userRecipes", userRecipes);
             model.addAttribute("categories", Category.values());
             model.addAttribute("category", category);
             model.addAttribute("sort", SortParameter.values());
 
             //If selected sort is NAME DESCENDING
          } else if ((sortParameter.getName().equals(SortParameter.NAME_DESCENDING.getName()))) {
-            Collections.sort(userRecipes, new Recipe.SortByNameDesc());
+            Collections.sort(recipes, new Recipe.SortByNameDesc());
 
             //render user recipes by DESCENDING NAME
             model.addAttribute("recipes", userRecipes);
@@ -160,7 +170,7 @@ public class UserController {
 
             //if selected sort is ASCENDING RATING
          } else if ((sortParameter.getName().equals(SortParameter.RATING_ASCENDING.getName()))) {
-            Collections.sort(userRecipes, new Recipe.SortByRatingAsc());
+            Collections.sort(recipes, new Recipe.SortByRatingAsc());
 
             //render  recipes from  by ASCENDING RATING
             model.addAttribute("recipes", userRecipes);
@@ -170,7 +180,7 @@ public class UserController {
 
             //if selected sort is DESCENDING RATING
          } else if ((sortParameter.getName().equals(SortParameter.RATING_DESCENDING.getName()))) {
-            Collections.sort(userRecipes, new Recipe.SortByRatingDsc());
+            Collections.sort(recipes, new Recipe.SortByRatingDsc());
 
             //render  recipes from  by DESCENDING RATING
             model.addAttribute("recipes", userRecipes);
@@ -180,7 +190,7 @@ public class UserController {
          }
 
       }
-      return "profile";
+      return "users/profile";
    }
 }
 

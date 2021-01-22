@@ -24,4 +24,6 @@ public interface UserRecipeRepository extends CrudRepository<UserRecipe, Integer
    void deleteByRecipe(Recipe recipe);
 
 
+
+
 }
