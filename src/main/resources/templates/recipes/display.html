@@ -67,13 +67,12 @@
                 <p th:if="${!session.isEmpty()}">Be the first to <a href="#submit-review">leave a comment</a>.</p>
             </div>
             <div th:unless="${recipe.numComments == 0}" id="recipeReviews">
-                <div class="recipeReview mx-5 my-2 border-bottom row" th:each="review : ${recipe.reviews}">
-                    <p class="col-12">
-                    <strong th:text="${review.username}" class="text-capitalize">Paal</strong> says...
-                <p class="col-12" th:text="${review.timestamp}"></p>
-                <p class="col-12" th:text="${review.comment}">
-                </p>
-                </div>
+                <div  th:each="review : ${recipe.reviews}">
+                    <div th:if ="${!review.comment.isEmpty()}" class="recipeReview mx-5 my-2 border-bottom row">
+                        <p class="col-12"><strong th:text="${review.username}" class="text-capitalize">Paal</strong> says...
+                        <p class="col-12" th:text="${review.timestamp}"></p>
+                        <p class="col-12" th:text="${review.comment}"></p>
+                    </div>
                 </div>
             </div>
         </div>
