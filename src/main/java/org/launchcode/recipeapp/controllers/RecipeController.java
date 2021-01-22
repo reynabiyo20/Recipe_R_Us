@@ -206,7 +206,7 @@ public class RecipeController {
 
       model.addAttribute("recipes", all);
 
-      return "redirect:/recipes";
+      return "recipes/all";
 
    }
 
@@ -223,6 +223,10 @@ public class RecipeController {
       Optional<Recipe> recipeOpt = recipeRepository.findById(recipeId);
       if (recipeOpt.isPresent()) {
          Recipe recipe = recipeOpt.get();
+         List<Instruction> instructions = instructionRepository.findByRecipeId(recipe.getId());
+         List<Ingredient> ingredients = ingredientRepository.findByRecipeId(recipe.getId());
+         model.addAttribute("ingredients", ingredients);
+         model.addAttribute("instructions", instructions);
          model.addAttribute("recipe", recipe);
          model.addAttribute("title", "Edit recipe " + recipe.getName());
          model.addAttribute("recipeId", recipe.getId());

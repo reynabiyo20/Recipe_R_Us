@@ -1,48 +1,61 @@
-let ingredientsContainer = document.getElementById("ingredientsContainer");
-let addIngredientButton = document.getElementById("addIngredientButton");
-let instructionsContainer = document.getElementById("instructionsContainer");
-let addInstructionButton = document.getElementById("addInstructionButton");
+$(document).ready(function () {
 
-if(addIngredientButton) {
-    addIngredientButton.addEventListener('click', (e) => {
-        e.preventDefault();
+//add ingredient on add ingredent button click
+    if($('#addIngredientButton')) {
+        $('#addIngredientButton').on('click', function(e){
+            e.preventDefault();
+              $('#recipeIngredient').clone().find("input").val("").end().appendTo('#ingredientsContainer');
+          });
 
-        let newQuantity = document.createElement("input");
-        newQuantity.setAttribute("name", "quantity");
-        newQuantity.setAttribute('id', 'quantity')
-        newQuantity.setAttribute('type', 'number');
-        newQuantity.setAttribute('min', '1');
-        newQuantity.setAttribute('step', '.1')
-        newQuantity.setAttribute("placeholder", "Quantity")
-        newQuantity.required = true;
-        ingredientsContainer.appendChild(newQuantity);
+// Remove Ingredient on clicking the red x, if not first ingredient
+       $('#ingredientsContainer').on('click', 'i', function(e){
+            if($(this).parent().parent().index() > 0) {
+                $(this).parent().parent().remove();
+            }
+        })
+    }
 
+//
+    if($('#addInstructionButton')) {
+        $('#addInstructionButton').on('click', function(e){
+            e.preventDefault();
+            $('#recipeInstruction').clone().find("input").val("").end().appendTo('#instructionsContainer');
+        })
 
+// Remove Instruction on clicking the red x, if not first ingredient
+       $('#instructionsContainer').on('click', 'i', function(e){
+            if($(this).parent().parent().index() > 0) {
+                $(this).parent().parent().remove();
+            }
+        })
+    }
 
-        let measurementEl = document.getElementById('measurement');
-        let msrClone = measurementEl.cloneNode(true);
-        ingredientsContainer.appendChild(msrClone);
+    function addCategory() {
+        $.get("/recipes/create/addCategory").done(function (fragment) { // get from controller
+            $("#new-input").replaceWith(fragment); // update snippet of page
+        });
+    }
+    function submitForm() {
+        document.recipe - form.reset();
+    }
 
-        let newIngredient = document.createElement("input");
-        newIngredient.setAttribute("name", "ingredient");
-        newIngredient.setAttribute('id', 'ingredient')
-        newIngredient.setAttribute('type', 'text');
-        newIngredient.setAttribute("placeholder", "Ingredient")
-        newIngredient.required = true;
-        ingredientsContainer.appendChild(newIngredient);
+    if (window.location.href.indexOf("/home") > -1) {
+        $("#home").hide();
+    }
 
-    })
-}
+    if (window.location.href.indexOf("/recipes/all") > -1) {
+        $("#search").hide();
+        $('#all-recipes').hide();
+    }
 
-if(addInstructionButton) {
-    addInstructionButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        let newInstruction = document.createElement('input');
-        newInstruction.setAttribute("name", "instruction");
-        newInstruction.setAttribute('id', 'instruction')
-        newInstruction.setAttribute('type', 'text');
-        newInstruction.setAttribute("placeholder", "Instruction")
-        newInstruction.required = true;
-        instructionsContainer.appendChild(newInstruction);
-    })
-}
+    if (window.location.href.indexOf("/login") > -1) {
+        $("#login").hide();
+        $("#search").hide();
+    }
+
+    if (window.location.href.indexOf("/register") > -1) {
+        $("#register").hide();
+        $("#search").hide();
+    }
+
+})
