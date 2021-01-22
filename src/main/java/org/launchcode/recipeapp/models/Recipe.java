@@ -57,6 +57,50 @@ public class Recipe extends AbstractEntity {
    @NotNull(message = "User is required")
    private List<UserRecipe> users = new ArrayList<>();
 
+   //// Used for sorting in ascending order of name
+   public static class SortByNameAsc implements Comparator<Recipe> {
+      public int compare(Recipe a, Recipe b) {
+         return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+      }
+
+   }
+
+   //// Used for sorting in descending order of name
+   public static class SortByNameDesc implements Comparator<Recipe> {
+      public int compare(Recipe a, Recipe b) {
+         return b.name.toLowerCase().compareTo(a.name.toLowerCase());
+      }
+
+   }
+
+   //// Used for sorting in ascending order of averageRating
+   public static class SortByRatingAsc implements Comparator<Recipe> {
+      public int compare(Recipe a, Recipe b) {
+         if (a.averageRating == null && b.averageRating == null)
+            return 0;
+         if (a.averageRating == null)
+            return 1;
+         else if (b.averageRating == null)
+            return -1;
+         return b.averageRating.compareTo(a.averageRating);
+      }
+   }
+
+   //// Used for sorting in descending order of averageRating
+   public static class SortByRatingDsc implements Comparator<Recipe> {
+      public int compare(Recipe a, Recipe b) {
+         if (a.averageRating == null && b.averageRating == null)
+            return 0;
+         if (b.averageRating == null)
+            return 1;
+         else if (a.averageRating == null)
+            return -1;
+         return a.averageRating.compareTo(b.averageRating);
+      }
+   }
+
+
+
    public Recipe() {
    }
 

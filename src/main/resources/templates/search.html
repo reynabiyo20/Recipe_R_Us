@@ -5,8 +5,22 @@
 <div th:replace="fragments :: header"></div>
 
 <div class="container-fluid p-5 m-auto">
-    <h1 th:text="${'Search Results for: ' + keyword}"></h1>
-    <p>Click on the recipe to view details</p>
+    <h1 th:unless="${keyword == null}" th:text="${'Search Results for: ' + keyword}"></h1>
+    <h1 th:if="${category == null && keyword == null}" th:text="${'Showing All Recipes'}"></h1>
+    <h1 th:unless="${category == null}" th:text="${'Search Results for: ' + category.name}"></h1>
+
+    <form action="/search/sort" method="post" th:object="${recipe}">
+        <div class="sort">
+            <select id="sortParameter" class="btn btn-light" name="sortParameter" onchange="this.form.submit()">
+                <option value="">Sort by..</option>
+                <option th:each="sortValue:${sort}"
+                        th:value="${sortValue}"
+                        th:text="${sortValue.getName()}">
+                </option>
+            </select>
+        </div>
+    </form>
+
     <div class="card-deck justify-content-center pt-5">
         <div class="card col-2 thumb-post p-1" th:each="recipe:${recipes}">
             <a th:href="'/recipes/display?recipeId=' + ${recipe.id}"><div class="imagecontainer"><img class="card-img-top img my-auto" th:src="${recipe.img}" alt="Card image cap"></div></a>

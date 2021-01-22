@@ -1,9 +1,6 @@
 package org.launchcode.recipeapp.controllers;
 
-import org.launchcode.recipeapp.models.Recipe;
-import org.launchcode.recipeapp.models.Review;
-import org.launchcode.recipeapp.models.User;
-import org.launchcode.recipeapp.models.UserRecipe;
+import org.launchcode.recipeapp.models.*;
 import org.launchcode.recipeapp.models.data.RecipeRepository;
 import org.launchcode.recipeapp.models.data.UserRecipeRepository;
 import org.launchcode.recipeapp.models.data.UserRepository;
@@ -70,6 +67,7 @@ public class UserController {
          model.addAttribute("user", sessionUser);
          model.addAttribute("recipes", recipes);
          model.addAttribute("title1", redirectAttributes.getAttribute("title1"));
+         model.addAttribute("sort", SortParameter.values());
 
       }
       return "users/profile";

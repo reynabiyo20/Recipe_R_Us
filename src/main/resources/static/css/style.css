@@ -26,3 +26,10 @@ div.imagecontainer {
 i.fa.fa-times:hover {
     cursor: pointer
 }
+
+.sort {
+   background color: blue;
+   position: fixed;
+   right: 10px;
+   top: 120px;
+}
