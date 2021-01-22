@@ -46,7 +46,7 @@ public class Recipe extends AbstractEntity {
 
    private String img;
 
-   private Double averageRating;
+   private Double averageRating = 0.0;
    private Integer totalRatings = 0;
    private Integer numComments = 0;
 
@@ -126,18 +126,21 @@ public class Recipe extends AbstractEntity {
       return averageRating;
    }
 
-   public void setAverageRating() {
-      List<Review> reviewList = getReviews();
-      double numRatings = reviewList.size();
+   public void setAverageRating(Review newReview) {
+      List<Review> reviews = getReviews();
       double sumRatings = 0.0;
 
-      for (int i = 0; i < numRatings; i++) {
-         double reviewRating = reviewList.get(i).getRating();
-         sumRatings += reviewRating;
+         if (getTotalRatings() == 0){
+               sumRatings = newReview.getRating();
+         } else {
+            for (int i = 0; i < getTotalRatings(); i++) {
+                  sumRatings += reviews.get(i).getRating();
+               }
+         }
+         averageRating = Double.parseDouble(String.format("%.1f", (double) sumRatings / getTotalRatings()));
       }
-      double average = Double.parseDouble(String.format("%.1f", (double) sumRatings / numRatings));
-      averageRating = average;
-   }
+
+
 
    public Integer getNumComments() {
       return numComments;
@@ -162,10 +165,7 @@ public class Recipe extends AbstractEntity {
    }
 
    public void setTotalRatings(Review review) {
-      if (totalRatings == null) {
-         totalRatings = 0;
-      }
-      if (!reviews.isEmpty()) {
+      if (!getReviews().isEmpty()) {
          totalRatings++;
       }
       this.totalRatings = totalRatings;

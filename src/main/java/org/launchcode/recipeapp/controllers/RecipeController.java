@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.swing.*;
 import javax.validation.Valid;
 import java.lang.reflect.Array;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -190,6 +191,8 @@ public class RecipeController {
       User sessionUser = (User) request.getSession().getAttribute("user");
       Review review = new Review(recipe, newReview.getRating(), newReview.getComment(), sessionUser, sessionUser.getUsername(), recipe.getCurrentTime());
       reviewRepository.save(review);
+      recipe.getReviews().add(review);
+
       review.updateCalculations(recipe,review);
       recipeRepository.save(recipe);
 
@@ -302,7 +305,13 @@ public class RecipeController {
    @RequestMapping("/delete/{recipeId}")
    public String handleDeleteUser(@PathVariable Integer recipeId) {
       Optional<Recipe> recipeOpt = recipeRepository.findById(recipeId);
+      List<Review> reviews = recipeOpt.get().getReviews();
       if (recipeOpt.isPresent()) {
+         for (int i = 0; i < reviews.size(); i++){
+            Review review = reviews.get(i);
+            review.setUser(null);
+            reviewRepository.deleteById(review.getId());
+         }
          recipeRepository.deleteById(recipeId);
       }
 

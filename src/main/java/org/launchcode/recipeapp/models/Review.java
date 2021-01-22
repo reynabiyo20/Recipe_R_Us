@@ -91,8 +91,12 @@ public class Review extends AbstractEntity{
     }
 
     public void updateCalculations(Recipe recipe, Review review){
-        recipe.setAverageRating();
         recipe.setTotalRatings(review);
+        System.out.println("set total ratings: " + recipe.getTotalRatings());
+        recipe.setAverageRating(review);
+        System.out.println("set average rating: " + recipe.getAverageRating());
         recipe.setNumComments(review);
+        System.out.println("set num comments: " + recipe.getNumComments());
+
     }
 }
