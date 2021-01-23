@@ -30,5 +30,11 @@ public class HomeController {
       return "index";
    }
 
+   @GetMapping("/about")
+   public String about(Model model) {
+      model.addAttribute("title", "Contributors");
+
+      return "about";
+   }
 
 }

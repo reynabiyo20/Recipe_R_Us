@@ -122,10 +122,8 @@ public class UserController {
                   userRecipeRepository.delete(userRecipe);
 
                }
-
             }
          }
-
       }
 
       return "redirect:/users/profile";
