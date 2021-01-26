@@ -3,11 +3,11 @@
 This project was built for the Liftoff program in Winter of 2020.
 
 Contributors for this application are:
-- [Athena Hiatt]()
-- [Oksana Ross]()
+- [Athena Hiatt](https://github.com/missAH16)
+- [Oksana Ross](https://github.com/Oksana999)
 - [Paal Williams](https://www.github.com/paalwilliams)
-- [Reyna Biyo]()
-- [Kelly Dobbs]()
+- [Reyna Biyo](https://github.com/reynabiyo20)
+- [Kelly Dobbs](https://github.com/kellydobbs)
 
 ## Technology Stack
 
@@ -44,9 +44,9 @@ User registration, login, logout
 
 
 
-To start the Application you need to set the environment variables: <p>
-<code><DB_PASS></code>,
-<code><DB_USER></code> <p>
-These variables should be the same variables that you use for creating the database.
+To start the Application you need to set the environment variables in `application.properties`: <p>
+`<DB_PASS>`
 
-To run test you need to specify application-test.properties properties for the database.
+`<DB_USER>`
+
+These variables should be the same variables that you use for creating the database.
