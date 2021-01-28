@@ -9,12 +9,28 @@
     <h1>My Recipes</h1>
     <div class="card-deck justify-content-center pt-5">
         <div class="card col-2 thumb-post p-1" th:each="recipe:${recipes}">
-            <a th:href="'/recipes/display?recipeId=' + ${recipe.id}"><div class="imagecontainer"><img class="card-img-top img my-auto" th:src="${recipe.img}" alt="Card image cap"></div></a>
+            <a th:href="'/recipes/display?recipeId=' + ${recipe.id}">
+                <div class="imagecontainer"><img class="card-img-top img my-auto" th:src="${recipe.img}"
+                                                 alt="Card image cap"></div>
+            </a>
             <div class="card-body">
-                <h5 class="card-title"><a th:href="'/recipes/display?recipeId=' + ${recipe.id}" th:text="${recipe.name}"></a></h5>
-                                        <form method="post" th:action="'/users/deleteRecipe/' + ${recipe.id}">
-                                            <input class="btn btn-danger" id="delete_button" value="Delete from favorite" type="submit" >
-                                        </form>
+                <h5 class="card-title">
+                    <a th:href="'/recipes/display?recipeId=' + ${recipe.id}"
+                       th:text="${recipe.name}"></a>
+                </h5>
+                <div style="margin-bottom: 10px;">
+                    <form th:action="'/users/shoppingList/add/'+ ${recipe.id}" method="post" >
+                        <div class="form-group">
+                            <label for="portions">Portions</label>
+                            <input type="number" class="form-control" min="1" step="1" name="portions" id="portions" placeholder="Portions" required>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Add to Shopping List</button>
+                    </form>
+                </div>
+                <form method="post" th:action="'/users/deleteRecipe/' + ${recipe.id}">
+                    <input class="btn btn-danger" id="delete_button" value="Delete from favorite" type="submit">
+                </form>
+
             </div>
         </div>
     </div>
