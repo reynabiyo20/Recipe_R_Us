@@ -44,40 +44,19 @@ public class TagController {
     }
 
     @PostMapping("tags")
-    public String processCreateTag(@ModelAttribute @Valid Tag tag, Errors errors, Model model) {
-        List<Tag> tags = tagRepository.findAll();
-
-        if (!errors.hasErrors()) {
-            Optional<Tag> tagOptional = tags.parallelStream()
-                    .filter(t -> tag.getName().equals(t.getName()))
-                    .findAny();
-            if (tagOptional.isPresent()) {
-                model.addAttribute("message", "This tag already exists");
-                model.addAttribute("tags", tags);
-                return "recipes/tags";
-            } else {
-                tagRepository.save(tag);
-            }
+    public String processCreateTag(@ModelAttribute @Valid Tag tag, Errors errors, Model model){
+        if(errors.hasErrors()) {
+            Iterable<Tag> tags = tagRepository.findAll();
+            model.addAttribute("tags", tags);
+            return "recipes/tags";
+        } else {
+            tagRepository.save(tag);
         }
+        Iterable<Tag> tags = tagRepository.findAll();
+        model.addAttribute("tags", tags);
+        return "recipes/tags";
 
-        return "redirect:/recipes/tags";
     }
-
-
-//    @PostMapping("tags")
-//    public String processCreateTag(@ModelAttribute @Valid Tag tag, Errors errors, Model model){
-//        if(errors.hasErrors()) {
-//            Iterable<Tag> tags = tagRepository.findAll();
-//            model.addAttribute("tags", tags);
-//            return "recipes/tags";
-//        } else {
-//            tagRepository.save(tag);
-//        }
-//        Iterable<Tag> tags = tagRepository.findAll();
-//        model.addAttribute("tags", tags);
-//        return "recipes/tags";
-//
-//    }
 
     @RequestMapping("tags/delete/{id}")
     public String deleteTag(@PathVariable Integer id) {
