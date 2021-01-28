@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+<div th:replace="fragments :: header"></div>
+
+<div class="container">
+
+    <div class="offset-1 col-9">
+        <div th:if="${shoppingList == null}">
+            <p> Please add your first recipe to your shopping list.</p>
+            <p>You can do it <a th:href="@{/recipes/all}">here</a>.</p>
+        </div>
+        <span th:if="${shoppingList != null}">
+            <h4 class="shopping-head"  th:inline="text">
+                [[${shoppingList.getUser().username}]]'s shopping list
+            </h4>
+            <form method="post" action="/users/shoppingList/close">
+                <div class="shopping-close">
+                    <input type="submit" class="btn btn-danger" value="Close"/>
+                </div>
+            </form>
+            <div th:each="recipe : ${shoppingList.getRecipes()}">
+                <h5 style="margin-bottom: 0;" th:text="${recipe.recipe.name}"></h5>
+                <p style="font-size: smaller" th:inline="text">for [[${recipe.portions}]] portion(s)</p>
+                <ul>
+                    <li th:each="ingredient : ${recipe.recipe.ingredients}" th:inline="text">
+                        [[${ingredient.ingredient}]]
+                        ([[${#numbers.formatDecimal((ingredient.quantity*recipe.portions), 1, 2)}]]
+                        [[${ingredient.measurement}]])
+                    </li>
+                </ul>
+            </div>
+            </span>
+    </div>
+</div>
+
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{assets/datatable/datatables.js}"></script>
+
+<script>
+    $('#example').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "ajax": {
+            "url": "/employees",
+            "type": "POST",
+            "dataType": "json",
+            "contentType": "application/json",
+            "data": function (d) {
+                return JSON.stringify(d);
+            }
+        },
+        "columns": [
+            {"data": "Ingredient", "width": "33%"},
+            {"data": "Quantity", "width": "33%"},
+            {"data": "Measurement", "width": "33%"},
+
+        ]
+    });
+</script>
+
+<div th:replace="fragments :: footer"></div>
+
+</body>
+</html>

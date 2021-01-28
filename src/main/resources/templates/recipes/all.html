@@ -12,6 +12,15 @@
             <div class="card-body">
                 <h5 class="card-title"><a th:href="'/recipes/display?recipeId=' + ${recipe.id}" th:text="${recipe.name}"></a></h5>
             </div>
+            <div class="card-body">
+                <form th:action="'/users/shoppingList/add/'+ ${recipe.id}" method="post" >
+                    <div class="form-group">
+                        <label for="portions">Portions</label>
+                        <input type="number" class="form-control" min="1" step="1" name="portions" id="portions" placeholder="Portions" required>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Add to Shopping List</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
