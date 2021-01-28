@@ -13,6 +13,7 @@ import org.launchcode.recipeapp.models.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -73,7 +74,11 @@ public class RecipeController {
    public String createRecipe(Model model) {
       Category[] categories = Category.values();
       Measurement[] measurements = Measurement.values();
-      Iterable<Tag> tags = tagRepository.findAll();
+//      Iterable<Tag> tags = tagRepository.findAll();
+      List<Tag> tags = (List<Tag>) tagRepository.findAll();
+
+
+
 
       model.addAttribute("title", "Create Recipe");
       model.addAttribute("recipe", new Recipe());
@@ -85,12 +90,30 @@ public class RecipeController {
    }
 
    @PostMapping("create")
-   public String createRecipe(HttpServletRequest request, @ModelAttribute Recipe newRecipe,
+   public String createRecipe(HttpServletRequest request, @ModelAttribute @Valid Recipe newRecipe,
                               @ModelAttribute @Valid String newCategory,
-                              Errors errors, Model model, RedirectAttributes redirectAttrs) {
+                              Errors errors, Model model, RedirectAttributes redirectAttrs,
+                              BindingResult placeValidation) {
 
       if (errors.hasErrors()) {
          model.addAttribute("title", "Create Recipe");
+
+         return "recipes/create";
+      }
+      if (newRecipe.getTags().size() == 0) {
+         Category[] categories = Category.values();
+         Measurement[] measurements = Measurement.values();
+         List<Tag> tags = (List<Tag>) tagRepository.findAll();
+         String[] quantity = request.getParameterValues("quantity");
+
+         model.addAttribute("errorMsg", "Please, select the Tags");
+         model.addAttribute("recipe", newRecipe);
+         model.addAttribute("categories", categories);
+//         model.addAttribute("instructions", instructions);
+         model.addAttribute("measurements", measurements);
+         model.addAttribute("quantity", quantity);
+         model.addAttribute("tags", tags);
+
          return "recipes/create";
       }
 
