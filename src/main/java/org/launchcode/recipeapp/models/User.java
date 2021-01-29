@@ -59,4 +59,12 @@ public class User extends AbstractEntity {
    public void setUsername(String username) {
       this.username = username;
    }
+
+   public String toString(){//overriding the toString() method
+      return username;
+   }
+
+   public List<UserRecipe> getRecipes() {
+      return recipes;
+   }
 }

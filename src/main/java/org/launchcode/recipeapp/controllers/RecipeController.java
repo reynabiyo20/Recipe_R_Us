@@ -45,6 +45,8 @@ public class RecipeController {
    private final UserRecipeRepository userRecipeRepository;
    private final TagRepository tagRepository;
 
+   @Autowired
+   UserRepository userRepository;
 
    @Autowired
    public RecipeController(RecipeRepository recipeRepository,
@@ -141,9 +143,10 @@ public class RecipeController {
          Recipe recipe = result.get();
          model.addAttribute("title", recipe.getName());
          model.addAttribute("recipe", recipe);
-         User sessionUser = (User) request.getSession().getAttribute("user");
+         String sessionUser = (String) request.getSession().getAttribute("user");
 
-         Optional<UserRecipe> recipeByUserOptional = userRecipeRepository.findByRecipeAndUser(recipe,sessionUser);
+         User user = userRepository.findByUsername(sessionUser);
+         Optional<UserRecipe> recipeByUserOptional = userRecipeRepository.findByRecipeAndUser(recipe,user);
 
          boolean isFavourite;
          if (recipeByUserOptional.isPresent()) {
@@ -173,8 +176,9 @@ public class RecipeController {
       model.addAttribute("reviews", reviews);
 
       if (errors.hasErrors()) {
-         User sessionUser = (User) request.getSession().getAttribute("user");
-         Optional<UserRecipe> recipeByUserOptional = userRecipeRepository.findByRecipeAndUser(recipe,sessionUser);
+         String  sessionUser = (String) request.getSession().getAttribute("user");
+         User user = userRepository.findByUsername(sessionUser);
+         Optional<UserRecipe> recipeByUserOptional = userRecipeRepository.findByRecipeAndUser(recipe,user);
          boolean isFavourite;
          if (recipeByUserOptional.isPresent()) {
             isFavourite = true;
@@ -187,8 +191,9 @@ public class RecipeController {
       }
 
       // add review & update recipe calculations
-      User sessionUser = (User) request.getSession().getAttribute("user");
-      Review review = new Review(recipe, newReview.getRating(), newReview.getComment(), sessionUser, sessionUser.getUsername(), recipe.getCurrentTime());
+      String sessionUser = (String) request.getSession().getAttribute("user");
+      User user = userRepository.findByUsername(sessionUser);
+      Review review = new Review(recipe, newReview.getRating(), newReview.getComment(), user, user.getUsername(), recipe.getCurrentTime());
       reviewRepository.save(review);
       review.updateCalculations(recipe,review);
       recipeRepository.save(recipe);

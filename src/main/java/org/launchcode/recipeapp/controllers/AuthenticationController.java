@@ -26,12 +26,12 @@ AuthenticationController {
 
     private  static final String userSessionKey = "user";
 
-    public User getUserFromSession(HttpSession session) {
-        return (User) session.getAttribute(userSessionKey);
+    public String getUserFromSession(HttpSession session) {
+        return (String) session.getAttribute(userSessionKey);
     }
 
     private static void setUserInSession(HttpSession session, User user) {
-        session.setAttribute(userSessionKey, user);
+        session.setAttribute(userSessionKey, user.getUsername());
     }
 
     @GetMapping("/register")

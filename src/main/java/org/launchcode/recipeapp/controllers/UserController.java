@@ -24,13 +24,13 @@ import java.util.Optional;
 public class UserController {
 
    @Autowired
-   private UserRepository userRepository;
+   UserRepository userRepository;
 
    @Autowired
-   private UserRecipeRepository userRecipeRepository;
+   UserRecipeRepository userRecipeRepository;
 
    @Autowired
-   private RecipeRepository recipeRepository;
+   RecipeRepository recipeRepository;
 
 
    @GetMapping()
@@ -49,19 +49,20 @@ public class UserController {
 
    @GetMapping("/profile")
    public String getUserProfile(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
-      User sessionUser = (User) request.getSession().getAttribute("user");
+      String sessionUser = (String) request.getSession().getAttribute("user");
       if (sessionUser == null) {
          model.addAttribute("title", "No user found");
       } else {
          List<Recipe> recipes = new ArrayList<>();
-         List<UserRecipe> userRecipes = userRecipeRepository.getAllByUser(sessionUser);
+         User user = userRepository.findByUsername(sessionUser);
+         List<UserRecipe> userRecipes = userRecipeRepository.findAllByUser(user);
 
          for (UserRecipe userRecipe : userRecipes) {
             Recipe recipe = userRecipe.getRecipe();
             recipes.add(recipe);
          }
 
-         model.addAttribute("title", sessionUser.getUsername());
+         model.addAttribute("title", sessionUser);
          model.addAttribute("user", sessionUser);
          model.addAttribute("recipes", recipes);
          model.addAttribute("title1", redirectAttributes.getAttribute("title1"));
@@ -76,11 +77,11 @@ public class UserController {
    @PostMapping("/addRecipe/{id}")
    public String addRecipe(@PathVariable Integer id, HttpServletRequest request, Model model,
                            RedirectAttributes redirectAttrs) {
-      User sessionUser = (User) request.getSession().getAttribute("user");
+      String sessionUser = (String) request.getSession().getAttribute("user");
 
       Optional<Recipe> recipeOptional = recipeRepository.findById(id);
       if (recipeOptional.isPresent()) {
-         User user = userRepository.getById(sessionUser.getId());
+         User user = userRepository.findByUsername(sessionUser);
          Recipe recipe = recipeOptional.get();
 
 
@@ -101,8 +102,8 @@ public class UserController {
 
    @PostMapping("/deleteRecipe/{id}")
    public String deleteRecipeFromFavorite(@PathVariable Integer id, HttpServletRequest request, Model model) {
-      User sessionUser = (User) request.getSession().getAttribute("user");
-      User user = userRepository.getById(sessionUser.getId());
+      String sessionUser = (String) request.getSession().getAttribute("user");
+      User user = userRepository.findByUsername(sessionUser);
       List<UserRecipe> userRecipes = userRecipeRepository.getAllByUser(user);
 
       Optional<Recipe> recipeOptional = recipeRepository.findById(id);
@@ -131,29 +132,31 @@ public class UserController {
 
 
    @PostMapping("/profile/sort")
-   public String sortSearchResults(@RequestParam SortParameter sortParameter, Category category, Model model) {
-      Iterable<UserRecipe> userRecipes = userRecipeRepository.findAll();
+   public String sortSearchResults(@RequestParam SortParameter sortParameter, HttpServletRequest request,Category category, Model model) {
+//      Iterable<UserRecipe> userRecipes = userRecipeRepository.findAll();
+      String sessionUser = (String) request.getSession().getAttribute("user");
+      User user = userRepository.findByUsername(sessionUser);
+//      List<UserRecipe> newRecipes = userRecipeRepository.getAllByUser(user);
+      //
+//      Iterable<Recipe> recipes = newRecipes;
       List<Recipe> recipes = new ArrayList<>();
 
-      for (UserRecipe userRecipe : userRecipes) {
-         Optional<Recipe> newRecipe = recipeRepository.findById(userRecipe.getRecipe().getId());
-         if(newRecipe.isPresent()) {
-            recipes.add(newRecipe.get());
+      for (UserRecipe userRecipe : user.getRecipes()) {
+         Optional<Recipe> singleRecipe = recipeRepository.findById(userRecipe.getRecipe().getId());
+         if(singleRecipe.isPresent()) {
+            recipes.add(singleRecipe.get());
          }
       }
-
-      for (Recipe recipe : recipes) {
 
          //If selected sort is NAME ASCENDING
          if ((sortParameter.getName().equals(SortParameter.NAME_ASCENDING.getName()))) {
 
-
 //            IDK WHAT BUT ITS HERE THO
-            Collections.sort(recipes);
+            Collections.sort(recipes, new Recipe.SortByNameAsc());
 
             //render user recipes by ASCENDING NAME
-            model.addAttribute("recipes", userRecipes);
-            model.addAttribute("userRecipes", userRecipes);
+            model.addAttribute("recipes", recipes);
+//            model.addAttribute("userRecipes", userRecipes);
             model.addAttribute("categories", Category.values());
             model.addAttribute("category", category);
             model.addAttribute("sort", SortParameter.values());
@@ -163,7 +166,7 @@ public class UserController {
             Collections.sort(recipes, new Recipe.SortByNameDesc());
 
             //render user recipes by DESCENDING NAME
-            model.addAttribute("recipes", userRecipes);
+            model.addAttribute("recipes", recipes);
             model.addAttribute("categories", Category.values());
             model.addAttribute("category", category);
             model.addAttribute("sort", SortParameter.values());
@@ -173,7 +176,7 @@ public class UserController {
             Collections.sort(recipes, new Recipe.SortByRatingAsc());
 
             //render  recipes from  by ASCENDING RATING
-            model.addAttribute("recipes", userRecipes);
+            model.addAttribute("recipes", recipes);
             model.addAttribute("categories", Category.values());
             model.addAttribute("category", category);
             model.addAttribute("sort", SortParameter.values());
@@ -183,16 +186,16 @@ public class UserController {
             Collections.sort(recipes, new Recipe.SortByRatingDsc());
 
             //render  recipes from  by DESCENDING RATING
-            model.addAttribute("recipes", userRecipes);
+            model.addAttribute("recipes", recipes);
             model.addAttribute("categories", Category.values());
             model.addAttribute("category", category);
             model.addAttribute("sort", SortParameter.values());
          }
 
-      }
       return "users/profile";
    }
 }
+
 
 
 

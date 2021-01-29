@@ -21,7 +21,7 @@ import javax.persistence.Table;
 public class UserRecipe extends AbstractEntity {
 
    @ManyToOne(targetEntity = User.class,
-           fetch = FetchType.LAZY,
+           fetch = FetchType.EAGER,
            cascade = {CascadeType.MERGE})
    @JoinColumn(name = "user_id",
            referencedColumnName = "id",
@@ -29,7 +29,7 @@ public class UserRecipe extends AbstractEntity {
    private User user;
 
    @ManyToOne(targetEntity = Recipe.class,
-           fetch = FetchType.LAZY,
+           fetch = FetchType.EAGER,
            cascade = {CascadeType.MERGE})
    @JoinColumn(name = "recipe_id",
            referencedColumnName = "id",
