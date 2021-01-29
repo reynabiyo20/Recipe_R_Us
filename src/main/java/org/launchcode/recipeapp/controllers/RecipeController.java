@@ -1,14 +1,6 @@
 package org.launchcode.recipeapp.controllers;
 
-import org.launchcode.recipeapp.models.Category;
-import org.launchcode.recipeapp.models.Ingredient;
-import org.launchcode.recipeapp.models.Instruction;
-import org.launchcode.recipeapp.models.Measurement;
-import org.launchcode.recipeapp.models.Recipe;
-import org.launchcode.recipeapp.models.Review;
-import org.launchcode.recipeapp.models.Tag;
-import org.launchcode.recipeapp.models.User;
-import org.launchcode.recipeapp.models.UserRecipe;
+import org.launchcode.recipeapp.models.*;
 import org.launchcode.recipeapp.models.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -207,9 +199,61 @@ public class RecipeController {
       List<Recipe> all = ((List<Recipe>) recipeRepository.findAll());
 
       model.addAttribute("recipes", all);
+      model.addAttribute("categories", Category.values());
+      model.addAttribute("sort", SortParameter.values());
 
       return "recipes/all";
 
+   }
+
+
+   @PostMapping("sort")
+   public String sortSearchResults(@RequestParam SortParameter sortParameter, Category category, Model model) {
+      List<Recipe> all = (List<Recipe>) recipeRepository.findAll();
+
+      //If selected sort is NAME ASCENDING
+      if ((sortParameter.getName().equals(SortParameter.NAME_ASCENDING.getName()))) {
+
+         Collections.sort(all, new Recipe.SortByNameAsc());
+
+         //render user recipes by ASCENDING NAME
+         model.addAttribute("recipes", all);
+         model.addAttribute("categories", Category.values());
+         model.addAttribute("category", category);
+         model.addAttribute("sort", SortParameter.values());
+
+         //If selected sort is NAME DESCENDING
+      } else if ((sortParameter.getName().equals(SortParameter.NAME_DESCENDING.getName()))) {
+         Collections.sort(all, new Recipe.SortByNameDesc());
+
+         //render user recipes by DESCENDING NAME
+         model.addAttribute("recipes", all);
+         model.addAttribute("categories", Category.values());
+         model.addAttribute("category", category);
+         model.addAttribute("sort", SortParameter.values());
+
+         //if selected sort is ASCENDING RATING
+      } else if ((sortParameter.getName().equals(SortParameter.RATING_ASCENDING.getName()))) {
+         Collections.sort(all, new Recipe.SortByRatingAsc());
+
+         //render  recipes from  by ASCENDING RATING
+         model.addAttribute("recipes", all);
+         model.addAttribute("categories", Category.values());
+         model.addAttribute("category", category);
+         model.addAttribute("sort", SortParameter.values());
+
+         //if selected sort is DESCENDING RATING
+      } else if ((sortParameter.getName().equals(SortParameter.RATING_DESCENDING.getName()))) {
+         Collections.sort(all, new Recipe.SortByRatingDsc());
+
+         //render  recipes from  by DESCENDING RATING
+         model.addAttribute("recipes", all);
+         model.addAttribute("categories", Category.values());
+         model.addAttribute("category", category);
+         model.addAttribute("sort", SortParameter.values());
+      }
+
+      return "recipes/all";
    }
 
 
@@ -316,5 +360,7 @@ public class RecipeController {
    public String saveRecipeToUser(@PathVariable Integer recipeId) {
       return "index";
    }
+
+
 
 }

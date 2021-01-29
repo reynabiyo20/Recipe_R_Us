@@ -133,12 +133,9 @@ public class UserController {
 
    @PostMapping("/profile/sort")
    public String sortSearchResults(@RequestParam SortParameter sortParameter, HttpServletRequest request,Category category, Model model) {
-//      Iterable<UserRecipe> userRecipes = userRecipeRepository.findAll();
       String sessionUser = (String) request.getSession().getAttribute("user");
       User user = userRepository.findByUsername(sessionUser);
-//      List<UserRecipe> newRecipes = userRecipeRepository.getAllByUser(user);
-      //
-//      Iterable<Recipe> recipes = newRecipes;
+
       List<Recipe> recipes = new ArrayList<>();
 
       for (UserRecipe userRecipe : user.getRecipes()) {
@@ -151,12 +148,10 @@ public class UserController {
          //If selected sort is NAME ASCENDING
          if ((sortParameter.getName().equals(SortParameter.NAME_ASCENDING.getName()))) {
 
-//            IDK WHAT BUT ITS HERE THO
             Collections.sort(recipes, new Recipe.SortByNameAsc());
 
             //render user recipes by ASCENDING NAME
             model.addAttribute("recipes", recipes);
-//            model.addAttribute("userRecipes", userRecipes);
             model.addAttribute("categories", Category.values());
             model.addAttribute("category", category);
             model.addAttribute("sort", SortParameter.values());
@@ -194,6 +189,8 @@ public class UserController {
 
       return "users/profile";
    }
+
+
 }
 
 

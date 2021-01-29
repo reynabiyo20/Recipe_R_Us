@@ -7,7 +7,7 @@
 <div class="container-fluid p-5 m-auto">
     <h1>View All Recipes</h1>
 
-    <form action="/search/sort" method="post" th:object="${recipe}">
+    <form action="/recipes/sort" method="post" th:object="${recipe}">
         <div class="sort">
             <select id="sortParameter" class="btn btn-light" name="sortParameter" onchange="this.form.submit()">
                 <option value="">Sort by..</option>

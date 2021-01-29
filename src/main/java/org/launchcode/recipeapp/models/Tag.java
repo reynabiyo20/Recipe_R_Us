@@ -3,7 +3,6 @@ package org.launchcode.recipeapp.models;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +21,15 @@ public class Tag extends AbstractEntity {
       this.name = name;
    }
 
+//   public List<Tag> filterableTags = new ArrayList<>();
+//
+//   public static boolean isFilterable;
+//
+//   public static void addToFilterableTags {
+//      if()
+//   }
+
+
    public Tag() { }
 
 
@@ -36,4 +44,8 @@ public class Tag extends AbstractEntity {
    public List<Recipe> getRecipes() {
       return recipes;
    }
+
+//   public boolean isFilterable() {
+//      return isFilterable;
+//   }
 }

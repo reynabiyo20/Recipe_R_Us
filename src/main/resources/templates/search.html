@@ -22,6 +22,20 @@
         </div>
     </form>
 
+    <form action="/search/filter" method="post" th:object="${recipe}">
+            <list id="tagRepository"  name="tagRepository">
+                <option value="" >Filter by..
+                <input type="checkbox"
+                        th:each="tagValue:${tag}"
+                        th:value="${tagValue}"
+                        th:text="${tagValue.getName()}">
+                </option>
+                <button class="btn btn-primary my-2 my-sm-0" type="submit">Filter</button>
+            </list>
+            </ul>
+    </form>
+
+
     <div class="card-deck justify-content-center pt-5">
         <div class="card col-2 thumb-post p-1" th:each="recipe:${recipes}">
             <a th:href="'/recipes/display?recipeId=' + ${recipe.id}"><div class="imagecontainer"><img class="card-img-top img my-auto" th:src="${recipe.img}" alt="Card image cap"></div></a>
