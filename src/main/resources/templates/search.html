@@ -20,16 +20,19 @@
                 </option>
             </select>
         </div>
+        <input type="hidden" name="category" th:value="${category}">
     </form>
 
     <form action="/search/filter" method="post">
             <list id="tagRepository"  name="tagRepository">
                 <p>Filter by..</p>
-                    <div th:each="tagValue:${tag}">
+                    <div th:each="aTag:${tag}">
                     <input type="checkbox"
-                            th:value="${tagValue}"
-                            th:text="${tagValue.getName()}"><br>
+                            name="tagId"
+                            th:value="${aTag.getId()}"
+                            th:text="${aTag.getName()}"><br>
                     </div>
+                <input type="hidden" name="category" th:value="${category}">
                 <button class="btn btn-primary my-2 my-sm-0" type="submit">Filter</button>
             </list>
             </ul>

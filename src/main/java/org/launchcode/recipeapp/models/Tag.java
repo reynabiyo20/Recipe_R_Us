@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class Tag extends AbstractEntity {
    @NotBlank(message = "Tag name required")
    String name;
 
-   @ManyToMany(mappedBy="tags")
+   @ManyToMany(mappedBy="tags", fetch = FetchType.EAGER)
    List<Recipe> recipes = new ArrayList<>();
 
 

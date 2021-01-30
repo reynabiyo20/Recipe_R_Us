@@ -6,10 +6,7 @@ import lombok.ToString;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
@@ -41,7 +38,7 @@ public class Recipe extends AbstractEntity {
    @NotNull(message = "Category required")
    private Category category;
 
-   @ManyToMany
+   @ManyToMany(fetch = FetchType.EAGER)
    private List<Tag> tags = new ArrayList<Tag>();
 
    private String img;

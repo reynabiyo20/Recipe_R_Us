@@ -68,14 +68,10 @@ public class SearchController {
         List<Tag> tags = tagRepository.findAll();
         List<Tag> filterTags = new ArrayList<>();
         for (Tag tag : tags) {
-            System.out.println("tag name: " + tag.getName());
-            System.out.println("value: " + tag.getIsFilterable());
-
-            if(tag.getIsFilterable() == null){ }
-            else if (tag.getIsFilterable() == true){
+            if (tag.getIsFilterable() == null) {
+            } else if (tag.getIsFilterable() == true) {
                 filterTags.add(tag);
             }
-
         }
         model.addAttribute("tag", filterTags);
 
@@ -107,13 +103,14 @@ public class SearchController {
 
     //SORTING
     @PostMapping(value = "/sort")
-    public String sortSearchResults(@RequestParam SortParameter sortParameter, Category category, Model model) {
-        Iterable<Recipe> recipes = foundRecipes;
+    public String sortSearchResults(@RequestParam SortParameter sortParameter, @RequestParam Category category, Model model) {
+//        Iterable<Recipe> recipes = foundRecipes;
 
         List<Tag> tags = tagRepository.findAll();
         List<Tag> filterTags = new ArrayList<>();
         for (Tag tag : tags) {
-            if (tag.getIsFilterable() == true) {
+            if(tag.getIsFilterable() == null){}
+            else if (tag.getIsFilterable()) {
                 filterTags.add(tag);
             }
         }
@@ -165,33 +162,47 @@ public class SearchController {
     }
 
     @PostMapping(value = "/filter")
-    public String filterResults(@RequestParam TagRepository tagRepository, Model model) {
+    public String filterResults(@RequestParam List<Integer> tagId, @RequestParam Category category, Model model) {
+        model.addAttribute("category", category);
+
+        // store selected filters in an arrayList
+        List<Tag> selectedTags = new ArrayList<>();
+        for (Integer aTagId : tagId) {
+            selectedTags.add(tagRepository.findById(aTagId).get());
+        }
+
+        // filter checkboxes
+        List<Tag> allTags = tagRepository.findAll();
+        List<Tag> filters = new ArrayList<>();
+        for (Tag aTag : allTags) {
+            if (aTag.getIsFilterable() == null) {
+            } else if (aTag.getIsFilterable() == true) {
+                filters.add(aTag);
+                model.addAttribute("tag", filters);
+            }
+        }
+
+        // find and store recipes with the selected tag
         Iterable<Recipe> recipes = foundRecipes;
         List<Recipe> filteredRecipes = new ArrayList<>();
 
-        List<Tag> allTags = tagRepository.findAll();
-        List<Tag> filterTags = new ArrayList<>();
-        for (Tag tag : allTags) {
-            if (tag.getIsFilterable() == true) {
-                filterTags.add(tag);
-            }
-        }
-
         for (Recipe recipe : recipes) {
             for (Tag recipeTag : recipe.getTags()) {
-                for(Tag tags : tagRepository.findAll())
-                    if (recipeTag.getName().toLowerCase().equals(tagRepository.toString().toLowerCase())) {
-                    filteredRecipes.add(recipe);
-                        //render filtered recipes
-                        model.addAttribute("recipes", filteredRecipes);
-                        model.addAttribute("categories", Category.values());
-                        model.addAttribute("sort", SortParameter.values());
-                        model.addAttribute("tag", filterTags);
+                for (Tag tag : selectedTags) {
+                    if (recipeTag.getId() == tag.getId()) {
+                        if(!filteredRecipes.contains(recipe)) {
+                            filteredRecipes.add(recipe);
+                        }
+                    }
                 }
             }
-
         }
+
+
+        //render filtered recipes
+        model.addAttribute("recipes", filteredRecipes);
+        model.addAttribute("categories", Category.values());
+        model.addAttribute("sort", SortParameter.values());
         return "search";
     }
 }
-
