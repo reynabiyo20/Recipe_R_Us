@@ -21,18 +21,13 @@ public class Tag extends AbstractEntity {
    @ManyToMany(mappedBy="tags")
    List<Recipe> recipes = new ArrayList<>();
 
-   public Tag(String name) {
+
+   Boolean isFilterable;
+
+   public Tag( String name, Boolean isFilterable) {
       this.name = name;
+      this.isFilterable = isFilterable;
    }
-
-//   public List<Tag> filterableTags = new ArrayList<>();
-//
-//   public static boolean isFilterable;
-//
-//   public static void addToFilterableTags {
-//      if()
-//   }
-
 
    public Tag() { }
 
@@ -49,7 +44,11 @@ public class Tag extends AbstractEntity {
       return recipes;
    }
 
-//   public boolean isFilterable() {
-//      return isFilterable;
-//   }
+   public Boolean getIsFilterable() {
+      return isFilterable;
+   }
+
+   public void setIsFilterable(Boolean isFilterable) {
+      isFilterable = isFilterable;
+   }
 }

@@ -45,4 +45,20 @@ public class ShoppingList extends AbstractEntity {
    public ShoppingList() {
 
    }
+
+   public boolean isActive() {
+      return active;
+   }
+
+   public void setActive(boolean active) {
+      this.active = active;
+   }
+
+   public User getUser() {
+      return user;
+   }
+
+   public void setUser(User user) {
+      this.user = user;
+   }
 }

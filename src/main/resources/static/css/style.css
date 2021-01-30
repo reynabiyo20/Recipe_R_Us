@@ -112,3 +112,10 @@ tr:nth-child(even) {
 .table_dark tr:hover td {
     text-decoration: underline;
 }
+
+.sort {
+   background color: blue;
+   position: fixed;
+   right: 10px;
+   top: 150px;
+}

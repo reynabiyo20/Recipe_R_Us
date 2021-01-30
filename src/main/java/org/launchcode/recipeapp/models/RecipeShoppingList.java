@@ -35,4 +35,28 @@ public class RecipeShoppingList extends AbstractEntity {
    private ShoppingList shoppingList;
 
    private int portions;
+
+   public Recipe getRecipe() {
+      return recipe;
+   }
+
+   public void setRecipe(Recipe recipe) {
+      this.recipe = recipe;
+   }
+
+   public ShoppingList getShoppingList() {
+      return shoppingList;
+   }
+
+   public void setShoppingList(ShoppingList shoppingList) {
+      this.shoppingList = shoppingList;
+   }
+
+   public int getPortions() {
+      return portions;
+   }
+
+   public void setPortions(int portions) {
+      this.portions = portions;
+   }
 }
