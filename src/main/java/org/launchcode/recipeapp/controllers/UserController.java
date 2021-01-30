@@ -24,13 +24,19 @@ import java.util.Optional;
 public class UserController {
 
    @Autowired
-   UserRepository userRepository;
+   private UserRepository userRepository;
 
    @Autowired
-   UserRecipeRepository userRecipeRepository;
+   private UserRecipeRepository userRecipeRepository;
 
    @Autowired
-   RecipeRepository recipeRepository;
+   private RecipeRepository recipeRepository;
+
+   @Autowired
+   private ShoppingListRepository shoppingListRepository;
+
+   @Autowired
+   private RecipeShoppingListRepository recipeShoppingListRepository;
 
 
    @GetMapping()
@@ -130,6 +136,85 @@ public class UserController {
       return "redirect:/users/profile";
    }
 
+   @GetMapping("/shoppingList")
+   public String getUserShoppingList(Model model, HttpServletRequest request){
+      User sessionUser = (User) request.getSession().getAttribute("user");
+      if (sessionUser == null) {
+         model.addAttribute("title", "No user found");
+         return "/login";
+      }
+
+      User user = userRepository.getById(sessionUser.getId());
+      Optional<ShoppingList> shoppingListOptional = shoppingListRepository.findByUserAndActive(user, true);
+      if (shoppingListOptional.isPresent()) {
+         ShoppingList shoppingList = shoppingListOptional.get();
+         model.addAttribute("shoppingList", shoppingList);
+      }
+
+      return "users/shopping-list";
+   }
+
+   @PostMapping("/shoppingList/close")
+   public String closeShoppingList(HttpServletRequest request) {
+      User sessionUser = (User) request.getSession().getAttribute("user");
+      if (sessionUser == null) {
+         return "/login";
+      }
+
+      User user = userRepository.getById(sessionUser.getId());
+      Optional<ShoppingList> shoppingListOptional = shoppingListRepository.findByUserAndActive(user, true);
+
+      if (shoppingListOptional.isPresent()) {
+         ShoppingList shoppingList = shoppingListOptional.get();
+         shoppingList.setActive(false);
+         shoppingListRepository.save(shoppingList);
+      }
+
+      return "redirect:/users/shoppingList";
+   }
+
+   @Transactional
+   @PostMapping("/shoppingList/add/{recipeId}")
+   public String addToShoppingList(@PathVariable int recipeId, @RequestParam int portions,
+                                   Model model, HttpServletRequest request) {
+      User sessionUser = (User) request.getSession().getAttribute("user");
+      if (sessionUser == null) {
+         model.addAttribute("title", "No user found");
+         return "/login";
+      }
+
+      User user = userRepository.getById(sessionUser.getId());
+      Optional<ShoppingList> shoppingListOptional = shoppingListRepository.findByUserAndActive(user, true);
+
+      ShoppingList shoppingList;
+      if (shoppingListOptional.isPresent()) {
+         shoppingList = shoppingListOptional.get();
+      } else {
+         shoppingList = new ShoppingList();
+         shoppingList.setUser(user);
+         shoppingList.setActive(true);
+
+         shoppingList = shoppingListRepository.save(shoppingList);
+      }
+
+      saveRecipeToShoppingList(recipeId, portions, shoppingList);
+
+      return "redirect:/users/shoppingList";
+   }
+
+   private void saveRecipeToShoppingList(int recipeId, int portions, ShoppingList shoppingList) {
+      Recipe recipe = recipeRepository.getById(recipeId);
+      RecipeShoppingList recipeShoppingList = new RecipeShoppingList();
+      recipeShoppingList.setShoppingList(shoppingList);
+      recipeShoppingList.setRecipe(recipe);
+      if (portions == 0) {
+         portions = 1;
+      }
+      recipeShoppingList.setPortions(portions);
+      recipeShoppingListRepository.save(recipeShoppingList);
+   }
+
+
 
    @PostMapping("/profile/sort")
    public String sortSearchResults(@RequestParam SortParameter sortParameter, HttpServletRequest request,Category category, Model model) {
@@ -192,7 +277,6 @@ public class UserController {
 
 
 }
-
 
 
 

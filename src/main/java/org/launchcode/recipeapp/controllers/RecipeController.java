@@ -5,6 +5,7 @@ import org.launchcode.recipeapp.models.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.swing.*;
 import javax.validation.Valid;
 import java.lang.reflect.Array;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -66,7 +68,11 @@ public class RecipeController {
    public String createRecipe(Model model) {
       Category[] categories = Category.values();
       Measurement[] measurements = Measurement.values();
-      Iterable<Tag> tags = tagRepository.findAll();
+//      Iterable<Tag> tags = tagRepository.findAll();
+      List<Tag> tags = (List<Tag>) tagRepository.findAll();
+
+
+
 
       model.addAttribute("title", "Create Recipe");
       model.addAttribute("recipe", new Recipe());
@@ -78,12 +84,30 @@ public class RecipeController {
    }
 
    @PostMapping("create")
-   public String createRecipe(HttpServletRequest request, @ModelAttribute Recipe newRecipe,
+   public String createRecipe(HttpServletRequest request, @ModelAttribute @Valid Recipe newRecipe,
                               @ModelAttribute @Valid String newCategory,
-                              Errors errors, Model model, RedirectAttributes redirectAttrs) {
+                              Errors errors, Model model, RedirectAttributes redirectAttrs,
+                              BindingResult placeValidation) {
 
       if (errors.hasErrors()) {
          model.addAttribute("title", "Create Recipe");
+
+         return "recipes/create";
+      }
+      if (newRecipe.getTags().size() == 0) {
+         Category[] categories = Category.values();
+         Measurement[] measurements = Measurement.values();
+         List<Tag> tags = (List<Tag>) tagRepository.findAll();
+         String[] quantity = request.getParameterValues("quantity");
+
+         model.addAttribute("errorMsg", "Please, select the Tags");
+         model.addAttribute("recipe", newRecipe);
+         model.addAttribute("categories", categories);
+//         model.addAttribute("instructions", instructions);
+         model.addAttribute("measurements", measurements);
+         model.addAttribute("quantity", quantity);
+         model.addAttribute("tags", tags);
+
          return "recipes/create";
       }
 
@@ -187,6 +211,8 @@ public class RecipeController {
       User user = userRepository.findByUsername(sessionUser);
       Review review = new Review(recipe, newReview.getRating(), newReview.getComment(), user, user.getUsername(), recipe.getCurrentTime());
       reviewRepository.save(review);
+      recipe.getReviews().add(review);
+
       review.updateCalculations(recipe,review);
       recipeRepository.save(recipe);
 
@@ -349,7 +375,13 @@ public class RecipeController {
    @RequestMapping("/delete/{recipeId}")
    public String handleDeleteUser(@PathVariable Integer recipeId) {
       Optional<Recipe> recipeOpt = recipeRepository.findById(recipeId);
+      List<Review> reviews = recipeOpt.get().getReviews();
       if (recipeOpt.isPresent()) {
+         for (int i = 0; i < reviews.size(); i++){
+            Review review = reviews.get(i);
+            review.setUser(null);
+            reviewRepository.deleteById(review.getId());
+         }
          recipeRepository.deleteById(recipeId);
       }
 

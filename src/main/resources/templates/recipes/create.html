@@ -32,9 +32,9 @@
 
 
         <!-- Tag -->
-        <label th:for="tags">Tags</label>
-        <th:block th:each="tag : ${tags}">
-            <input type="checkbox" name="tags" th:value="${tag.id}">
+        <label th:for="tags" th:text="${errorMsg}" style="color: red">Tags</label>
+        <th:block th:each="tag : ${tags}" th:field="*{tags}" required>
+            <input type="checkbox" name="tags" th:value="${tag.id}" >
             <label th:text="${tag.name}" style="font-size:15px"></label>
         </th:block>
         <a th:href="@{'./tags'}">Create New Tag</a>

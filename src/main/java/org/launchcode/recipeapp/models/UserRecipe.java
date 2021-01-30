@@ -36,13 +36,6 @@ public class UserRecipe extends AbstractEntity {
            foreignKey = @ForeignKey(name = "FK_USER_RECIPE"))
    private Recipe recipe;
 
-   @Override
-   public String toString() {
-      return "UserRecipe{" +
-              "user=" + user +
-              ", recipe=" + recipe +
-              '}';
-   }
 
    public User getUser() {
       return user;
