@@ -44,7 +44,13 @@ public class TagController {
     }
 
     @PostMapping("tags")
-    public String processCreateTag(@ModelAttribute @Valid Tag tag, Errors errors, Model model) {
+    public String processCreateTag(@ModelAttribute @Valid Tag tag, @RequestParam Boolean isFilterable, Errors errors, Model model) {
+
+        System.out.println("isFilterable: " + isFilterable);
+        if(isFilterable == null){
+            isFilterable = false;
+        }
+
         List<Tag> tags = tagRepository.findAll();
 
         if (!errors.hasErrors()) {
@@ -56,28 +62,15 @@ public class TagController {
                 model.addAttribute("tags", tags);
                 return "recipes/tags";
             } else {
+                tag.setFilterable(isFilterable);
                 tagRepository.save(tag);
+                System.out.println("tag.getIsFilterable(): " + tag.getIsFilterable());
             }
         }
 
         return "redirect:/recipes/tags";
     }
 
-
-//    @PostMapping("tags")
-//    public String processCreateTag(@ModelAttribute @Valid Tag tag, Errors errors, Model model){
-//        if(errors.hasErrors()) {
-//            Iterable<Tag> tags = tagRepository.findAll();
-//            model.addAttribute("tags", tags);
-//            return "recipes/tags";
-//        } else {
-//            tagRepository.save(tag);
-//        }
-//        Iterable<Tag> tags = tagRepository.findAll();
-//        model.addAttribute("tags", tags);
-//        return "recipes/tags";
-//
-//    }
 
     @RequestMapping("tags/delete/{id}")
     public String deleteTag(@PathVariable Integer id) {

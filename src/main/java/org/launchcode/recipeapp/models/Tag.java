@@ -24,7 +24,7 @@ public class Tag extends AbstractEntity {
 
    Boolean isFilterable;
 
-   public Tag( String name, Boolean isFilterable) {
+   public Tag(String name, Boolean isFilterable) {
       this.name = name;
       this.isFilterable = isFilterable;
    }
@@ -48,7 +48,8 @@ public class Tag extends AbstractEntity {
       return isFilterable;
    }
 
-   public void setIsFilterable(Boolean isFilterable) {
-      isFilterable = isFilterable;
+
+   public void setFilterable(Boolean filterable) {
+      isFilterable = filterable;
    }
 }

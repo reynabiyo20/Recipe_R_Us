@@ -22,14 +22,14 @@
         </div>
     </form>
 
-    <form action="/search/filter" method="post" th:object="${recipe}">
+    <form action="/search/filter" method="post">
             <list id="tagRepository"  name="tagRepository">
-                <option value="" >Filter by..
-                <input type="checkbox"
-                        th:each="tagValue:${tag}"
-                        th:value="${tagValue}"
-                        th:text="${tagValue.getName()}">
-                </option>
+                <p>Filter by..</p>
+                    <div th:each="tagValue:${tag}">
+                    <input type="checkbox"
+                            th:value="${tagValue}"
+                            th:text="${tagValue.getName()}"><br>
+                    </div>
                 <button class="btn btn-primary my-2 my-sm-0" type="submit">Filter</button>
             </list>
             </ul>

@@ -16,9 +16,12 @@
                 <label th:for="name">New Tag: </label>
                     <input class="form-control" th:field="*{name}">
 
+
                 <label th:for="isFilterable">Add to Recipe Filter?</label>
-                    <input type="checkbox" th:field="*{isFilterable}" value="true">
-                </div>
+                <input type="checkbox" th:field="*{isFilterable}" value="true">
+                <input type="hidden" th:field="*{isFilterable}" value="false" checked>
+
+            </div>
             <input type="submit" value="Add Tag">
             <p class="error" th:errors="${tag.name}"></p><br><br>
         </form>

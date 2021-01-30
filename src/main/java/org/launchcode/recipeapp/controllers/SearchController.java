@@ -65,15 +65,30 @@ public class SearchController {
 
         model.addAttribute("category", category);
 
+        List<Tag> tags = tagRepository.findAll();
+        List<Tag> filterTags = new ArrayList<>();
+        for (Tag tag : tags) {
+            System.out.println("tag name: " + tag.getName());
+            System.out.println("value: " + tag.getIsFilterable());
+
+            if(tag.getIsFilterable() == null){ }
+            else if (tag.getIsFilterable() == true){
+                filterTags.add(tag);
+            }
+
+        }
+        model.addAttribute("tag", filterTags);
+
+
         if (category == null) {
             //get all recipes
             for (Recipe recipe : recipes) {
                 foundRecipes.add(recipe);
             }
+
             model.addAttribute("recipes", foundRecipes);
             model.addAttribute("categories", Category.values());
             model.addAttribute("sort", SortParameter.values());
-            model.addAttribute("tag", tagRepository.findAll());
 
             //get all recipes in selected CATEGORY search
         } else {
@@ -84,7 +99,6 @@ public class SearchController {
                     model.addAttribute("categories", Category.values());
                     model.addAttribute("category", category);
                     model.addAttribute("sort", SortParameter.values());
-                    model.addAttribute("tag", tagRepository.findAll());
                 }
             }
         }
@@ -96,6 +110,16 @@ public class SearchController {
     public String sortSearchResults(@RequestParam SortParameter sortParameter, Category category, Model model) {
         Iterable<Recipe> recipes = foundRecipes;
 
+        List<Tag> tags = tagRepository.findAll();
+        List<Tag> filterTags = new ArrayList<>();
+        for (Tag tag : tags) {
+            if (tag.getIsFilterable() == true) {
+                filterTags.add(tag);
+            }
+        }
+        model.addAttribute("tag", filterTags);
+
+
         //If selected sort is NAME ASCENDING
         if ((sortParameter.getName().equals(SortParameter.NAME_ASCENDING.getName()))) {
             Collections.sort(foundRecipes, new Recipe.SortByNameAsc());
@@ -105,7 +129,6 @@ public class SearchController {
             model.addAttribute("categories", Category.values());
             model.addAttribute("category", category);
             model.addAttribute("sort", SortParameter.values());
-            model.addAttribute("tag", tagRepository.findAll());
 
             //If selected sort is NAME DESCENDING
         } else if ((sortParameter.getName().equals(SortParameter.NAME_DESCENDING.getName()))) {
@@ -116,7 +139,6 @@ public class SearchController {
             model.addAttribute("categories", Category.values());
             model.addAttribute("category", category);
             model.addAttribute("sort", SortParameter.values());
-            model.addAttribute("tag", tagRepository.findAll());
 
             //if selected sort is ASCENDING RATING
         } else if ((sortParameter.getName().equals(SortParameter.RATING_ASCENDING.getName()))) {
@@ -127,7 +149,6 @@ public class SearchController {
             model.addAttribute("categories", Category.values());
             model.addAttribute("category", category);
             model.addAttribute("sort", SortParameter.values());
-            model.addAttribute("tag", tagRepository.findAll());
 
             //if selected sort is DESCENDING RATING
         } else if ((sortParameter.getName().equals(SortParameter.RATING_DESCENDING.getName()))) {
@@ -138,7 +159,6 @@ public class SearchController {
             model.addAttribute("categories", Category.values());
             model.addAttribute("category", category);
             model.addAttribute("sort", SortParameter.values());
-            model.addAttribute("tag", tagRepository.findAll());
         }
 
         return "search";
@@ -149,6 +169,14 @@ public class SearchController {
         Iterable<Recipe> recipes = foundRecipes;
         List<Recipe> filteredRecipes = new ArrayList<>();
 
+        List<Tag> allTags = tagRepository.findAll();
+        List<Tag> filterTags = new ArrayList<>();
+        for (Tag tag : allTags) {
+            if (tag.getIsFilterable() == true) {
+                filterTags.add(tag);
+            }
+        }
+
         for (Recipe recipe : recipes) {
             for (Tag recipeTag : recipe.getTags()) {
                 for(Tag tags : tagRepository.findAll())
@@ -158,7 +186,7 @@ public class SearchController {
                         model.addAttribute("recipes", filteredRecipes);
                         model.addAttribute("categories", Category.values());
                         model.addAttribute("sort", SortParameter.values());
-                        model.addAttribute("tag", tagRepository.findAll());
+                        model.addAttribute("tag", filterTags);
                 }
             }
 
