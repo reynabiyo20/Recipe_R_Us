@@ -73,7 +73,7 @@
             <select id ="category" class="btn btn-light" name="category">
                 <option th:unless="${category == null}" th:value="${category}" th:text="${category.getName()}">
                 </option>
-                <option name="selectedValue" value="">All Categories</option>
+                <option name="selectedValue" value="" placeholder="Search by Keyword">All Categories</option>
                 <option th:each="category:${categories}"
                         th:value="${category}"
                         th:text="${category.getName()}">

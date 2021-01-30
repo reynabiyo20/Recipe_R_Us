@@ -37,6 +37,10 @@ public class UserController {
    @Autowired
    private RecipeShoppingListRepository recipeShoppingListRepository;
 
+   @Autowired
+   private TagRepository tagRepository;
+   List<Recipe> recipes = new ArrayList<>();
+
 
    @GetMapping()
    public String getAllUsers(Model model) {
@@ -58,7 +62,8 @@ public class UserController {
       if (sessionUser == null) {
          model.addAttribute("title", "No user found");
       } else {
-         List<Recipe> recipes = new ArrayList<>();
+//         List<Recipe> recipes = new ArrayList<>();
+         recipes.clear();
          User user = userRepository.findByUsername(sessionUser);
          List<UserRecipe> userRecipes = userRecipeRepository.findAllByUser(user);
 
@@ -73,11 +78,104 @@ public class UserController {
          model.addAttribute("title1", redirectAttributes.getAttribute("title1"));
          model.addAttribute("categories", Category.values());
          model.addAttribute("sort", SortParameter.values());
+         model.addAttribute("tag", tagRepository.findAll());
 
 
       }
       return "users/profile";
    }
+
+
+   @PostMapping("/profile/sort")
+   public String sortMyRecipes(@RequestParam SortParameter sortParameter, HttpServletRequest request,Category category, Model model) {
+      String sessionUser = (String) request.getSession().getAttribute("user");
+      User user = userRepository.findByUsername(sessionUser);
+
+      recipes.clear();
+      for (UserRecipe userRecipe : user.getRecipes()) {
+         Optional<Recipe> singleRecipe = recipeRepository.findById(userRecipe.getRecipe().getId());
+         if(singleRecipe.isPresent()) {
+            recipes.add(singleRecipe.get());
+         }
+      }
+
+      //If selected sort is NAME ASCENDING
+      if ((sortParameter.getName().equals(SortParameter.NAME_ASCENDING.getName()))) {
+
+         Collections.sort(recipes, new Recipe.SortByNameAsc());
+
+         //If selected sort is NAME DESCENDING
+      } else if ((sortParameter.getName().equals(SortParameter.NAME_DESCENDING.getName()))) {
+         Collections.sort(recipes, new Recipe.SortByNameDesc());
+
+         //if selected sort is ASCENDING RATING
+      } else if ((sortParameter.getName().equals(SortParameter.RATING_ASCENDING.getName()))) {
+         Collections.sort(recipes, new Recipe.SortByRatingAsc());
+
+
+         //if selected sort is DESCENDING RATING
+      } else if ((sortParameter.getName().equals(SortParameter.RATING_DESCENDING.getName()))) {
+         Collections.sort(recipes, new Recipe.SortByRatingDsc());
+
+      }
+      //render  sorted recipes
+      model.addAttribute("recipes", recipes);
+      model.addAttribute("categories", Category.values());
+      model.addAttribute("category", category);
+      model.addAttribute("sort", SortParameter.values());
+      model.addAttribute("tag", tagRepository.findAll());
+
+      return "users/profile";
+   }
+
+
+
+   @PostMapping(value = "/profile/filter")
+   public String filterMyRecipes(@RequestParam List<Integer> tagId, @RequestParam Category category, Model model) {
+      model.addAttribute("category", category);
+
+      // store selected filters in an arrayList
+      List<Tag> selectedTags = new ArrayList<>();
+      for (Integer aTagId : tagId) {
+         selectedTags.add(tagRepository.findById(aTagId).get());
+      }
+
+      // filter checkboxes
+      List<Tag> allTags = tagRepository.findAll();
+      List<Tag> filters = new ArrayList<>();
+      for (Tag aTag : allTags) {
+         if (aTag.getIsFilterable() == null) {
+         } else if (aTag.getIsFilterable() == true) {
+            filters.add(aTag);
+            model.addAttribute("tag", filters);
+         }
+      }
+
+      // find and store recipes with the selected tag
+      List<Recipe> filteredRecipes = new ArrayList<>();
+
+      for (Recipe recipe : recipes) {
+         for (Tag recipeTag : recipe.getTags()) {
+            for (Tag tag : selectedTags) {
+               if (recipeTag.getId() == tag.getId()) {
+                  if(!filteredRecipes.contains(recipe)) {
+                     filteredRecipes.add(recipe);
+                  }
+               }
+            }
+         }
+      }
+
+      //render filtered recipes
+      model.addAttribute("recipes", filteredRecipes);
+      model.addAttribute("categories", Category.values());
+      model.addAttribute("sort", SortParameter.values());
+      model.addAttribute("tag", tagRepository.findAll());
+
+      return "users/profile";
+   }
+
+
 
    @PostMapping("/addRecipe/{id}")
    public String addRecipe(@PathVariable Integer id, HttpServletRequest request, Model model,
@@ -104,6 +202,7 @@ public class UserController {
 
       return "redirect:/users/profile";
    }
+
 
    @PostMapping("/deleteRecipe/{id}")
    public String deleteRecipeFromFavorite(@PathVariable Integer id, HttpServletRequest request, Model model) {
@@ -212,68 +311,6 @@ public class UserController {
       recipeShoppingList.setPortions(portions);
       recipeShoppingListRepository.save(recipeShoppingList);
    }
-
-
-
-   @PostMapping("/profile/sort")
-   public String sortSearchResults(@RequestParam SortParameter sortParameter, HttpServletRequest request,Category category, Model model) {
-      String sessionUser = (String) request.getSession().getAttribute("user");
-      User user = userRepository.findByUsername(sessionUser);
-
-      List<Recipe> recipes = new ArrayList<>();
-
-      for (UserRecipe userRecipe : user.getRecipes()) {
-         Optional<Recipe> singleRecipe = recipeRepository.findById(userRecipe.getRecipe().getId());
-         if(singleRecipe.isPresent()) {
-            recipes.add(singleRecipe.get());
-         }
-      }
-
-         //If selected sort is NAME ASCENDING
-         if ((sortParameter.getName().equals(SortParameter.NAME_ASCENDING.getName()))) {
-
-            Collections.sort(recipes, new Recipe.SortByNameAsc());
-
-            //render user recipes by ASCENDING NAME
-            model.addAttribute("recipes", recipes);
-            model.addAttribute("categories", Category.values());
-            model.addAttribute("category", category);
-            model.addAttribute("sort", SortParameter.values());
-
-            //If selected sort is NAME DESCENDING
-         } else if ((sortParameter.getName().equals(SortParameter.NAME_DESCENDING.getName()))) {
-            Collections.sort(recipes, new Recipe.SortByNameDesc());
-
-            //render user recipes by DESCENDING NAME
-            model.addAttribute("recipes", recipes);
-            model.addAttribute("categories", Category.values());
-            model.addAttribute("category", category);
-            model.addAttribute("sort", SortParameter.values());
-
-            //if selected sort is ASCENDING RATING
-         } else if ((sortParameter.getName().equals(SortParameter.RATING_ASCENDING.getName()))) {
-            Collections.sort(recipes, new Recipe.SortByRatingAsc());
-
-            //render  recipes from  by ASCENDING RATING
-            model.addAttribute("recipes", recipes);
-            model.addAttribute("categories", Category.values());
-            model.addAttribute("category", category);
-            model.addAttribute("sort", SortParameter.values());
-
-            //if selected sort is DESCENDING RATING
-         } else if ((sortParameter.getName().equals(SortParameter.RATING_DESCENDING.getName()))) {
-            Collections.sort(recipes, new Recipe.SortByRatingDsc());
-
-            //render  recipes from  by DESCENDING RATING
-            model.addAttribute("recipes", recipes);
-            model.addAttribute("categories", Category.values());
-            model.addAttribute("category", category);
-            model.addAttribute("sort", SortParameter.values());
-         }
-
-      return "users/profile";
-   }
-
 
 }
 

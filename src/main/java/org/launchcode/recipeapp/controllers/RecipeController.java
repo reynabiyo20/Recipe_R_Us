@@ -227,6 +227,7 @@ public class RecipeController {
       model.addAttribute("recipes", all);
       model.addAttribute("categories", Category.values());
       model.addAttribute("sort", SortParameter.values());
+      model.addAttribute("tag", tagRepository.findAll());
 
       return "recipes/all";
 
@@ -242,42 +243,71 @@ public class RecipeController {
 
          Collections.sort(all, new Recipe.SortByNameAsc());
 
-         //render user recipes by ASCENDING NAME
-         model.addAttribute("recipes", all);
-         model.addAttribute("categories", Category.values());
-         model.addAttribute("category", category);
-         model.addAttribute("sort", SortParameter.values());
-
          //If selected sort is NAME DESCENDING
       } else if ((sortParameter.getName().equals(SortParameter.NAME_DESCENDING.getName()))) {
          Collections.sort(all, new Recipe.SortByNameDesc());
-
-         //render user recipes by DESCENDING NAME
-         model.addAttribute("recipes", all);
-         model.addAttribute("categories", Category.values());
-         model.addAttribute("category", category);
-         model.addAttribute("sort", SortParameter.values());
 
          //if selected sort is ASCENDING RATING
       } else if ((sortParameter.getName().equals(SortParameter.RATING_ASCENDING.getName()))) {
          Collections.sort(all, new Recipe.SortByRatingAsc());
 
-         //render  recipes from  by ASCENDING RATING
-         model.addAttribute("recipes", all);
-         model.addAttribute("categories", Category.values());
-         model.addAttribute("category", category);
-         model.addAttribute("sort", SortParameter.values());
-
          //if selected sort is DESCENDING RATING
       } else if ((sortParameter.getName().equals(SortParameter.RATING_DESCENDING.getName()))) {
          Collections.sort(all, new Recipe.SortByRatingDsc());
 
-         //render  recipes from  by DESCENDING RATING
-         model.addAttribute("recipes", all);
-         model.addAttribute("categories", Category.values());
-         model.addAttribute("category", category);
-         model.addAttribute("sort", SortParameter.values());
       }
+      model.addAttribute("recipes", all);
+      model.addAttribute("categories", Category.values());
+      model.addAttribute("category", category);
+      model.addAttribute("sort", SortParameter.values());
+      model.addAttribute("tag", tagRepository.findAll());
+
+      return "recipes/all";
+   }
+
+   @PostMapping(value = "/filter")
+   public String filterResults(@RequestParam List<Integer> tagId, @RequestParam Category category, Model model) {
+      model.addAttribute("category", category);
+      List<Recipe> all = (List<Recipe>) recipeRepository.findAll();
+
+      // store selected filters in an arrayList
+      List<Tag> selectedTags = new ArrayList<>();
+      for (Integer aTagId : tagId) {
+         selectedTags.add(tagRepository.findById(aTagId).get());
+      }
+
+      // filter checkboxes
+      List<Tag> allTags = tagRepository.findAll();
+      List<Tag> filters = new ArrayList<>();
+      for (Tag aTag : allTags) {
+         if (aTag.getIsFilterable() == null) {
+         } else if (aTag.getIsFilterable() == true) {
+            filters.add(aTag);
+            model.addAttribute("tag", filters);
+         }
+      }
+
+      // find and store recipes with the selected tag
+      Iterable<Recipe> recipes = all;
+      List<Recipe> filteredRecipes = new ArrayList<>();
+
+      for (Recipe recipe : recipes) {
+         for (Tag recipeTag : recipe.getTags()) {
+            for (Tag tag : selectedTags) {
+               if (recipeTag.getId() == tag.getId()) {
+                  if(!filteredRecipes.contains(recipe)) {
+                     filteredRecipes.add(recipe);
+                  }
+               }
+            }
+         }
+      }
+
+
+      //render filtered recipes
+      model.addAttribute("recipes", filteredRecipes);
+      model.addAttribute("categories", Category.values());
+      model.addAttribute("sort", SortParameter.values());
 
       return "recipes/all";
    }

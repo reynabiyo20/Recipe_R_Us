@@ -30,7 +30,7 @@
                     <input type="checkbox"
                             name="tagId"
                             th:value="${aTag.getId()}"
-                            th:text="${aTag.getName()}"><br>
+                            th:text="'   ' + ${aTag.getName()}"><br>
                     </div>
                 <input type="hidden" name="category" th:value="${category}">
                 <button class="btn btn-primary my-2 my-sm-0" type="submit">Filter</button>

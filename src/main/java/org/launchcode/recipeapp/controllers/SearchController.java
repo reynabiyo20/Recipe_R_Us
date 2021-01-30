@@ -52,6 +52,7 @@ public class SearchController {
         model.addAttribute("categories", Category.values());
         model.addAttribute("sort", SortParameter.values());
         model.addAttribute("tag", tagRepository.findAll());
+
         return "search";
     }
 
@@ -63,8 +64,6 @@ public class SearchController {
         Iterable<Recipe> recipes = recipeRepository.findAll();
         foundRecipes.clear();
 
-        model.addAttribute("category", category);
-
         List<Tag> tags = tagRepository.findAll();
         List<Tag> filterTags = new ArrayList<>();
         for (Tag tag : tags) {
@@ -75,29 +74,29 @@ public class SearchController {
         }
         model.addAttribute("tag", filterTags);
 
-
         if (category == null) {
             //get all recipes
             for (Recipe recipe : recipes) {
                 foundRecipes.add(recipe);
             }
 
-            model.addAttribute("recipes", foundRecipes);
-            model.addAttribute("categories", Category.values());
-            model.addAttribute("sort", SortParameter.values());
-
             //get all recipes in selected CATEGORY search
         } else {
             for (Recipe recipe : recipes) {
                 if (recipe.getCategory().name().toLowerCase().equals(category.name().toLowerCase())) {
                     foundRecipes.add(recipe);
-                    model.addAttribute("recipes", foundRecipes);
-                    model.addAttribute("categories", Category.values());
-                    model.addAttribute("category", category);
-                    model.addAttribute("sort", SortParameter.values());
+
                 }
             }
         }
+
+        //render found recipes
+        model.addAttribute("recipes", foundRecipes);
+        model.addAttribute("categories", Category.values());
+        model.addAttribute("category", category);
+        model.addAttribute("sort", SortParameter.values());
+        model.addAttribute("category", category);
+
         return "search";
     }
 
@@ -121,42 +120,24 @@ public class SearchController {
         if ((sortParameter.getName().equals(SortParameter.NAME_ASCENDING.getName()))) {
             Collections.sort(foundRecipes, new Recipe.SortByNameAsc());
 
-            //render recipes  by ASCENDING NAME
-            model.addAttribute("recipes", foundRecipes);
-            model.addAttribute("categories", Category.values());
-            model.addAttribute("category", category);
-            model.addAttribute("sort", SortParameter.values());
-
             //If selected sort is NAME DESCENDING
         } else if ((sortParameter.getName().equals(SortParameter.NAME_DESCENDING.getName()))) {
             Collections.sort(foundRecipes, new Recipe.SortByNameDesc());
-
-            //render recipes  by DESCENDING NAME
-            model.addAttribute("recipes", foundRecipes);
-            model.addAttribute("categories", Category.values());
-            model.addAttribute("category", category);
-            model.addAttribute("sort", SortParameter.values());
 
             //if selected sort is ASCENDING RATING
         } else if ((sortParameter.getName().equals(SortParameter.RATING_ASCENDING.getName()))) {
             Collections.sort(foundRecipes, new Recipe.SortByRatingAsc());
 
-            //render  recipes from  by ASCENDING RATING
-            model.addAttribute("recipes", foundRecipes);
-            model.addAttribute("categories", Category.values());
-            model.addAttribute("category", category);
-            model.addAttribute("sort", SortParameter.values());
-
             //if selected sort is DESCENDING RATING
         } else if ((sortParameter.getName().equals(SortParameter.RATING_DESCENDING.getName()))) {
             Collections.sort(foundRecipes, new Recipe.SortByRatingDsc());
 
-            //render  recipes from  by DESCENDING RATING
-            model.addAttribute("recipes", foundRecipes);
-            model.addAttribute("categories", Category.values());
-            model.addAttribute("category", category);
-            model.addAttribute("sort", SortParameter.values());
         }
+        //render found recipes
+        model.addAttribute("recipes", foundRecipes);
+        model.addAttribute("categories", Category.values());
+        model.addAttribute("category", category);
+        model.addAttribute("sort", SortParameter.values());
 
         return "search";
     }
@@ -198,11 +179,11 @@ public class SearchController {
             }
         }
 
-
         //render filtered recipes
         model.addAttribute("recipes", filteredRecipes);
         model.addAttribute("categories", Category.values());
         model.addAttribute("sort", SortParameter.values());
+
         return "search";
     }
 }

@@ -5,7 +5,7 @@
 <div th:replace="fragments :: header"></div>
 
 <div class="container-fluid p-5 m-auto">
-    <h1>View All Recipes</h1>
+    <h1>Showing All Recipes</h1>
 
     <form action="/recipes/sort" method="post" th:object="${recipe}">
         <div class="sort">
@@ -17,6 +17,21 @@
                 </option>
             </select>
         </div>
+    </form>
+
+    <form action="/recipes/filter" method="post">
+        <list id="tagRepository"  name="tagRepository">
+            <p>Filter by..</p>
+            <div th:each="aTag:${tag}">
+                <input type="checkbox"
+                       name="tagId"
+                       th:value="${aTag.getId()}"
+                       th:text="'   ' +${aTag.getName()}"><br>
+            </div>
+            <input type="hidden" name="category" th:value="${category}">
+            <button class="btn btn-primary my-2 my-sm-0" type="submit">Filter</button>
+        </list>
+        </ul>
     </form>
     <div class="card-deck justify-content-center pt-5">
         <div class="card col-2 thumb-post p-1" th:each="recipe:${recipes}">
