@@ -56,6 +56,6 @@ public class Tag extends AbstractEntity {
    }
 
    public String nameToLowerCase(){
-      return name.toLowerCase();
+      return name;
    }
 }

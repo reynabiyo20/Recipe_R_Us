@@ -33,6 +33,9 @@ public class SearchController {
 
     List<Recipe> foundRecipes = new ArrayList<>();
 
+
+
+
     // Search by KEYWORD
     @PostMapping(value = "/keywordResults")
     public String searchByKeyword(Model model, @RequestParam String keyword) {
@@ -103,13 +106,11 @@ public class SearchController {
                 model.addAttribute("keyword", keyword);
                 model.addAttribute("categories", Category.values());
                 model.addAttribute("sort", SortParameter.values());
-               // model.addAttribute("tag", tagRepository.findAll());
+                //model.addAttribute("tag", tagRepository.findAll());
 
                 return "search";
 
     }
-
-
 
 
 
@@ -141,6 +142,7 @@ public class SearchController {
             for (Recipe recipe : recipes) {
                 if (recipe.getCategory().name().toLowerCase().equals(category.name().toLowerCase())) {
                     foundRecipes.add(recipe);
+
                 }
             }
         }
@@ -156,6 +158,8 @@ public class SearchController {
 
         return "search";
     }
+
+
 
     //SORTING
     @PostMapping(value = "/sort")
@@ -199,6 +203,8 @@ public class SearchController {
 
         return "search";
     }
+
+
 
     @PostMapping(value = "/filter")
     public String filterResults(@RequestParam List<Integer> tagId, @RequestParam Category category, Model model) {
