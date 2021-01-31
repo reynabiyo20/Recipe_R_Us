@@ -63,6 +63,7 @@ public class TagController {
                 return "recipes/tags";
             } else {
                 tag.setFilterable(isFilterable);
+                tag.setName(tag.getName().toUpperCase());
                 tagRepository.save(tag);
                 System.out.println("tag.getIsFilterable(): " + tag.getIsFilterable());
             }

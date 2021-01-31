@@ -36,7 +36,7 @@ public class Ingredient extends AbstractEntity{
     }
 
     public String getIngredient() {
-        return ingredient;
+        return ingredient.toLowerCase();
     }
 
     public void setIngredient(String ingredient) {

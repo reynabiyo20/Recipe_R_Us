@@ -2,6 +2,7 @@ package org.launchcode.recipeapp.controllers;
 
 
 import org.launchcode.recipeapp.models.*;
+import org.launchcode.recipeapp.models.data.IngredientRepository;
 import org.launchcode.recipeapp.models.data.RecipeRepository;
 import org.launchcode.recipeapp.models.data.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,35 +28,82 @@ public class SearchController {
     @Autowired
     private TagRepository tagRepository;
 
+    @Autowired
+    private IngredientRepository ingredientRepository;
+
     List<Recipe> foundRecipes = new ArrayList<>();
 
     // Search by KEYWORD
     @PostMapping(value = "/keywordResults")
     public String searchByKeyword(Model model, @RequestParam String keyword) {
-        String lower_val = keyword.toLowerCase();
+        String lowerVal = keyword.toLowerCase();
         Iterable<Recipe> recipes = recipeRepository.findAll();
         foundRecipes.clear();
+
+        Tag tagRec = (Tag) tagRepository.findByName(lowerVal);
+        Ingredient ingRec = (Ingredient) ingredientRepository.findByIngredient(lowerVal);
+
+        if (tagRec != null) {
+            foundRecipes = ((List<Recipe>) tagRec.getRecipes());
+        }
+        if (ingRec != null) {
+            foundRecipes.add((Recipe) ingRec.getRecipe());
+        }
+
         for (Recipe recipe : recipes) {
-            if (recipe.getName().toLowerCase().contains(keyword.toLowerCase())) {
-                foundRecipes.add(recipe);
-            } else if (recipe.getIngredients().contains(lower_val)) {
-                foundRecipes.add(recipe);
-            } else if (recipe.getInstructions().contains(lower_val)) {
-                foundRecipes.add(recipe);
-            } else if (recipe.getCategory().toString().toLowerCase().contains(lower_val)) {
-                foundRecipes.add(recipe);
-            } else if (recipe.getTags().toString().toLowerCase().contains(lower_val)) {
-                foundRecipes.add(recipe);
+            if (recipe.getName().toLowerCase().contains(lowerVal)) {
+                if (!foundRecipes.contains(recipe))
+                    foundRecipes.add(recipe);
+                } else if (recipe.getCategory().toString().toLowerCase().contains(lowerVal)) {
+                        if (!foundRecipes.contains(recipe))
+                        foundRecipes.add(recipe);
             }
         }
-        model.addAttribute("recipes", foundRecipes);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("categories", Category.values());
-        model.addAttribute("sort", SortParameter.values());
-        model.addAttribute("tag", tagRepository.findAll());
 
-        return "search";
+//        if(lowerVal.contains(" ")) {
+//
+//            String[] str = lowerVal.split(" ");
+//            List<String> list;
+//            list = Arrays.asList(str);
+//            for (int i = 0; i < list.size(); i++) {
+//
+//                Tag tagRec1 = (Tag) tagRepository.findByName(list.get(i));
+//                Ingredient ingRec1 = (Ingredient) ingredientRepository.findByIngredient(list.get(i));
+//                if (tagRec != null) {
+//                    foundRecipes.add((Recipe) tagRec1.getRecipes());
+//                }
+//                if (ingRec != null) {
+//                    foundRecipes.add((Recipe) ingRec1.getRecipe());
+//                }
+//
+//                for (Recipe recipe1 : recipes) {
+//                    if (recipe1.getName().toLowerCase().contains(list.get(i))) {
+//                        if (!foundRecipes.contains(recipe1))
+//                            foundRecipes.add(recipe1);
+//                    } else if (recipe1.getCategory().toString().toLowerCase().contains(list.get(i))) {
+//                        if (!foundRecipes.contains(recipe1))
+//                            foundRecipes.add(recipe1);
+//                    }
+//                }
+//            }
+//        }
+
+                model.addAttribute("recipes", foundRecipes);
+                model.addAttribute("keyword", keyword);
+                model.addAttribute("categories", Category.values());
+                model.addAttribute("sort", SortParameter.values());
+                model.addAttribute("tag", tagRepository.findAll());
+
+                return "search";
+
     }
+
+
+
+
+
+
+
 
 
     //Search by CATEGORY
@@ -63,16 +112,6 @@ public class SearchController {
         String selectedValue = request.getParameter("selectedValue");
         Iterable<Recipe> recipes = recipeRepository.findAll();
         foundRecipes.clear();
-
-        List<Tag> tags = tagRepository.findAll();
-        List<Tag> filterTags = new ArrayList<>();
-        for (Tag tag : tags) {
-            if (tag.getIsFilterable() == null) {
-            } else if (tag.getIsFilterable() == true) {
-                filterTags.add(tag);
-            }
-        }
-        model.addAttribute("tag", filterTags);
 
         if (category == null) {
             //get all recipes
@@ -96,6 +135,7 @@ public class SearchController {
         model.addAttribute("category", category);
         model.addAttribute("sort", SortParameter.values());
         model.addAttribute("category", category);
+        model.addAttribute("tag", tagRepository.findAll());
 
         return "search";
     }
@@ -138,6 +178,7 @@ public class SearchController {
         model.addAttribute("categories", Category.values());
         model.addAttribute("category", category);
         model.addAttribute("sort", SortParameter.values());
+        model.addAttribute("tag", tagRepository.findAll());
 
         return "search";
     }
@@ -180,9 +221,11 @@ public class SearchController {
         }
 
         //render filtered recipes
+        model.addAttribute("selectedTags", selectedTags);
         model.addAttribute("recipes", filteredRecipes);
         model.addAttribute("categories", Category.values());
         model.addAttribute("sort", SortParameter.values());
+        model.addAttribute("tag", tagRepository.findAll());
 
         return "search";
     }

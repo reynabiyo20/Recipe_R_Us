@@ -40,6 +40,7 @@ public class UserController {
    @Autowired
    private TagRepository tagRepository;
    List<Recipe> recipes = new ArrayList<>();
+   List<UserRecipe> foundCategoryRecipes = new ArrayList<UserRecipe>();
 
 
    @GetMapping()
@@ -99,6 +100,7 @@ public class UserController {
          }
       }
 
+
       //If selected sort is NAME ASCENDING
       if ((sortParameter.getName().equals(SortParameter.NAME_ASCENDING.getName()))) {
 
@@ -145,9 +147,9 @@ public class UserController {
       List<Tag> filters = new ArrayList<>();
       for (Tag aTag : allTags) {
          if (aTag.getIsFilterable() == null) {
-         } else if (aTag.getIsFilterable() == true) {
-            filters.add(aTag);
-            model.addAttribute("tag", filters);
+            } else if (aTag.getIsFilterable() == true) {
+               filters.add(aTag);
+               model.addAttribute("tag", filters);
          }
       }
 

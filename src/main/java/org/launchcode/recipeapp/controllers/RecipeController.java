@@ -308,6 +308,7 @@ public class RecipeController {
       model.addAttribute("recipes", filteredRecipes);
       model.addAttribute("categories", Category.values());
       model.addAttribute("sort", SortParameter.values());
+      model.addAttribute("tag", tagRepository.findAll());
 
       return "recipes/all";
    }

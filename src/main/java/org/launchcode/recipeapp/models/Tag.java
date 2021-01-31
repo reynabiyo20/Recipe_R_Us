@@ -22,8 +22,8 @@ public class Tag extends AbstractEntity {
    @ManyToMany(mappedBy="tags", fetch = FetchType.EAGER)
    List<Recipe> recipes = new ArrayList<>();
 
-
    Boolean isFilterable;
+
 
    public Tag(String name, Boolean isFilterable) {
       this.name = name;
@@ -34,7 +34,7 @@ public class Tag extends AbstractEntity {
 
 
    public String getName() {
-      return name;
+      return name.toLowerCase();
    }
 
    public void setName(String name) {
