@@ -34,7 +34,9 @@ public class Tag extends AbstractEntity {
 
 
    public String getName() {
-      return name.toLowerCase();
+//      return name.toLowerCase();
+      return name;
+
    }
 
    public void setName(String name) {
@@ -49,8 +51,11 @@ public class Tag extends AbstractEntity {
       return isFilterable;
    }
 
-
    public void setFilterable(Boolean filterable) {
       isFilterable = filterable;
+   }
+
+   public String nameToLowerCase(){
+      return name.toLowerCase();
    }
 }

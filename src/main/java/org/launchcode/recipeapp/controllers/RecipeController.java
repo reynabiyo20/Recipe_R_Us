@@ -227,7 +227,17 @@ public class RecipeController {
       model.addAttribute("recipes", all);
       model.addAttribute("categories", Category.values());
       model.addAttribute("sort", SortParameter.values());
-      model.addAttribute("tag", tagRepository.findAll());
+     // model.addAttribute("tag", tagRepository.findAll());
+
+      List<Tag> tags = tagRepository.findAll();
+      List<Tag> filterTags = new ArrayList<>();
+      for (Tag tag : tags) {
+         if(tag.getIsFilterable() == null){}
+         else if (tag.getIsFilterable()) {
+            filterTags.add(tag);
+         }
+      }
+      model.addAttribute("tag", filterTags);
 
       return "recipes/all";
 
@@ -260,7 +270,16 @@ public class RecipeController {
       model.addAttribute("categories", Category.values());
       model.addAttribute("category", category);
       model.addAttribute("sort", SortParameter.values());
-      model.addAttribute("tag", tagRepository.findAll());
+      //model.addAttribute("tag", tagRepository.findAll());
+      List<Tag> tags = tagRepository.findAll();
+      List<Tag> filterTags = new ArrayList<>();
+      for (Tag tag : tags) {
+         if(tag.getIsFilterable() == null){}
+         else if (tag.getIsFilterable()) {
+            filterTags.add(tag);
+         }
+      }
+      model.addAttribute("tag", filterTags);
 
       return "recipes/all";
    }
@@ -308,7 +327,7 @@ public class RecipeController {
       model.addAttribute("recipes", filteredRecipes);
       model.addAttribute("categories", Category.values());
       model.addAttribute("sort", SortParameter.values());
-      model.addAttribute("tag", tagRepository.findAll());
+    //  model.addAttribute("tag", tagRepository.findAll());
 
       return "recipes/all";
    }

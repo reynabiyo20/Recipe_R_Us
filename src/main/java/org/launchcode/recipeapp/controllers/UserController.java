@@ -79,7 +79,16 @@ public class UserController {
          model.addAttribute("title1", redirectAttributes.getAttribute("title1"));
          model.addAttribute("categories", Category.values());
          model.addAttribute("sort", SortParameter.values());
-         model.addAttribute("tag", tagRepository.findAll());
+        // model.addAttribute("tag", tagRepository.findAll());
+         List<Tag> tags = tagRepository.findAll();
+         List<Tag> filterTags = new ArrayList<>();
+         for (Tag tag : tags) {
+            if(tag.getIsFilterable() == null){}
+            else if (tag.getIsFilterable()) {
+               filterTags.add(tag);
+            }
+         }
+         model.addAttribute("tag", filterTags);
 
 
       }
@@ -125,7 +134,16 @@ public class UserController {
       model.addAttribute("categories", Category.values());
       model.addAttribute("category", category);
       model.addAttribute("sort", SortParameter.values());
-      model.addAttribute("tag", tagRepository.findAll());
+     // model.addAttribute("tag", tagRepository.findAll());
+      List<Tag> tags = tagRepository.findAll();
+      List<Tag> filterTags = new ArrayList<>();
+      for (Tag tag : tags) {
+         if(tag.getIsFilterable() == null){}
+         else if (tag.getIsFilterable()) {
+            filterTags.add(tag);
+         }
+      }
+      model.addAttribute("tag", filterTags);
 
       return "users/profile";
    }
@@ -172,7 +190,7 @@ public class UserController {
       model.addAttribute("recipes", filteredRecipes);
       model.addAttribute("categories", Category.values());
       model.addAttribute("sort", SortParameter.values());
-      model.addAttribute("tag", tagRepository.findAll());
+      //model.addAttribute("tag", tagRepository.findAll());
 
       return "users/profile";
    }

@@ -41,6 +41,7 @@ public class SearchController {
         foundRecipes.clear();
 
         Tag tagRec = (Tag) tagRepository.findByName(lowerVal);
+
         Ingredient ingRec = (Ingredient) ingredientRepository.findByIngredient(lowerVal);
 
         if (tagRec != null) {
@@ -58,6 +59,16 @@ public class SearchController {
                         if (!foundRecipes.contains(recipe))
                         foundRecipes.add(recipe);
             }
+            List<Tag> tags = tagRepository.findAll();
+            List<Tag> filterTags = new ArrayList<>();
+            for (Tag tag : tags) {
+                if(tag.getIsFilterable() == null){}
+                else if (tag.getIsFilterable()) {
+                    filterTags.add(tag);
+                }
+            }
+            model.addAttribute("tag", filterTags);
+
         }
 
 //        if(lowerVal.contains(" ")) {
@@ -92,14 +103,11 @@ public class SearchController {
                 model.addAttribute("keyword", keyword);
                 model.addAttribute("categories", Category.values());
                 model.addAttribute("sort", SortParameter.values());
-                model.addAttribute("tag", tagRepository.findAll());
+               // model.addAttribute("tag", tagRepository.findAll());
 
                 return "search";
 
     }
-
-
-
 
 
 
@@ -113,6 +121,15 @@ public class SearchController {
         Iterable<Recipe> recipes = recipeRepository.findAll();
         foundRecipes.clear();
 
+        List<Tag> tags = tagRepository.findAll();
+        List<Tag> filterTags = new ArrayList<>();
+        for (Tag tag : tags) {
+            if(tag.getIsFilterable() == null){}
+            else if (tag.getIsFilterable()) {
+                filterTags.add(tag);
+            }
+        }
+        model.addAttribute("tag", filterTags);
         if (category == null) {
             //get all recipes
             for (Recipe recipe : recipes) {
@@ -124,10 +141,10 @@ public class SearchController {
             for (Recipe recipe : recipes) {
                 if (recipe.getCategory().name().toLowerCase().equals(category.name().toLowerCase())) {
                     foundRecipes.add(recipe);
-
                 }
             }
         }
+
 
         //render found recipes
         model.addAttribute("recipes", foundRecipes);
@@ -135,7 +152,7 @@ public class SearchController {
         model.addAttribute("category", category);
         model.addAttribute("sort", SortParameter.values());
         model.addAttribute("category", category);
-        model.addAttribute("tag", tagRepository.findAll());
+      //  model.addAttribute("tag", tagRepository.findAll());
 
         return "search";
     }
@@ -178,7 +195,7 @@ public class SearchController {
         model.addAttribute("categories", Category.values());
         model.addAttribute("category", category);
         model.addAttribute("sort", SortParameter.values());
-        model.addAttribute("tag", tagRepository.findAll());
+       // model.addAttribute("tag", tagRepository.findAll());
 
         return "search";
     }
@@ -225,7 +242,7 @@ public class SearchController {
         model.addAttribute("recipes", filteredRecipes);
         model.addAttribute("categories", Category.values());
         model.addAttribute("sort", SortParameter.values());
-        model.addAttribute("tag", tagRepository.findAll());
+       // model.addAttribute("tag", tagRepository.findAll());
 
         return "search";
     }
