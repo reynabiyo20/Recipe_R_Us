@@ -6,8 +6,10 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -21,6 +23,7 @@ public class Tag extends AbstractEntity {
 
    @ManyToMany(mappedBy="tags", fetch = FetchType.EAGER)
    List<Recipe> recipes = new ArrayList<>();
+
 
    Boolean isFilterable;
 
@@ -58,4 +61,5 @@ public class Tag extends AbstractEntity {
    public String nameToLowerCase(){
       return name;
    }
+
 }

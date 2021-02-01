@@ -79,10 +79,9 @@ public class SearchController {
 //            String[] str = lowerVal.split(" ");
 //            List<String> list;
 //            list = Arrays.asList(str);
-//            for (int i = 0; i < list.size(); i++) {
-//
-//                Tag tagRec1 = (Tag) tagRepository.findByName(list.get(i));
-//                Ingredient ingRec1 = (Ingredient) ingredientRepository.findByIngredient(list.get(i));
+//            for (String word : list) {
+//                Tag tagRec1 = (Tag) tagRepository.findByName(word);
+//                Ingredient ingRec1 = (Ingredient) ingredientRepository.findAll();
 //                if (tagRec != null) {
 //                    foundRecipes.add((Recipe) tagRec1.getRecipes());
 //                }
@@ -91,10 +90,10 @@ public class SearchController {
 //                }
 //
 //                for (Recipe recipe1 : recipes) {
-//                    if (recipe1.getName().toLowerCase().contains(list.get(i))) {
+//                    if (recipe1.getName().toLowerCase().contains(word)) {
 //                        if (!foundRecipes.contains(recipe1))
 //                            foundRecipes.add(recipe1);
-//                    } else if (recipe1.getCategory().toString().toLowerCase().contains(list.get(i))) {
+//                    } else if (recipe1.getCategory().toString().toLowerCase().contains(word)) {
 //                        if (!foundRecipes.contains(recipe1))
 //                            foundRecipes.add(recipe1);
 //                    }

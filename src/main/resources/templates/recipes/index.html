@@ -13,6 +13,8 @@
             <th>Recipes</th>
         </tr>
         </thead>
+
+
         <tr th:each="recipe:${recipes}">
             <td><a th:text="${recipe.name}" th:href="'/recipes/display?recipeId=' + ${recipe.id}"></a></td>
             <td>

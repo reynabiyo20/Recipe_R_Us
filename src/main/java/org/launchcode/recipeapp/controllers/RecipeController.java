@@ -60,6 +60,7 @@ public class RecipeController {
    @GetMapping
    public String getListOfRecipes(Model model) {
       Iterable<Recipe> recipes = recipeRepository.findAll();
+      model.addAttribute("categories", Category.values());
       model.addAttribute("recipes", recipes);
       return "recipes/index";
    }
@@ -143,6 +144,7 @@ public class RecipeController {
    @GetMapping("display")
    public String displayRecipe(@RequestParam Integer recipeId, Model model, HttpServletRequest request) {
       model.addAttribute("review", new Review());
+      model.addAttribute("categories", Category.values());
       Optional<Recipe> result = recipeRepository.findById(recipeId);
 
       List<Review> reviews = new ArrayList<Review>();
