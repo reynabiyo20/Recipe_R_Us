@@ -11,10 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,8 +31,7 @@ public class SearchController {
 
     List<Recipe> foundRecipes = new ArrayList<>();
 
-
-
+    List<Tag> selectedTags = new ArrayList<>();
 
     // Search by KEYWORD
     @PostMapping(value = "/keywordResults")
@@ -42,10 +39,9 @@ public class SearchController {
         String lowerVal = keyword.toLowerCase();
         Iterable<Recipe> recipes = recipeRepository.findAll();
         foundRecipes.clear();
-
         Tag tagRec = (Tag) tagRepository.findByName(lowerVal);
-
         Ingredient ingRec = (Ingredient) ingredientRepository.findByIngredient(lowerVal);
+
 
         if (tagRec != null) {
             foundRecipes = ((List<Recipe>) tagRec.getRecipes());
@@ -53,26 +49,33 @@ public class SearchController {
         if (ingRec != null) {
             foundRecipes.add((Recipe) ingRec.getRecipe());
         }
-
         for (Recipe recipe : recipes) {
             if (recipe.getName().toLowerCase().contains(lowerVal)) {
                 if (!foundRecipes.contains(recipe))
                     foundRecipes.add(recipe);
-                } else if (recipe.getCategory().toString().toLowerCase().contains(lowerVal)) {
-                        if (!foundRecipes.contains(recipe))
-                        foundRecipes.add(recipe);
+            } else if (recipe.getCategory().toString().toLowerCase().contains(lowerVal)) {
+                if (!foundRecipes.contains(recipe))
+                    foundRecipes.add(recipe);
             }
             List<Tag> tags = tagRepository.findAll();
             List<Tag> filterTags = new ArrayList<>();
             for (Tag tag : tags) {
-                if(tag.getIsFilterable() == null){}
-                else if (tag.getIsFilterable()) {
+                if (tag.getIsFilterable() == null) {
+                } else if (tag.getIsFilterable()) {
                     filterTags.add(tag);
                 }
             }
-            model.addAttribute("tag", filterTags);
-
+                    model.addAttribute("tag", filterTags);
         }
+                    model.addAttribute("recipes", foundRecipes);
+                    model.addAttribute("keyword", keyword);
+                    model.addAttribute("categories", Category.values());
+                    model.addAttribute("sort", SortParameter.values());
+
+                    return "search";
+    }
+
+
 
 //        if(lowerVal.contains(" ")) {
 //
@@ -101,16 +104,6 @@ public class SearchController {
 //            }
 //        }
 
-                model.addAttribute("recipes", foundRecipes);
-                model.addAttribute("keyword", keyword);
-                model.addAttribute("categories", Category.values());
-                model.addAttribute("sort", SortParameter.values());
-                //model.addAttribute("tag", tagRepository.findAll());
-
-                return "search";
-
-    }
-
 
 
 
@@ -120,113 +113,62 @@ public class SearchController {
         String selectedValue = request.getParameter("selectedValue");
         Iterable<Recipe> recipes = recipeRepository.findAll();
         foundRecipes.clear();
+        selectedTags.clear();
 
-        List<Tag> tags = tagRepository.findAll();
-        List<Tag> filterTags = new ArrayList<>();
-        for (Tag tag : tags) {
-            if(tag.getIsFilterable() == null){}
-            else if (tag.getIsFilterable()) {
-                filterTags.add(tag);
-            }
-        }
-        model.addAttribute("tag", filterTags);
-        if (category == null) {
-            //get all recipes
-            for (Recipe recipe : recipes) {
-                foundRecipes.add(recipe);
-            }
-
-            //get all recipes in selected CATEGORY search
-        } else {
-            for (Recipe recipe : recipes) {
-                if (recipe.getCategory().name().toLowerCase().equals(category.name().toLowerCase())) {
+            if (category == null) {
+                //get all recipes
+                for(Recipe recipe : recipes) {
                     foundRecipes.add(recipe);
+                }
+                } else {
+                //get all recipes in selected CATEGORY search
+                    for (Recipe recipe : recipes) {
+                        if (recipe.getCategory().name().toLowerCase().equals(category.name().toLowerCase())) {
+                            foundRecipes.add(recipe);
+                        }
+                    }
+                }
 
+            List<Tag> tags = tagRepository.findAll();
+            List<Tag> filterTags = new ArrayList<>();
+            for (Tag tag : tags) {
+                if (tag.getIsFilterable() == null) {
+                } else if (tag.getIsFilterable()) {
+                    filterTags.add(tag);
                 }
             }
-        }
-
+            model.addAttribute("tag", filterTags);
 
         //render found recipes
-        model.addAttribute("recipes", foundRecipes);
         model.addAttribute("categories", Category.values());
         model.addAttribute("category", category);
         model.addAttribute("sort", SortParameter.values());
         model.addAttribute("category", category);
-      //  model.addAttribute("tag", tagRepository.findAll());
+        model.addAttribute("recipes", foundRecipes);
+
 
         return "search";
     }
-
 
 
     //SORTING
     @PostMapping(value = "/sort")
     public String sortSearchResults(@RequestParam SortParameter sortParameter, @RequestParam Category category, Model model) {
-//        Iterable<Recipe> recipes = foundRecipes;
-
         List<Tag> tags = tagRepository.findAll();
+        if(selectedTags.isEmpty()) {
+            selectedTags = tags;
+        }
         List<Tag> filterTags = new ArrayList<>();
+
         for (Tag tag : tags) {
             if(tag.getIsFilterable() == null){}
             else if (tag.getIsFilterable()) {
                 filterTags.add(tag);
             }
         }
+
         model.addAttribute("tag", filterTags);
 
-
-        //If selected sort is NAME ASCENDING
-        if ((sortParameter.getName().equals(SortParameter.NAME_ASCENDING.getName()))) {
-            Collections.sort(foundRecipes, new Recipe.SortByNameAsc());
-
-            //If selected sort is NAME DESCENDING
-        } else if ((sortParameter.getName().equals(SortParameter.NAME_DESCENDING.getName()))) {
-            Collections.sort(foundRecipes, new Recipe.SortByNameDesc());
-
-            //if selected sort is ASCENDING RATING
-        } else if ((sortParameter.getName().equals(SortParameter.RATING_ASCENDING.getName()))) {
-            Collections.sort(foundRecipes, new Recipe.SortByRatingAsc());
-
-            //if selected sort is DESCENDING RATING
-        } else if ((sortParameter.getName().equals(SortParameter.RATING_DESCENDING.getName()))) {
-            Collections.sort(foundRecipes, new Recipe.SortByRatingDsc());
-
-        }
-        //render found recipes
-        model.addAttribute("recipes", foundRecipes);
-        model.addAttribute("categories", Category.values());
-        model.addAttribute("category", category);
-        model.addAttribute("sort", SortParameter.values());
-       // model.addAttribute("tag", tagRepository.findAll());
-
-        return "search";
-    }
-
-
-
-    @PostMapping(value = "/filter")
-    public String filterResults(@RequestParam List<Integer> tagId, @RequestParam Category category, Model model) {
-        model.addAttribute("category", category);
-
-        // store selected filters in an arrayList
-        List<Tag> selectedTags = new ArrayList<>();
-        for (Integer aTagId : tagId) {
-            selectedTags.add(tagRepository.findById(aTagId).get());
-        }
-
-        // filter checkboxes
-        List<Tag> allTags = tagRepository.findAll();
-        List<Tag> filters = new ArrayList<>();
-        for (Tag aTag : allTags) {
-            if (aTag.getIsFilterable() == null) {
-            } else if (aTag.getIsFilterable() == true) {
-                filters.add(aTag);
-                model.addAttribute("tag", filters);
-            }
-        }
-
-        // find and store recipes with the selected tag
         Iterable<Recipe> recipes = foundRecipes;
         List<Recipe> filteredRecipes = new ArrayList<>();
 
@@ -234,7 +176,7 @@ public class SearchController {
             for (Tag recipeTag : recipe.getTags()) {
                 for (Tag tag : selectedTags) {
                     if (recipeTag.getId() == tag.getId()) {
-                        if(!filteredRecipes.contains(recipe)) {
+                        if (!filteredRecipes.contains(recipe)) {
                             filteredRecipes.add(recipe);
                         }
                     }
@@ -242,13 +184,80 @@ public class SearchController {
             }
         }
 
-        //render filtered recipes
-        model.addAttribute("selectedTags", selectedTags);
+        //If selected sort is NAME ASCENDING
+        if ((sortParameter.getName().equals(SortParameter.NAME_ASCENDING.getName()))) {
+            Collections.sort(filteredRecipes, new Recipe.SortByNameAsc());
+            //If selected sort is NAME DESCENDING
+        } else if ((sortParameter.getName().equals(SortParameter.NAME_DESCENDING.getName()))) {
+            Collections.sort(filteredRecipes, new Recipe.SortByNameDesc());
+            //if selected sort is ASCENDING RATING
+        } else if ((sortParameter.getName().equals(SortParameter.RATING_ASCENDING.getName()))) {
+            Collections.sort(filteredRecipes, new Recipe.SortByRatingAsc());
+            //if selected sort is DESCENDING RATING
+        } else if ((sortParameter.getName().equals(SortParameter.RATING_DESCENDING.getName()))) {
+            Collections.sort(filteredRecipes, new Recipe.SortByRatingDsc());
+        }
+        //render found recipes
         model.addAttribute("recipes", filteredRecipes);
         model.addAttribute("categories", Category.values());
+        model.addAttribute("category", category);
         model.addAttribute("sort", SortParameter.values());
-       // model.addAttribute("tag", tagRepository.findAll());
+        model.addAttribute("selectedTags", selectedTags);
 
         return "search";
     }
+
+
+
+
+    @PostMapping(value = "/filter")
+    public String filterResults(@RequestParam (required = false) List<Integer> tagId, @RequestParam (required=false) Category category, Model model) {
+        model.addAttribute("category", category);
+            List<Tag> allTags = tagRepository.findAll();
+            selectedTags.clear();
+
+            // store selected filters in an arrayList
+            if(tagId != null) {
+                for (Integer aTagId : tagId) {
+                    selectedTags.add(tagRepository.findById(aTagId).get());
+                }
+            } else if( tagId == null) {
+                selectedTags = allTags;
+            }
+
+            // filter checkboxes
+            List<Tag> filters = new ArrayList<>();
+            for (Tag aTag : allTags) {
+                if (aTag.getIsFilterable() == null) {
+                } else if (aTag.getIsFilterable()) {
+                    filters.add(aTag);
+                    model.addAttribute("tag", filters);
+                }
+            }
+
+            // find and store recipes with the selected tag
+            Iterable<Recipe> recipes = foundRecipes;
+            List<Recipe> filteredRecipes = new ArrayList<>();
+
+            for (Recipe recipe : recipes) {
+                for (Tag recipeTag : recipe.getTags()) {
+                    for (Tag tag : selectedTags) {
+                        if (recipeTag.getId() == tag.getId()) {
+                            if (!filteredRecipes.contains(recipe)) {
+                                filteredRecipes.add(recipe);
+                            }
+                        }
+                    }
+                }
+            }
+            //render filtered recipes
+            model.addAttribute("selectedTags", selectedTags);
+            model.addAttribute("recipes", filteredRecipes);
+            model.addAttribute("categories", Category.values());
+            model.addAttribute("sort", SortParameter.values());
+
+
+            return "search";
+    }
 }
+

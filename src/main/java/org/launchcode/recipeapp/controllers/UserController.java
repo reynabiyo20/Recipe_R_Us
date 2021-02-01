@@ -40,7 +40,7 @@ public class UserController {
    @Autowired
    private TagRepository tagRepository;
    List<Recipe> recipes = new ArrayList<>();
-   List<UserRecipe> foundCategoryRecipes = new ArrayList<UserRecipe>();
+   List<Tag> selectedTags = new ArrayList<>();
 
 
    @GetMapping()
@@ -60,10 +60,12 @@ public class UserController {
    @GetMapping("/profile")
    public String getUserProfile(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
       String sessionUser = (String) request.getSession().getAttribute("user");
+      selectedTags.clear();
+
       if (sessionUser == null) {
          model.addAttribute("title", "No user found");
       } else {
-//         List<Recipe> recipes = new ArrayList<>();
+
          recipes.clear();
          User user = userRepository.findByUsername(sessionUser);
          List<UserRecipe> userRecipes = userRecipeRepository.findAllByUser(user);
@@ -79,7 +81,8 @@ public class UserController {
          model.addAttribute("title1", redirectAttributes.getAttribute("title1"));
          model.addAttribute("categories", Category.values());
          model.addAttribute("sort", SortParameter.values());
-        // model.addAttribute("tag", tagRepository.findAll());
+
+
          List<Tag> tags = tagRepository.findAll();
          List<Tag> filterTags = new ArrayList<>();
          for (Tag tag : tags) {
@@ -101,6 +104,10 @@ public class UserController {
       String sessionUser = (String) request.getSession().getAttribute("user");
       User user = userRepository.findByUsername(sessionUser);
 
+      if(selectedTags.isEmpty()) {
+         selectedTags = tagRepository.findAll();
+      }
+
       recipes.clear();
       for (UserRecipe userRecipe : user.getRecipes()) {
          Optional<Recipe> singleRecipe = recipeRepository.findById(userRecipe.getRecipe().getId());
@@ -109,41 +116,56 @@ public class UserController {
          }
       }
 
-
-      //If selected sort is NAME ASCENDING
-      if ((sortParameter.getName().equals(SortParameter.NAME_ASCENDING.getName()))) {
-
-         Collections.sort(recipes, new Recipe.SortByNameAsc());
-
-         //If selected sort is NAME DESCENDING
-      } else if ((sortParameter.getName().equals(SortParameter.NAME_DESCENDING.getName()))) {
-         Collections.sort(recipes, new Recipe.SortByNameDesc());
-
-         //if selected sort is ASCENDING RATING
-      } else if ((sortParameter.getName().equals(SortParameter.RATING_ASCENDING.getName()))) {
-         Collections.sort(recipes, new Recipe.SortByRatingAsc());
-
-
-         //if selected sort is DESCENDING RATING
-      } else if ((sortParameter.getName().equals(SortParameter.RATING_DESCENDING.getName()))) {
-         Collections.sort(recipes, new Recipe.SortByRatingDsc());
-
-      }
-      //render  sorted recipes
-      model.addAttribute("recipes", recipes);
-      model.addAttribute("categories", Category.values());
-      model.addAttribute("category", category);
-      model.addAttribute("sort", SortParameter.values());
-     // model.addAttribute("tag", tagRepository.findAll());
-      List<Tag> tags = tagRepository.findAll();
       List<Tag> filterTags = new ArrayList<>();
-      for (Tag tag : tags) {
+
+      for (Tag tag : tagRepository.findAll()) {
          if(tag.getIsFilterable() == null){}
          else if (tag.getIsFilterable()) {
             filterTags.add(tag);
          }
       }
+
       model.addAttribute("tag", filterTags);
+
+      List<Recipe> filteredRecipes = new ArrayList<>();
+
+      for (Recipe recipe : recipes) {
+         for (Tag recipeTag : recipe.getTags()) {
+            for (Tag tag : selectedTags) {
+               if (recipeTag.getId() == tag.getId()) {
+                  if (!filteredRecipes.contains(recipe)) {
+                     filteredRecipes.add(recipe);
+                  }
+               }
+            }
+         }
+      }
+
+
+      //If selected sort is NAME ASCENDING
+      if ((sortParameter.getName().equals(SortParameter.NAME_ASCENDING.getName()))) {
+
+         Collections.sort(filteredRecipes, new Recipe.SortByNameAsc());
+
+         //If selected sort is NAME DESCENDING
+      } else if ((sortParameter.getName().equals(SortParameter.NAME_DESCENDING.getName()))) {
+         Collections.sort(filteredRecipes, new Recipe.SortByNameDesc());
+
+         //if selected sort is ASCENDING RATING
+      } else if ((sortParameter.getName().equals(SortParameter.RATING_ASCENDING.getName()))) {
+         Collections.sort(filteredRecipes, new Recipe.SortByRatingAsc());
+
+
+         //if selected sort is DESCENDING RATING
+      } else if ((sortParameter.getName().equals(SortParameter.RATING_DESCENDING.getName()))) {
+         Collections.sort(filteredRecipes, new Recipe.SortByRatingDsc());
+
+      }
+      //render  sorted recipes
+      model.addAttribute("recipes", filteredRecipes);
+      model.addAttribute("categories", Category.values());
+      model.addAttribute("category", category);
+      model.addAttribute("sort", SortParameter.values());
 
       return "users/profile";
    }
@@ -151,21 +173,27 @@ public class UserController {
 
 
    @PostMapping(value = "/profile/filter")
-   public String filterMyRecipes(@RequestParam List<Integer> tagId, @RequestParam Category category, Model model) {
+   public String filterMyRecipes(@RequestParam (required =false) List<Integer> tagId, @RequestParam  Category category, Model model) {
       model.addAttribute("category", category);
+      selectedTags.clear();
 
       // store selected filters in an arrayList
-      List<Tag> selectedTags = new ArrayList<>();
-      for (Integer aTagId : tagId) {
-         selectedTags.add(tagRepository.findById(aTagId).get());
+      List<Tag> allTags = tagRepository.findAll();
+
+      if(tagId != null) {
+         for (Integer aTagId : tagId) {
+            selectedTags.add(tagRepository.findById(aTagId).get());
+         }
+      } else if( tagId == null) {
+         selectedTags = allTags;
       }
 
       // filter checkboxes
-      List<Tag> allTags = tagRepository.findAll();
+
       List<Tag> filters = new ArrayList<>();
       for (Tag aTag : allTags) {
          if (aTag.getIsFilterable() == null) {
-            } else if (aTag.getIsFilterable() == true) {
+            } else if (aTag.getIsFilterable()) {
                filters.add(aTag);
                model.addAttribute("tag", filters);
          }
@@ -173,7 +201,6 @@ public class UserController {
 
       // find and store recipes with the selected tag
       List<Recipe> filteredRecipes = new ArrayList<>();
-
       for (Recipe recipe : recipes) {
          for (Tag recipeTag : recipe.getTags()) {
             for (Tag tag : selectedTags) {
@@ -190,7 +217,6 @@ public class UserController {
       model.addAttribute("recipes", filteredRecipes);
       model.addAttribute("categories", Category.values());
       model.addAttribute("sort", SortParameter.values());
-      //model.addAttribute("tag", tagRepository.findAll());
 
       return "users/profile";
    }
@@ -234,7 +260,6 @@ public class UserController {
       if (recipeOptional.isPresent()) {
 
          Recipe recipe = recipeOptional.get();
-
 
          for (UserRecipe userRecipe : userRecipes) {
             Optional<Recipe> recipeOpt = recipeRepository.findById(userRecipe.getRecipe().getId());

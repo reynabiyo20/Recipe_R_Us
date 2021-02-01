@@ -2,14 +2,11 @@ package org.launchcode.recipeapp.models;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
