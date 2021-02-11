@@ -6,9 +6,11 @@
 
 <div class="container-fluid p-5 m-auto">
 
+    <th:block>
     <h1 th:unless="${keyword == null}" th:text="${'Search Results:  ' + keyword}"></h1>
     <h1 th:if="${category == null && keyword == null}" th:text="${'Showing All Recipes'}"></h1>
     <h1 th:unless="${category == null}" th:text="${'Search Results:  ' + category.name}"></h1>
+    </th:block>
 <!--    <h1 th:unless="${sortParameter == null}" th:text="${'Search Results sorted by  ' + sortParameter.name}"></h1>-->
 
 <!--    <h2 th:unless="${#lists.isEmpty(foundRecipes) && #lists.isEmpty(filteredRecipes)}" th:text="${'No Recipes Found'}"></h2>-->
@@ -29,8 +31,6 @@
     <form action="/search/filter" method="post">
             <list id="tagRepository"  name="tagRepository">
                 <p>Filter by:</p>
-<!--                <input id="All" type="checkbox" value="All Recipes" checked >-->
-<!--                <label for="All"> ALL RECIPES</label>-->
                     <div th:each="aTag:${tag}">
                     <input type="checkbox"
                             name="tagId"
